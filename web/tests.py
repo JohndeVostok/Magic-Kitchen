@@ -10,5 +10,4 @@ class IndexTestCase(TestCase):
     def test_index_page(self):
         c = Client()
         response = c.get("/")
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.content, "Hello world")
+        self.assertRedirects(response, "/codechef.html")
