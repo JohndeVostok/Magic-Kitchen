@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<meta charset="UTF-8">
+
+<title> CodeCheF </title>
+
+<script src="libs/js/jquery-3.2.1.min.js"></script>
+
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="libs/css/bootstrap.min.css" />
+
+<!-- Latest compiled and minified JavaScript -->
+<script src="libs/js/bootstrap.min.js"></script>
+
+<script src="libs/js/blockly_compressed.js"></script>
+<script src="libs/js/blocks_compressed.js"></script>
+<script src="msg/js/zh-hans.js"></script>
+
+<script src="libs/js/createjs-2015.11.26.min.js"></script>
+
+<link rel="stylesheet" type="text/css" href="css/main.css" />
+<link rel="stylesheet" href="css/non-responsive.css" type="text/css" /> 
+
+<script src="js/main.js"></script>
+
+</head>
+
+<body onload="setTimeout(main.doLoad, 100);">
+<script> document.body.style.zoom = 0.9 * Math.max(window.screen.width, 1440) / 1440; </script>
+
+<div id="mainDiv" class="container">
+	<div class="row">
+		<table class="table table-borderless">
+			<tr>
+				<td class="col-xs-6">
+					<canvas id="gameCanvas" width="500" height="500"></canvas>
+				</td>
+				<td class="col-xs-6">
+					<div id="blocklyDiv" style="height: 480px; width: 600px;"></div>
+				</td>
+			</tr>
+		</table>
+	</div>
+	
+</div>
+
+<xml id="toolbox" style="display: none">
+	<block type="controls_if"></block>
+	<block type="controls_repeat_ext"></block>
+	<block type="logic_compare"></block>
+	<block type="math_number"></block>
+	<block type="math_arithmetic"></block>
+	<block type="text"></block>
+	<block type="text_print"></block>
+</xml>
+
+</body>
+
+</html>
