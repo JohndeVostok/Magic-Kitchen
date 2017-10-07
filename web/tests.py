@@ -17,23 +17,23 @@ class CustomSystemTestCase(TestCase):
     def test_register(self):
         c = Client()
 
-        #test empyt name
+        #test empty name
         response = c.post('/api/register', {'password': 'abc', 'email': '123@111.com'})
         ret = json.loads(response.content)
         self.assertEqual(ret['status'], 'failed')
-        self.assertEqual(ret['error'], 'user name can\'t be empyt')
+        self.assertEqual(ret['error'], 'user name can\'t be empty')
 
-        #test empyt password
+        #test empty password
         response = c.post('/api/register', {'name': 'sth', 'email': '123@111.com'})
         ret = json.loads(response.content)
         self.assertEqual(ret['status'], 'failed')
-        self.assertEqual(ret['error'], 'password can\'t be empyt')
+        self.assertEqual(ret['error'], 'password can\'t be empty')
 
-        #test empyt email
+        #test empty email
         response = c.post('/api/register', {'name': 'sth', 'password': 'abc'})
         ret = json.loads(response.content)
         self.assertEqual(ret['status'], 'failed')
-        self.assertEqual(ret['error'], 'email can\'t be empyt')
+        self.assertEqual(ret['error'], 'email can\'t be empty')
 
         #test succeeded
         response = c.post('/api/register', {'name': 'sth', 'password': 'abc', 'email': '123@111.com'})
@@ -82,13 +82,13 @@ class CustomSystemTestCase(TestCase):
         response = c.get('/api/login?password=abc')
         ret = json.loads(response.content)
         self.assertEqual(ret['status'], 'failed')
-        self.assertEqual(ret['error'], 'user name can\'t be empyt')
+        self.assertEqual(ret['error'], 'user name can\'t be empty')
 
         #test empty password
         response = c.get('/api/login?name=sth')
         ret = json.loads(response.content)
         self.assertEqual(ret['status'], 'failed')
-        self.assertEqual(ret['error'], 'password can\'t be empyt')
+        self.assertEqual(ret['error'], 'password can\'t be empty')
 
         #test succeeded
         #response = c.get('/api/login', {'name': 'sth', 'password': 'abc'})
