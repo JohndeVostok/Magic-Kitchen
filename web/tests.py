@@ -17,6 +17,24 @@ class CustomSystemTestCase(TestCase):
     def test_register(self):
         c = Client()
 
+        #test empyt name
+        response = c.post('/api/register', {'password': 'abc', 'email': '123@111.com'})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 'failed')
+        self.assertEqual(ret['error'], 'user name can\'t be empyt')
+
+        #test empyt password
+        response = c.post('/api/register', {'name': 'sth', 'email': '123@111.com'})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 'failed')
+        self.assertEqual(ret['error'], 'password can\'t be empyt')
+
+        #test empyt email
+        response = c.post('/api/register', {'name': 'sth', 'password': 'abc'})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 'failed')
+        self.assertEqual(ret['error'], 'email can\'t be empyt')
+
         #test succeed
         response = c.post('/api/register', {'name': 'sth', 'password': 'abc', 'email': '123@111.com'})
         ret = json.loads(response.content)
@@ -51,3 +69,15 @@ class CustomSystemTestCase(TestCase):
         ret = json.loads(response.content)
         self.assertEqual(ret['status'], 'failed')
         self.assertEqual(ret['error'], 'this email is too long')
+
+    def test_login(self):
+        c = Client()
+
+        #register
+        response = c.post('/api/register', {'name': 'sth', 'password': 'abc', 'email': '123@111.com'})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 'succeed')
+        
+        response = c.get('/api/login', {'name': 'sth', 'password': 'abc'})
+        ret = json.loads(response.content)
+
