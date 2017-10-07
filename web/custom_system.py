@@ -1,22 +1,44 @@
 from models import User
+import json
+from django.http import HttpResponse 
 
-def register(_name, _password, _email):
+#this request need to be POST
+def register(request): 
     #TODO email verification
 
+    content = request.POST
+    _name = content['name']
+    _email = content['email']
+    _password = content['password']
+
+    ret = {}
+    ret['status'] = 'failed'
+
     if len(_name) >= 20:
-        return 'this name is too long'
+        ret['error'] = 'this name is too long'
+        return HttpResponse(json.dumps(ret), content_type="application/json")
+
     if len(_password) >= 20:
-        return 'this password is too long'
+        ret['error'] = 'this password is too long'
+        return HttpResponse(json.dumps(ret), content_type="application/json")
+
     if len(_email) >= 50:
-        return 'this email is too long'
+        ret['error'] = 'this email is too long'
+        return HttpResponse(json.dumps(ret), content_type="application/json")
+
     name_filter = User.objects.filter(name = _name)
     if len(name_filter) >= 1:
-        return 'this name already exists'
+        ret['error'] = 'this name already exists'
+        return HttpResponse(json.dumps(ret), content_type="application/json")
+
     email_filter = User.objects.filter(email = _email)
     if len(email_filter) >= 1:
-        return 'this email already exists'
+        ret['error'] = 'this email already exists'
+        return HttpResponse(json.dumps(ret), content_type="application/json")
+
     User.objects.create(name = _name, password = _password, email = _email)
-    return 'success'
+    ret['status'] = 'succeed'
+    return HttpResponse(json.dumps(ret), content_type="application/json")
 
 def login(_name, _password):
     #TODO return user info(such as email, level ...)
