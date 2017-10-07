@@ -3,7 +3,6 @@ from django.conf import settings
 from django.views import static
 
 from . import views
-from . import custom_system
 
 urlpatterns = [
     url(r'^$', views.index, name='index'),
@@ -11,5 +10,4 @@ urlpatterns = [
     url(r'^api/login$', custom_system.login),
     # Force to serve static files, which is not recommended by Django
     url(r'^(?P<path>.*)$', static.serve, {'document_root': settings.STATICFILES_DIRS[0]}),
-    
 ]
