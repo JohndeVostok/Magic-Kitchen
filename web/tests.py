@@ -78,6 +78,32 @@ class CustomSystemTestCase(TestCase):
         ret = json.loads(response.content)
         self.assertEqual(ret['status'], 'succeed')
         
+        #test empty name
+        response = c.get('/api/login', {'password': 'abc'})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 'failed')
+        self.assertEqual(ret['error'], 'user name can\'t be empyt')
+
+        #test empty password
+        response = c.get('/api/login', {'name': 'sth'})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 'failed')
+        self.assertEqual(ret['error'], 'password can\'t be empyt')
+
+        #test succeed
         response = c.get('/api/login', {'name': 'sth', 'password': 'abc'})
         ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 'succeed')
+
+        #test 'this name does\'t exist'
+        response = c.get('/api/login', {'name': 'sth2', 'password': 'abc'})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 'failed')
+        self.assertEqual(ret['error'], 'this name does\'t exist')
+
+        #test 'wrong password'
+        response = c.get('/api/login', {'name': 'sth', 'password': 'abcd'})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 'failed')
+        self.assertEqual(ret['error'], 'wrong password')
 

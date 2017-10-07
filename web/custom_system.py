@@ -77,8 +77,8 @@ def login(request):
 
     name_filter = User.objects.filter(name = _name)
 
-    if name_filter == 0:
-        ret['error'] = 'this name does not exist'
+    if len(name_filter) == 0:
+        ret['error'] = 'this name does\'t exist'
         return json_response(ret)
 
     user = name_filter[0]
@@ -86,5 +86,5 @@ def login(request):
         ret['error'] = 'wrong password'
         return json_response(ret)
 
-    ret['status'] = 'success'
+    ret['status'] = 'succeed'
     return json_response(ret)
