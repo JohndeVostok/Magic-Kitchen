@@ -15,15 +15,15 @@ def register(request):
     ret['status'] = 'failed'
 
     if not 'name' in content:
-        ret['error'] = 'user name can\'t be empyt'
+        ret['error'] = 'user name can\'t be empty'
         return json_response(ret)
 
     if not 'password' in content:
-        ret['error'] = 'password can\'t be empyt'
+        ret['error'] = 'password can\'t be empty'
         return json_response(ret)
 
     if not 'email' in content:
-        ret['error'] = 'email can\'t be empyt'
+        ret['error'] = 'email can\'t be empty'
         return json_response(ret)
 
     _name = content['name']
@@ -53,7 +53,7 @@ def register(request):
         return json_response(ret)
 
     User.objects.create(name = _name, password = _password, email = _email)
-    ret['status'] = 'succeed'
+    ret['status'] = 'succeeded'
     return json_response(ret)
 
 def login(request):
@@ -65,11 +65,11 @@ def login(request):
     ret['status'] = 'failed'
 
     if not 'name' in content:
-        ret['error'] = 'user name can\'t be empyt'
+        ret['error'] = 'user name can\'t be empty'
         return json_response(ret)
 
     if not 'password' in content:
-        ret['error'] = 'password can\'t be empyt'
+        ret['error'] = 'password can\'t be empty'
         return json_response(ret)
 
     _name = content['name']
@@ -86,5 +86,5 @@ def login(request):
         ret['error'] = 'wrong password'
         return json_response(ret)
 
-    ret['status'] = 'succeed'
+    ret['status'] = 'succeeded'
     return json_response(ret)

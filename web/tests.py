@@ -35,10 +35,10 @@ class CustomSystemTestCase(TestCase):
         self.assertEqual(ret['status'], 'failed')
         self.assertEqual(ret['error'], 'email can\'t be empyt')
 
-        #test succeed
+        #test succeeded
         response = c.post('/api/register', {'name': 'sth', 'password': 'abc', 'email': '123@111.com'})
         ret = json.loads(response.content)
-        self.assertEqual(ret['status'], 'succeed')
+        self.assertEqual(ret['status'], 'succeeded')
 
         #test this name already exists
         response = c.post('/api/register', {'name': 'sth', 'password': 'abc', 'email': '123@456.com'})
@@ -76,7 +76,7 @@ class CustomSystemTestCase(TestCase):
         #register
         response = c.post('/api/register', {'name': 'sth', 'password': 'abc', 'email': '123@111.com'})
         ret = json.loads(response.content)
-        self.assertEqual(ret['status'], 'succeed')
+        self.assertEqual(ret['status'], 'succeeded')
         
         #test empty name
         response = c.get('/api/login?password=abc')
@@ -90,11 +90,11 @@ class CustomSystemTestCase(TestCase):
         self.assertEqual(ret['status'], 'failed')
         self.assertEqual(ret['error'], 'password can\'t be empyt')
 
-        #test succeed
+        #test succeeded
         #response = c.get('/api/login', {'name': 'sth', 'password': 'abc'})
         response = c.get('/api/login?name=sth&password=abc')
         ret = json.loads(response.content)
-        self.assertEqual(ret['status'], 'succeed')
+        self.assertEqual(ret['status'], 'succeeded')
 
         #test 'this name does\'t exist'
         response = c.get('/api/login?name=sth2&password=abc')
