@@ -39,7 +39,7 @@ def register(request):
         return json_response(ret)
 
     if len(_email) >= 50:
-        ret['error'] = 'this email is too long'
+        ret['error'] = 'this email address is too long'
         return json_response(ret)
 
     name_filter = User.objects.filter(name = _name)
@@ -49,7 +49,7 @@ def register(request):
 
     email_filter = User.objects.filter(email = _email)
     if len(email_filter) >= 1:
-        ret['error'] = 'this email already exists'
+        ret['error'] = 'this email address already exists'
         return json_response(ret)
 
     User.objects.create(name = _name, password = _password, email = _email)

@@ -32,3 +32,31 @@
 * [x] Python test & coverage support
 * [ ] Front-end unittests
 * [ ] Maintenance scripts
+
+# Doc
+
+## Back-end
+
+### Register
+        POST('/api/register'), attributes: name = nameStr, password = passwordStr, email = eamilStr
+        return json:
+            status = 'succeed' ---------succeed
+            status = 'failed'  ---------failed
+                error = 'user name can't be empyt'
+                error = 'password can't be empyt' 
+                error = 'email can't be empyt'
+                error = 'this name is too long'
+                error = 'this password is too long'
+                error = 'this email address is too long'
+                error = 'this name already exists'
+                error = 'this email address already exists'
+
+### Login
+        GET('/api/login?name=nameStr&password=passwordStr')
+        return json:
+            status = 'succeed' ---------succeed
+            status = 'failed'  ---------failed
+                error = 'user name can't be empyt'
+                error = 'password can't be empyt' 
+                error = 'this name does't exist'
+                error = 'wrong password'
