@@ -5,6 +5,9 @@ from django.http import HttpResponse
 def json_response(info):
     return HttpResponse(json.dumps(info), content_type="application/json")
 
+def get_session(request):
+    return request.session.get('name', None)
+
 #this request need to be POST
 def register(request): 
     #TODO email verification
@@ -13,6 +16,11 @@ def register(request):
 
     ret = {}
     ret['status'] = 'failed'
+
+    session = get_session(request)
+    if (session != None):
+        ret['error'] = 'you have already logged in'
+        return json_response(ret)
 
     if not 'name' in content:
         ret['error'] = 'user name can\'t be empty'
@@ -64,6 +72,11 @@ def login(request):
     ret = {}
     ret['status'] = 'failed'
 
+    session = get_session(request)
+    if (session != None):
+        ret['error'] = 'you have already logged in'
+        return json_response(ret)
+
     if not 'name' in content:
         ret['error'] = 'user name can\'t be empty'
         return json_response(ret)
@@ -86,5 +99,6 @@ def login(request):
         ret['error'] = 'wrong password'
         return json_response(ret)
 
+    request.session['name'] = _name
     ret['status'] = 'succeeded'
     return json_response(ret)
