@@ -70,6 +70,15 @@ class CustomSystemTestCase(TestCase):
         self.assertEqual(ret['status'], 'failed')
         self.assertEqual(ret['error'], 'this email address is too long')
 
+        #login and test register after login
+        response = c.get('/api/login?name=sth&password=abc')
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 'succeeded')
+        response = c.post('/api/register', {'name': 'sth2', 'password': 'abc', 'email': '123@233.com'})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 'failed')
+        self.assertEqual(ret['error'], 'you have already logged in')
+
     def test_login(self):
         c = Client()
 
@@ -90,12 +99,6 @@ class CustomSystemTestCase(TestCase):
         self.assertEqual(ret['status'], 'failed')
         self.assertEqual(ret['error'], 'password can\'t be empty')
 
-        #test succeeded
-        #response = c.get('/api/login', {'name': 'sth', 'password': 'abc'})
-        response = c.get('/api/login?name=sth&password=abc')
-        ret = json.loads(response.content)
-        self.assertEqual(ret['status'], 'succeeded')
-
         #test 'this name does\'t exist'
         response = c.get('/api/login?name=sth2&password=abc')
         ret = json.loads(response.content)
@@ -107,4 +110,39 @@ class CustomSystemTestCase(TestCase):
         ret = json.loads(response.content)
         self.assertEqual(ret['status'], 'failed')
         self.assertEqual(ret['error'], 'wrong password')
+
+        #test login succeeded
+        response = c.get('/api/login?name=sth&password=abc')
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 'succeeded')
+
+        #test login twice
+        response = c.get('/api/login?name=sth&password=abc')
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 'failed')
+        self.assertEqual(ret['error'], 'you have already logged in')
+
+    def test_logout(self):
+
+        c = Client()
+
+        #register
+        response = c.post('/api/register', {'name': 'sth', 'password': 'abc', 'email': '123@111.com'})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 'succeeded')
+
+        #test logout before login
+        response = c.get('/api/logout')
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 'succeeded')
+
+        #login succeeded
+        response = c.get('/api/login?name=sth&password=abc')
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 'succeeded')
+
+        #test logout after login
+        response = c.get('/api/logout')
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 'succeeded')
 
