@@ -8,6 +8,12 @@ def json_response(info):
 def get_session(request):
     return request.session.get('name', None)
 
+def change_password_to(_name, _password):
+    name_filter = User.objects.filter(name = _name)
+    user = name_filter[0]
+    user.password = _password
+    user.save()
+
 #this request need to be POST
 def register(request): 
     #TODO email verification
@@ -108,5 +114,29 @@ def logout(request):
     session = get_session(request)
     if (session != None):
         del request.session['name']
+    ret['status'] = 'succeeded'
+    return json_response(ret)
+
+def change_password_after_login(request):
+    content = request.POST
+
+    ret = {}
+    ret['status'] = 'failed'
+
+    session = get_session(request)
+    if (session == None):
+        ret['error'] = 'please log in first'
+        return json_response(ret)
+
+    if not 'new_password' in content:
+        ret['error'] = 'new password can\'t be empty'
+        return json_response(ret)
+
+    _new_password = content['new_password']
+    if len(_new_password) >= 20:
+        ret['error'] = 'this password is too long'
+        return json_response(ret)
+
+    change_password_to(session, _new_password)
     ret['status'] = 'succeeded'
     return json_response(ret)
