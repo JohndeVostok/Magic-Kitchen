@@ -10,6 +10,7 @@ urlpatterns = [
     url(r'^api/register$', custom_system.register),
     url(r'^api/login$', custom_system.login),
     url(r'^api/logout$', custom_system.logout),
+    url(r'^api/change_password_after_login$', custom_system.change_password_after_login),
     # Force to serve static files, which is not recommended by Django
     url(r'^(?P<path>.*)$', static.serve, {'document_root': settings.STATICFILES_DIRS[0]}),
 ]
