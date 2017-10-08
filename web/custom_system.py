@@ -102,3 +102,11 @@ def login(request):
     request.session['name'] = _name
     ret['status'] = 'succeeded'
     return json_response(ret)
+
+def logout(request):
+    ret = {}
+    session = get_session(request)
+    if (session != None):
+        del request.session['name']
+    ret['status'] = 'succeeded'
+    return json_response(ret)
