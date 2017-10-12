@@ -3,7 +3,7 @@
 ## Client
 
 ### Javascript Unittests
-		Dependency:
+		Dependencies:
 			client/libs/js/qunit-2.4.0.js
 			client/libs/css/qunit-2.4.0.css
 		Test body:
