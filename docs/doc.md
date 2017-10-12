@@ -33,3 +33,12 @@
         return json:
             status = 'succeeded' ---------succeeded
 
+### Change Password
+        要求用户必须登录后才能用这种方式修改密码，将修改正在登录的用户的密码
+        Post('/api/change_password_after_login'), attributes: new_password = new_passwordstr
+        return json:
+            status = 'succeeded' ---------succeeded
+            status = 'failed'
+                error = 'please log in first'
+                error = 'new password can't be empty'
+                error = 'this password is too long'
