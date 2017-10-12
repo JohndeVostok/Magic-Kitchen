@@ -147,6 +147,11 @@ class CustomSystemTestCase(TestCase):
         ret = json.loads(response.content)
         self.assertEqual(ret['status'], 'succeeded')
 
+        #test login after 'login and logout'
+        response = c.get('/api/login?name=sth&password=abc')
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 'succeeded')
+
     def test_change_password_after_login(self):
         c = Client()
 
