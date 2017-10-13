@@ -18,7 +18,7 @@
                 error = 'you have already logged in'
 
 ### Login
-        GET('/api/login?name=nameStr&password=passwordStr')
+        POST('/api/login'), attributes: name = nameStr, password = passwordStr
         return json:
             status = 'succeeded' ---------succeeded
             status = 'failed'  ---------failed
@@ -29,7 +29,7 @@
                 error = 'you have already logged in'
 
 ### Logout
-        GET('/api/logout')
+        POST('/api/logout')
         return json:
             status = 'succeeded' ---------succeeded
 
