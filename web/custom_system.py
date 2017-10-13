@@ -1,7 +1,7 @@
 from models import User
 import json
 from django.http import HttpResponse 
-from send_email import send_email
+from send_email import email_thread
 
 def json_response(info):
     return HttpResponse(json.dumps(info), content_type="application/json")
@@ -171,7 +171,7 @@ def change_password_by_email(request):
     user.save()
     ret['identifyingCode'] = identifyingCode
 
-    #send_email('Email From CodeCheF', 'This is the identifying code needed to change the password:\n' + identifyingCode, email)
+    email_thread('Email From CodeCheF', 'This is the identifying code needed to change the password:\n' + identifyingCode, email).start()
     ret['status'] = 'succeeded'
     return json_response(ret)
 

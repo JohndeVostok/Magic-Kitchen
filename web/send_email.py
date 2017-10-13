@@ -2,8 +2,19 @@
 import smtplib
 from email.mime.text import MIMEText
 from email.header import Header
+import threading
 
-def send_email(title, context, receiver):
+class email_thread(threading.Thread):
+    def __init__(self, title, context, receiver):
+        threading.Thread.__init__(self)
+        self.title = title
+        self.context = context
+        self.receiver = receiver
+
+    def run(self):
+        title = self.title
+        context = self.context
+        receiver = self.receiver
         mail_host = "smtp.163.com"
 
         mail_user = "Teamname_CodeCheF@163.com"
