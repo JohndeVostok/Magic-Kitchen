@@ -74,7 +74,7 @@ def register(request):
 def login(request):
     #TODO return user info(such as email, level ...)
 
-    content = request.GET
+    content = request.POST
 
     ret = {}
     ret['status'] = 'failed'
