@@ -1,6 +1,7 @@
 from models import User
 import json
 from django.http import HttpResponse 
+from send_email import send_email
 
 def json_response(info):
     return HttpResponse(json.dumps(info), content_type="application/json")
@@ -140,3 +141,37 @@ def change_password_after_login(request):
     change_password_to(session, _new_password)
     ret['status'] = 'succeeded'
     return json_response(ret)
+
+def change_password_by_email(request):
+    content = request.POST
+
+    ret = {}
+    ret['status'] = 'failed'
+
+    if not 'name' in content:
+        ret['error'] = 'name can\'t be empty'
+        return json_response(ret)
+
+    username = content['name']
+    name_filter = User.objects.filter(name = username)
+
+    if len(name_filter) == 0:
+        ret['error'] = 'this name does\'t exist'
+        return json_response(ret)
+
+    user = name_filter[0]
+    email = user.email
+    # generate Identifying Code
+    from random import choice
+    import string
+    def GenIdentifyingCode(length=8, chars=string.ascii_letters + string.digits):
+        return ''.join([choice(chars) for i in range(length)])
+    identifyingCode = GenIdentifyingCode(8)
+    user.identifyingCode = identifyingCode
+    user.save()
+    ret['identifyingCode'] = identifyingCode
+
+    #send_email('Email From CodeCheF', 'This is the identifying code needed to change the password:\n' + identifyingCode, email)
+    ret['status'] = 'succeeded'
+    return json_response(ret)
+

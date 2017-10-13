@@ -196,3 +196,28 @@ class CustomSystemTestCase(TestCase):
         ret = json.loads(response.content)
         self.assertEqual(ret['status'], 'failed')
         self.assertEqual(ret['error'], 'this password is too long')
+
+    def test_change_password_by_email(self):
+        c = Client()
+
+        #register
+        response = c.post('/api/register', {'name': 'sth', 'password': 'abc', 'email': '765215342@qq.com'})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 'succeeded')
+
+        #test empty name
+        response = c.post('/api/change_password_by_email')
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 'failed')
+        self.assertEqual(ret['error'], 'name can\'t be empty')
+
+        #test name not exist
+        response = c.post('/api/change_password_by_email', {'name': 'sthsth'})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 'failed')
+        self.assertEqual(ret['error'], 'this name does\'t exist')
+        
+        #test send eamil
+        response = c.post('/api/change_password_by_email', {'name': 'sth'})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 'succeeded')
