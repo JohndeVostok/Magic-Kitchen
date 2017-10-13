@@ -221,3 +221,73 @@ class CustomSystemTestCase(TestCase):
         response = c.post('/api/change_password_by_email', {'name': 'sth'})
         ret = json.loads(response.content)
         self.assertEqual(ret['status'], 'succeeded')
+
+    def test_change_password_by_identifyingCode(self):
+        c = Client()
+
+        #register
+        response = c.post('/api/register', {'name': 'sth', 'password': 'abc', 'email': '765215342@qq.com'})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 'succeeded')
+
+        #send eamil
+        response = c.post('/api/change_password_by_email', {'name': 'sth'})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 'succeeded')
+        identifyingCode = ret['identifyingCode']
+
+        #test empty name
+        response = c.post('/api/change_password_by_identifyingCode', {'identifyingCode': identifyingCode, 'new_password': 'newpw'})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 'failed')
+        self.assertEqual(ret['error'], 'name can\'t be empty')
+
+        #test empty identifyingCode
+        response = c.post('/api/change_password_by_identifyingCode', {'name': 'sth', 'new_password': 'newpw'})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 'failed')
+        self.assertEqual(ret['error'], 'identifying code can\'t be empty')
+
+        #test empty new_password
+        response = c.post('/api/change_password_by_identifyingCode', {'name': 'sth', 'identifyingCode': identifyingCode})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 'failed')
+        self.assertEqual(ret['error'], 'new password can\'t be empty')
+
+        #test name not exist
+        response = c.post('/api/change_password_by_identifyingCode', {'name': 'sthsth', 'identifyingCode': identifyingCode, 'new_password': 'newpw'})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 'failed')
+        self.assertEqual(ret['error'], 'this name does\'t exist')
+
+        #test new password is too long
+        response = c.post('/api/change_password_by_identifyingCode', {'name': 'sth', 'identifyingCode': identifyingCode, 'new_password': 'newpw' + 'abcdefghijklmnopqrstvwxyz'})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 'failed')
+        self.assertEqual(ret['error'], 'this password is too long')
+
+        #test wrong identifyingCode
+        response = c.post('/api/change_password_by_identifyingCode', {'name': 'sth', 'identifyingCode': identifyingCode + '1', 'new_password': 'newpw'})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 'failed')
+        self.assertEqual(ret['error'], 'wrong identifying code')
+
+        #test change password by identifyingCode
+        response = c.post('/api/change_password_by_identifyingCode', {'name': 'sth', 'identifyingCode': identifyingCode, 'new_password': 'newpw'})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 'succeeded')
+
+        #test login after changing password
+        response = c.get('/api/login?name=sth&password=abc')
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 'failed')
+        self.assertEqual(ret['error'], 'wrong password')
+        response = c.get('/api/login?name=sth&password=newpw')
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 'succeeded')
+
+        #test change password by old identifying code
+        response = c.post('/api/change_password_by_identifyingCode', {'name': 'sth', 'identifyingCode': identifyingCode, 'new_password': 'newpw2'})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 'failed')
+        self.assertEqual(ret['error'], 'wrong identifying code')
