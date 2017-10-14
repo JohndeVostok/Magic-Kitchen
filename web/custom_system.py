@@ -1,6 +1,7 @@
 from models import User
 import json
 from django.http import HttpResponse 
+from send_email import email_thread
 
 def json_response(info):
     return HttpResponse(json.dumps(info), content_type="application/json")
@@ -73,7 +74,7 @@ def register(request):
 def login(request):
     #TODO return user info(such as email, level ...)
 
-    content = request.GET
+    content = request.POST
 
     ret = {}
     ret['status'] = 'failed'
@@ -97,7 +98,7 @@ def login(request):
     name_filter = User.objects.filter(name = _name)
 
     if len(name_filter) == 0:
-        ret['error'] = 'this name does\'t exist'
+        ret['error'] = 'this name doesn\'t exist'
         return json_response(ret)
 
     user = name_filter[0]
@@ -138,5 +139,80 @@ def change_password_after_login(request):
         return json_response(ret)
 
     change_password_to(session, _new_password)
+    ret['status'] = 'succeeded'
+    return json_response(ret)
+
+def change_password_by_email(request):
+    content = request.POST
+
+    ret = {}
+    ret['status'] = 'failed'
+
+    if not 'name' in content:
+        ret['error'] = 'name can\'t be empty'
+        return json_response(ret)
+
+    username = content['name']
+    name_filter = User.objects.filter(name = username)
+
+    if len(name_filter) == 0:
+        ret['error'] = 'this name doesn\'t exist'
+        return json_response(ret)
+
+    user = name_filter[0]
+    email = user.email
+    # generate Identifying Code
+    from random import choice
+    import string
+    def GenIdentifyingCode(length=8, chars=string.ascii_letters + string.digits):
+        return ''.join([choice(chars) for i in range(length)])
+    identifyingCode = GenIdentifyingCode(8)
+    user.identifyingCode = identifyingCode
+    user.save()
+    ret['identifyingCode'] = identifyingCode
+
+    email_thread('Email From CodeCheF', 'This is the identifying code needed to change the password:\n' + identifyingCode, email).start()
+    ret['status'] = 'succeeded'
+    return json_response(ret)
+
+def change_password_by_identifyingCode(request):
+    content = request.POST
+
+    ret = {}
+    ret['status'] = 'failed'
+
+    if not 'name' in content:
+        ret['error'] = 'name can\'t be empty'
+        return json_response(ret)
+    _name = content['name']
+
+    if not 'identifyingCode' in content:
+        ret['error'] = 'identifying code can\'t be empty'
+        return json_response(ret)
+    _identifyCode = content['identifyingCode']
+
+    if not 'new_password' in content:
+        ret['error'] = 'new password can\'t be empty'
+        return json_response(ret)
+    _new_password = content['new_password']
+
+    if len(_new_password) >= 20:
+        ret['error'] = 'this password is too long'
+        return json_response(ret)
+
+    name_filter = User.objects.filter(name = _name)
+    if len(name_filter) == 0:
+        ret['error'] = 'this name doesn\'t exist'
+        return json_response(ret)
+
+    user = name_filter[0]
+    if _identifyCode != user.identifyingCode or _identifyCode == "":
+        ret['error'] = 'wrong identifying code'
+        return json_response(ret)
+
+    user.password = _new_password
+    user.identifyingCode = ""
+    user.save()
+
     ret['status'] = 'succeeded'
     return json_response(ret)
