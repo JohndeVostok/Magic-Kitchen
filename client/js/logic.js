@@ -1,8 +1,15 @@
 function Logic()
 {
+
+	var invalidOP = function()
+	{
+		console.log("out");
+	};
+
+
 	function State()
 	{
-		var map = new Array(config.mapWidth * config.mapHeight);
+		var map = new Array([config.mapWidth * config.mapHeight]);
 		var positionX = 0, positionY = 0, direction = 0;
 
 		this.moveForward = function()
@@ -11,19 +18,34 @@ function Logic()
 			{
 				case 0:
 				//down
-					if (positionY + 1 < config.mapHeight) positionY++; else invalidOP();
+					if (positionY + 1 < config.mapHeight)
+						positionY++;
+					else
+						invalidOP();
 				break;
 				case 1:
 				//right
-					if (positionX + 1 < config.mapWidth) positionX++; else invalidOP();
+					if (positionX + 1 < config.mapWidth)
+						positionX++;
+					else
+						invalidOP();
 				break;
 				case 2:
 				//up
-					if (positionY > 0) positionY--; else invalidOP();
+					if (positionY > 0)
+						positionY--;
+					else
+						invalidOP();
 				break;
 				case 3:
 				//left
-					if (positionX > 0) positionX--; else invalidOP();
+					if (positionX > 0)
+						positionX--;
+					else
+						invalidOP();
+				break;
+				default:
+				//nothing
 				break;
 			}
 			console.log(positionX.toString() + " " + positionY.toString());
@@ -44,6 +66,12 @@ function Logic()
 			return positionY;
 		}
 
+		this.init = function()
+		{
+			for (var i = 0; i < config.mapWidth; i++)
+				for (var j = 0; j < config.mapHeight; j++)
+					map[13 * i + j] = 0;
+		}
 	};
 
 	var currentState = new State();
@@ -51,11 +79,7 @@ function Logic()
 
 	var initMap = function()
 	{
-		for (var i = 0; i < config.mapWidth; i++)
-			for (var j = 0; j < config.mapHeight; j++)
-				currentState.map[13 * i + j] = 0;
-//		ui.loadMap(levelData);
-//		ui.loadUserInfo("");
+		currentState.init();
 	};
 
 	this.doLoad = function()
@@ -66,7 +90,6 @@ function Logic()
 	this.loadLevel = function()
 	{
 		initMap();//tmp test without network
-//		network.fetchLevel(initMap);
 	};
 
 	this.getState = function()
@@ -77,13 +100,8 @@ function Logic()
 		}
 	}
 	
-	var reset = function()
+	var reset = function()//todo
 	{
-	};
-
-	var invalidOP = function()
-	{
-		console.log("out");
 	};
 
 	var singleStepForward = function()
@@ -117,6 +135,9 @@ function Logic()
 			break;
 			case 4:
 			//store
+			break;
+			default:
+			//nothing
 			break;
 		}
 	};
