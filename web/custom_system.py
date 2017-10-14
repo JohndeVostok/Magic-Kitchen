@@ -98,7 +98,7 @@ def login(request):
     name_filter = User.objects.filter(name = _name)
 
     if len(name_filter) == 0:
-        ret['error'] = 'this name does\'t exist'
+        ret['error'] = 'this name doesn\'t exist'
         return json_response(ret)
 
     user = name_filter[0]
@@ -156,7 +156,7 @@ def change_password_by_email(request):
     name_filter = User.objects.filter(name = username)
 
     if len(name_filter) == 0:
-        ret['error'] = 'this name does\'t exist'
+        ret['error'] = 'this name doesn\'t exist'
         return json_response(ret)
 
     user = name_filter[0]
@@ -202,7 +202,7 @@ def change_password_by_identifyingCode(request):
 
     name_filter = User.objects.filter(name = _name)
     if len(name_filter) == 0:
-        ret['error'] = 'this name does\'t exist'
+        ret['error'] = 'this name doesn\'t exist'
         return json_response(ret)
 
     user = name_filter[0]

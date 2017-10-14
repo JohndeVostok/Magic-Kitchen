@@ -100,11 +100,11 @@ class CustomSystemTestCase(TestCase):
         self.assertEqual(ret['status'], 'failed')
         self.assertEqual(ret['error'], 'password can\'t be empty')
 
-        #test 'this name does\'t exist'
+        #test 'this name doesn\'t exist'
         response = c.post('/api/login', {'name': 'sth2', 'password': 'abc'})
         ret = json.loads(response.content)
         self.assertEqual(ret['status'], 'failed')
-        self.assertEqual(ret['error'], 'this name does\'t exist')
+        self.assertEqual(ret['error'], 'this name doesn\'t exist')
 
         #test 'wrong password'
         response = c.post('/api/login', {'name': 'sth', 'password': 'abcd'})
@@ -215,7 +215,7 @@ class CustomSystemTestCase(TestCase):
         response = c.post('/api/change_password_by_email', {'name': 'sthsth'})
         ret = json.loads(response.content)
         self.assertEqual(ret['status'], 'failed')
-        self.assertEqual(ret['error'], 'this name does\'t exist')
+        self.assertEqual(ret['error'], 'this name doesn\'t exist')
         
         #test send eamil
         response = c.post('/api/change_password_by_email', {'name': 'sth'})
@@ -258,7 +258,7 @@ class CustomSystemTestCase(TestCase):
         response = c.post('/api/change_password_by_identifyingCode', {'name': 'sthsth', 'identifyingCode': identifyingCode, 'new_password': 'newpw'})
         ret = json.loads(response.content)
         self.assertEqual(ret['status'], 'failed')
-        self.assertEqual(ret['error'], 'this name does\'t exist')
+        self.assertEqual(ret['error'], 'this name doesn\'t exist')
 
         #test new password is too long
         response = c.post('/api/change_password_by_identifyingCode', {'name': 'sth', 'identifyingCode': identifyingCode, 'new_password': 'newpw' + 'abcdefghijklmnopqrstvwxyz'})

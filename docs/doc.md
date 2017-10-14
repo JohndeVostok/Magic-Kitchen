@@ -24,7 +24,7 @@
             status = 'failed'  ---------failed
                 error = 'user name can't be empty'
                 error = 'password can't be empty' 
-                error = 'this name does't exist'
+                error = 'this name doesn't exist'
                 error = 'wrong password'
                 error = 'you have already logged in'
 
@@ -54,7 +54,7 @@
         status = 'succeeded' ---------succeeded
         status = 'failed'  ---------failed
             error = 'user name can't be empty'
-            error = 'this name does't exist'
+            error = 'this name doesn't exist'
 
         之后通过得到的验证码来修改密码。
         Post('api/change_password_by_identifyingCode'), attributes: name = namestr, identifyingCode = identCodeStr, new_password = new_passwordstr
@@ -64,6 +64,6 @@
             error = 'user name can't be empty'
             error = 'identifying code can't be empty'
             error = 'new password can't be empty'
-            error = 'this name does't exist'
+            error = 'this name doesn't exist'
             error = 'this password is too long'
             error = 'wrong identifying code'
