@@ -206,7 +206,7 @@ def change_password_by_identifyingCode(request):
         return json_response(ret)
 
     user = name_filter[0]
-    if _identifyCode != user.identifyingCode:
+    if _identifyCode != user.identifyingCode or _identifyCode == "":
         ret['error'] = 'wrong identifying code'
         return json_response(ret)
 

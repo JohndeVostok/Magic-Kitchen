@@ -277,6 +277,12 @@ class CustomSystemTestCase(TestCase):
         ret = json.loads(response.content)
         self.assertEqual(ret['status'], 'succeeded')
 
+        #test wrong identifyingCode
+        response = c.post('/api/change_password_by_identifyingCode', {'name': 'sth', 'identifyingCode': '', 'new_password': 'newpw'})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 'failed')
+        self.assertEqual(ret['error'], 'wrong identifying code')
+
         #test login after changing password
         response = c.post('/api/login', {'name': 'sth', 'password': 'abc'})
         ret = json.loads(response.content)
