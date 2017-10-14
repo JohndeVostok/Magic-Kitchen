@@ -11,6 +11,6 @@ from django.conf import settings
 def index(request):
     return redirect('codechef.html')
 
-# @ensure_csrf_cookie
+@ensure_csrf_cookie
 def static_file(request, path):
 	return static.serve(request, path, document_root=settings.STATICFILES_DIRS[0])
