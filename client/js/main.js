@@ -1,6 +1,6 @@
 var main = function() {
 	var doLoad = function() {
-		UI.doLoad();
+		ui.doLoad();
 		logic.doLoad();
 		network.doLoad();
 	};

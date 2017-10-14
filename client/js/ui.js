@@ -1,4 +1,4 @@
-var UI = function() {
+var ui = function() {
 	var doLoad = function() {
 		loadStage();
 		
