@@ -1,91 +1,103 @@
-var logic = function()
+function Logic()
 {
-	var stateGen = function()
+	function State()
 	{
 		var map = new Array(config.mapWidth * config.mapHeight);
 		var positionX = 0, positionY = 0, direction = 0;
 
-		var moveForward() = function()
+		this.moveForward = function()
 		{
 			switch(direction)
 			{
 				case 0:
 				//down
-					if (positionY + 1 < config.mapHeight) positionY++; else envalidOp;
+					if (positionY + 1 < config.mapHeight) positionY++; else invalidOP();
 				break;
 				case 1:
 				//right
-					if (positionX + 1 < config.mapWidth) positionX++; else envalidOp;
+					if (positionX + 1 < config.mapWidth) positionX++; else invalidOP();
 				break;
 				case 2:
 				//up
-					if (positionY > 0) positionY--; else envalidOp;
+					if (positionY > 0) positionY--; else invalidOP();
 				break;
 				case 3:
 				//left
-					if (positionX > 0) positionX--; else envalidOp;
+					if (positionX > 0) positionX--; else invalidOP();
 				break;
 			}
+			console.log(positionX.toString() + " " + positionY.toString());
 		};
 
-		var rotate = function(dir)
+		this.rotate = function(dir)
 		{
 			direction = (direction + dir) % 4;
 		}
 
-		return
+		this.getX = function()
 		{
-			map: map;
-			positionX: positionX;
-			positionY: positionY;
-			direction: direction;
-			moveForward: moveForward;
-			rotate: rotate;
-		};
+			return positionX;
+		}
+
+		this.getY = function()
+		{
+			return positionY;
+		}
+
 	};
 
-	var currentState = stateGen();
-	var originState = stateGen();
+	var currentState = new State();
+	var originalState = new State();
 
 	var initMap = function()
 	{
-		for (var i = 0; i < config.mapWidth; i++) for (var j = 0; j < config.mapHeight; j++) currentState.map[13 * i + j] = 0;
+		for (var i = 0; i < config.mapWidth; i++)
+			for (var j = 0; j < config.mapHeight; j++)
+				currentState.map[13 * i + j] = 0;
 //		ui.loadMap(levelData);
 //		ui.loadUserInfo("");
 	};
 
-	var doLoad = function()
+	this.doLoad = function()
 	{
+		console.log("doload");
 	};
 
-	var loadLevel = function()
+	this.loadLevel = function()
 	{
-		initMap();//tem test without network
+		initMap();//tmp test without network
 //		network.fetchLevel(initMap);
 	};
+
+	this.getState = function()
+	{
+		return {
+			x: currentState.getX(),
+			y: currentState.getY()
+		}
+	}
 	
 	var reset = function()
 	{
 	};
 
-	var envalidOP = function()
+	var invalidOP = function()
 	{
 		console.log("out");
 	};
 
 	var singleStepForward = function()
 	{
-		state.moveForward();
-		console.log("fo");
+		currentState.moveForward();
 	};
 
 	var rotate = function(dir)
 	{
-		state.rotate(dir);
+		currentState.rotate(dir);
 		console.log("dir");
 	};
 
-	var step = function(op)
+	this.step = function(op)
 	{
 		switch (op["typeID"])
 		{
@@ -98,7 +110,7 @@ var logic = function()
 			break;
 			case 2:
 			//rotate
-				rotate(op["info"]);
+				rotate(op["dir"]);
 			break;
 			case 3:
 			//load
@@ -108,10 +120,6 @@ var logic = function()
 			break;
 		}
 	};
+};
 
-	return
-	{
-		initMap: initMap,
-		doLoad: doLoad
-	};
-}();
+var logic = new Logic();
