@@ -53,7 +53,7 @@ var network = function() {
 	};
 
 	var login = function(name, password, callback) {
-		getRequest(
+		postRequest(
 			"/api/login",
 			{
 				"name": name,
