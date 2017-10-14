@@ -61,11 +61,31 @@ var network = function() {
 			},
 			callback
 		);
-	}
+	};
+
+	var logout = function(callback) {
+		postRequest(
+			"/api/logout",
+			{},
+			callback
+		);
+	};
+
+	var changePasswordByEmail = function(name, callback) {
+		postRequest(
+			"/api/change_password_by_email",
+			{
+				"name": name
+			},
+			callback
+		);
+	};
 	
 	return {
 		doLoad: doLoad,
 		register: register,
-		login: login
+		login: login,
+		logout: logout,
+		changePasswordByEmail: changePasswordByEmail
 	};
 }();
