@@ -1,6 +1,5 @@
 from django.conf.urls import url
 from django.conf import settings
-from django.views import static
 from . import custom_system
 
 from . import views
@@ -12,5 +11,5 @@ urlpatterns = [
     url(r'^api/logout$', custom_system.logout),
     url(r'^api/change_password_after_login$', custom_system.change_password_after_login),
     # Force to serve static files, which is not recommended by Django
-    url(r'^(?P<path>.*)$', static.serve, {'document_root': settings.STATICFILES_DIRS[0]}),
+    url(r'^(?P<path>.*)$', views.static_file),
 ]
