@@ -13,6 +13,7 @@
 						2 = +pi
 						3 = +3pi/2
 						etc.
+					dir = 0 means down, dir = 1 means right, dir = 2 means up, dir = 3 means left.
 			return: undefined
 
 		logic.getState()
