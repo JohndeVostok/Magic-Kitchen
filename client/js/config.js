@@ -1,6 +1,1 @@
-var config = function() {
-	return {
-		mapWidth: 13,
-		mapHeight: 13
-	};
-}();
+var config = {mapWidth: 13, mapHeight: 13};

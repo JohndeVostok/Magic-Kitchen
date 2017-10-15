@@ -3,7 +3,7 @@ function Logic()
 
 	var invalidOP = function()
 	{
-		console.log("out");
+		//TODO
 	};
 
 
@@ -48,7 +48,6 @@ function Logic()
 				//nothing
 				break;
 			}
-			console.log(positionX.toString() + " " + positionY.toString());
 		};
 
 		this.rotate = function(dir)
@@ -68,13 +67,14 @@ function Logic()
 
 		this.init = function()
 		{
-			for (var i = 0; i < config.mapWidth; i++)
-				for (var j = 0; j < config.mapHeight; j++)
-					map[13 * i + j] = 0;
+			for (var i = 0; i < config.mapHeight; i++)
+				for (var j = 0; j < config.mapWidth; j++)
+					map[i * mapWidth + j] = 0;
 		}
 	};
 
 	var currentState = new State();
+	//not used now
 	var originalState = new State();
 
 	var initMap = function()
@@ -84,14 +84,16 @@ function Logic()
 
 	this.doLoad = function()
 	{
-		console.log("doload");
+		//TODO
 	};
 
 	this.loadLevel = function()
 	{
-		initMap();//tmp test without network
+		//tmp test without network
+		initMap();
 	};
 
+	//function for test
 	this.getState = function()
 	{
 		return {
@@ -99,9 +101,10 @@ function Logic()
 			y: currentState.getY()
 		}
 	}
-	
-	var reset = function()//todo
+
+	var reset = function()
 	{
+		//TODO
 	};
 
 	var singleStepForward = function()
@@ -112,7 +115,6 @@ function Logic()
 	var rotate = function(dir)
 	{
 		currentState.rotate(dir);
-		console.log("dir");
 	};
 
 	this.step = function(op)
@@ -120,14 +122,11 @@ function Logic()
 		switch (op["typeID"])
 		{
 			case 0:
-			//nop
 			break;
 			case 1:
-			//singleStepForward
 				singleStepForward();
 			break;
 			case 2:
-			//rotate
 				rotate(op["dir"]);
 			break;
 			case 3:
