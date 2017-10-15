@@ -9,38 +9,40 @@ function Logic()
 
 	function State()
 	{
-		var map = new Array([config.mapWidth * config.mapHeight]);
-		var positionX = 0, positionY = 0, direction = 0;
+		var itemList = [];
+		var map = [];
+
+		var hero = {x: 0, y: 0, dir: 0, haveItem: 0, itemId: 0}
 
 		this.moveForward = function()
 		{
-			switch(direction)
+			switch(hero.dir)
 			{
 				case 0:
 				//down
-					if (positionY + 1 < config.mapHeight)
-						positionY++;
+					if (hero.y + 1 < config.mapHeight)
+						hero.y++;
 					else
 						invalidOP();
 				break;
 				case 1:
 				//right
-					if (positionX + 1 < config.mapWidth)
-						positionX++;
+					if (hero.x + 1 < config.mapWidth)
+						hero.x++;
 					else
 						invalidOP();
 				break;
 				case 2:
 				//up
-					if (positionY > 0)
-						positionY--;
+					if (hero.y > 0)
+						hero.y--;
 					else
 						invalidOP();
 				break;
 				case 3:
 				//left
-					if (positionX > 0)
-						positionX--;
+					if (hero.x > 0)
+						hero.x--;
 					else
 						invalidOP();
 				break;
@@ -52,34 +54,44 @@ function Logic()
 
 		this.rotate = function(dir)
 		{
-			direction = (direction + dir) % 4;
+			hero.dir = (hero.dir + dir) % 4;
 		}
 
-		this.getX = function()
+		//function for test
+		this.test = function()
 		{
-			return positionX;
+			return map;
 		}
 
-		this.getY = function()
-		{
-			return positionY;
-		}
-
-		this.init = function()
+		this.init = function(opFloor, itemInList)
 		{
 			for (var i = 0; i < config.mapHeight; i++)
 				for (var j = 0; j < config.mapWidth; j++)
-					map[i * mapWidth + j] = 0;
+					map[i * config.mapWidth + j] = {isOpFloor: 0, address: 0, haveItem: 0, itemId: 0};
+
+			for (var j = 0; j < opFloor.length; j++)
+			{
+				map[opFloor[j].location].isOpFloor = 1;
+				map[opFloor[j].location].address = opFloor[j].address;
+			}
+
+			for (var k = 0; k < itemInList.length; k++)
+			{
+				map[itemInList[k].location].haveItem = 1;
+				map[itemInList[k].location].itemId = k;
+				itemList[k] = {location: itemInList[k].location, type: itemInList[k].type}
+			}
+			console.log(itemList);
 		}
 	};
 
 	var currentState = new State();
-	//not used now
 	var originalState = new State();
 
-	var initMap = function()
+	var initMap = function(opFloor, itemList)
 	{
-		currentState.init();
+		currentState.init(opFloor, itemList);
+		originalState.init(opFloor, itemList);
 	};
 
 	this.doLoad = function()
@@ -87,19 +99,16 @@ function Logic()
 		//TODO
 	};
 
-	this.loadLevel = function()
+	this.loadLevel = function(opFloor, itemList)
 	{
 		//tmp test without network
-		initMap();
+		initMap(opFloor, itemList);
 	};
 
 	//function for test
-	this.getState = function()
+	this.test = function()
 	{
-		return {
-			x: currentState.getX(),
-			y: currentState.getY()
-		}
+		return currentState.test();
 	}
 
 	var reset = function()
@@ -119,7 +128,7 @@ function Logic()
 
 	this.step = function(op)
 	{
-		switch (op["typeID"])
+		switch (op["typeId"])
 		{
 			case 0:
 			break;
