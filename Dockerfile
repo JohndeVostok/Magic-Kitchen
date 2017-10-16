@@ -3,5 +3,5 @@ WORKDIR /CodeCheF
 RUN rm -rf /CodeCheF/*
 ADD . /CodeCheF
 EXPOSE 8000
-CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+CMD ["sh", "run.sh"]
 
