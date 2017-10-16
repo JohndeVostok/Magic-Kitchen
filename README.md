@@ -14,9 +14,15 @@ First install Python 2 and Django.
 $ pip install django
 ```
 
-Then run with `manage.py`.
+Then run with `run.sh`, which can be used for any scenario, including debugging, testing and production.
 ```bash
-$ python manage.py runserver 0.0.0.0:8000
+$ sh run.sh
+```
+
+Alternatively, you can run the server manually.
+```bash
+$ python manage.py migrate  # run Django migration
+$ python manage.py runserver 0.0.0.0:8000  # run Django server, listening at 0.0.0.0, port 8000
 ```
 
 ### Run with Docker
