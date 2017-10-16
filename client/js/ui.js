@@ -12,15 +12,10 @@ var ui = function() {
 			stage.addChild(circle);
 		}
 		stage.update();
-		
-		workspace = Blockly.inject('blocklyDiv', {toolbox: document.getElementById('toolbox')});
 	};
 	
 	// CreateJS stage
 	var stage;
-	
-	// Blockly workspace
-	var workspace;
 	
 	var loadStage = function() {
 		stage = new createjs.Stage("gameCanvas");
