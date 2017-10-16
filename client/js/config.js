@@ -13,9 +13,9 @@ var config = {
 				"colour": 120
 			},
 			initExtra: function(block){},
-			generateJavaScript: function(block){
+			generateJavaScript: function(block, operateSequence){
 				op = {"typeID": 1};
-				return "logic.step(" + JSON.stringify(op) + ");";
+				return "operateSequence[operateSequence.length] = {ops: [" + JSON.stringify(op) + "]};";
 			}
 		},
 		{
@@ -39,12 +39,12 @@ var config = {
 				"colour": 300
 			},
 			initExtra: function(block){},
-			generateJavaScript: function(block){
+			generateJavaScript: function(block, operateSequence){
 				op = {
 					"typeID": 2,
 					"dir": parseInt(block.getFieldValue("ANGLE"))
 				};
-				return "logic.step(" + JSON.stringify(op) + ");";
+				return "operateSequence[operateSequence.length] = {ops: [" + JSON.stringify(op) + "]};";
 			}
 		},
 		{
@@ -57,9 +57,9 @@ var config = {
 				"colour": 180
 			},
 			initExtra: function(block){},
-			generateJavaScript: function(block){
+			generateJavaScript: function(block, operateSequence){
 				op = {"typeID": 3};
-				return "logic.step(" + JSON.stringify(op) + ");";
+				return "operateSequence[operateSequence.length] = {ops: [" + JSON.stringify(op) + "]};";
 			}
 		},
 		{
@@ -72,9 +72,9 @@ var config = {
 				"colour": 240
 			},
 			initExtra: function(block){},
-			generateJavaScript: function(block){
+			generateJavaScript: function(block, operateSequence){
 				op = {"typeID": 4};
-				return "logic.step(" + JSON.stringify(op) + ");";
+				return "operateSequence[operateSequence.length] = {ops: [" + JSON.stringify(op) + "]};";
 			}
 		}
 	]

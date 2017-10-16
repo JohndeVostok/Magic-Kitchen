@@ -20,7 +20,7 @@ var code = function() {
 
 			Blockly.JavaScript[blockDef.name] = function(blockDef) {
 				return function(block) {
-					return blockDef.generateJavaScript(block);
+					return blockDef.generateJavaScript(block, operateSequence);
 				}
 			}(blockDef);
 
@@ -30,17 +30,24 @@ var code = function() {
 		workspace = Blockly.inject('blocklyDiv', {toolbox: document.getElementById('toolbox')});
 	};
 
-	var test = function() {
-		var code = Blockly.JavaScript.workspaceToCode(workspace);
-		$("p#test").text(code);
+	var start = function() {
+		var code = "operateSequence = [];" + Blockly.JavaScript.workspaceToCode(workspace);
+		eval(code);
 	};
-	
+
+	var step = function() {
+		return operateSequence;
+	};
+
 	// Blockly workspace
 	var workspace;
-	
+
+	var operateSequence;
+
 	return {
 		doLoad: doLoad,
 		setBlockTypes: setBlockTypes,
-		test: test
+		start: start,
+		step: step
 	};
 }();
