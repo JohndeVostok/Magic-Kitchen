@@ -1,4 +1,5 @@
 from models import Level
+import json
 from django.http import HttpResponse
 
 def json_response(info):
@@ -13,12 +14,19 @@ def get_level_info(request):
         ret['error'] = 'level id can\'t be empty'
         return json_response(ret)
 
-    level_id_filter = Level.objects.filter(level_id = int(content['id']))
+    try:
+        _id = int(content['level_id'])
+    except ValueError,e :
+        print e
+        ret['error'] = 'the input level id needs to be an Integer'
+        return json_response(ret)
+
+    level_id_filter = Level.objects.filter(level_id = _id)
     if len(level_id_filter) == 0:
         ret['error'] = 'this level doesn\'t exist'
         return json_response(ret)
 
     ret['status'] = 'succeeded'
-    ret['level_info'] = level_id_filter[0].level_info #json
+    ret['level_info'] = level_id_filter[0].info #json
 
     return json_response(ret)
