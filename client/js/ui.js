@@ -55,7 +55,64 @@ var ui = function() {
 		stage.update();
 	};
 	
+	var start = function() {
+		// TODO: implement this after logic is implemented
+	};
+	
+	var loadMap = function(mapData) {
+		
+	};
+	
+	var loadUserInfo = function(userInfo) {
+		// TODO: implement this
+	};
+	
+	var loadBlockInfo = function(blockInfo) {
+		// TODO: implement this
+	};
+	
+	// Below are animation functions, i.e. functions that register animations for later rendering.
+	
+	var clearItems = function() {
+		
+	};
+	
+	var newItem = function(pos, type, args) {
+		
+	};
+	
+	var deleteItem = function(pos, args) {
+		
+	};
+	
+	var addAnimation = function(pos1, pos2, args) {
+		
+	};
+	
+	var addPlayerAnimation = function(pos1, pos2, dir1, dir2) {
+		
+	};
+	
+	var setInput = function(itemList) {
+		
+	};
+	
+	var setOutput = function(itemList) {
+		
+	};
+	
 	return {
-		doLoad: doLoad
+		doLoad: doLoad,
+		start: start,
+		loadMap: loadMap,
+		loadUserInfo: loadUserInfo,
+		loadBlockInfo: loadBlockInfo,
+		clearItems: clearItems,
+		newItem: newItem,
+		deleteItem: deleteItem,
+		addAnimation: addAnimation,
+		addPlayerAnimation: addPlayerAnimation,
+		setInput: setInput,
+		setOutput: setOutput
 	};
 }();
