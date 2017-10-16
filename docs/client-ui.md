@@ -106,10 +106,10 @@
 * The map consists of an N \* M grid, where `N = config.mapHeight` and `M = config.mapWidth`.
 * Each cell in the grid has some object on it.
 * There's a player on the map, which has a position and a face direction.
-* There're some items on the map or off the map.
+* There're some items on the map.
 * Every item has a position on the map, and at most one item can be placed on a single cell of the map.
-* There're two special positions: "on player's head" and "off the map".
-* At most one item can be on player's head, but any numbers of items can be off the map.
+* There's one special position: "on player's head".
+* At most one item can be on player's head.
 
 **Map Data**
 * `mapData` is an array of `N * M` integers.
@@ -128,7 +128,7 @@
 
 **Positions and directions**
 * Position is an integer, ranging from `0` to `N * M - 1`, which are indexed in row-major order.
-* Special positions: `-1` means "on player's head", `-2` means "off the map".
+* Special position: `-1` means "on player's head".
 * Only item can be on special positions.
 * Direction is an integer, ranging from `0` to `3`, where `0` means down, `1` means right, etc.
 
