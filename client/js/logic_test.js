@@ -1,28 +1,58 @@
-QUnit.test( "logic step test", function( assert )
+function getmp()
 {
-	for (var i1 = 0; i1 < 13; i1++)
-		logic.step({"typeID" : 1});
-	logic.step({"typeID": 2, "dir": 1});
-	for (var i2 = 0; i2 < 13; i2++)
-		logic.step({"typeID" : 1});
-	logic.step({"typeID": 2, "dir": 1});
-	for (var i3 = 0; i3 < 13; i3++)
-		logic.step({"typeID" : 1});
-	logic.step({"typeID": 2, "dir": 1});
-	for (var i4 = 0; i4 < 13; i4++)
-		logic.step({"typeID" : 1});
-	logic.step({"typeID": 2, "dir": 2});
-	for (var i5 = 0; i5 < 13; i5++)
-		logic.step({"typeID" : 1});
-	logic.step({"typeID": 2, "dir": 3});
-	for (var i6 = 0; i6 < 13; i6++)
-		logic.step({"typeID" : 1});
-	logic.step({"typeID": 2, "dir": 3});
-	for (var i7 = 0; i7 < 13; i7++)
-		logic.step({"typeID" : 1});
-	logic.step({"typeID": 2, "dir": 3});
-	for (var i8 = 0; i8 < 13; i8++)
-		logic.step({"typeID" : 1});
-	
-	assert.ok((logic.getState().x == 0 && logic.getState().y == 0), logic.getState().x + " " + logic.getState().y);
-});
+	var mp = "";
+	state = logic.test();
+	for (var i = 0; i < 13; i++)
+	{
+		mp += "<p>";
+		for (var j = 0; j < 13; j++)
+		{
+			if (i * 13 + j == state.hero.pos)
+			{
+				mp += ["v", ">", "^", "<"][state.hero.dir];
+				if (state.hero.haveItem)
+					mp += state.itemList[state.hero.itemId].type + "  ";
+				else
+					mp += "0  ";
+			}
+			else
+			{
+				mp += state.map[13 * i + j].isOpFloor + "";
+				if (state.map[13 * i + j].haveItem == 1)
+					mp += state.itemList[state.map[13 * i + j].itemId].type + "  ";
+				else
+					mp += "0  ";
+			}
+		}
+		mp += "</p>";
+	}
+	return mp;
+}
+
+
+function playTest()
+{
+	logic.doLoad();
+	code.doLoad();
+	code.setBlockTypes([0, 1, 2, 3, 4]);
+
+	var map = [];
+	for (var i = 1; i < 12; i++)
+		map.push({address: i, location: i});
+
+	var itemList = [{type: 1, location: 1}, {type: 2, location: 2}, {type: 1, location: 3}];
+	logic.loadLevel(map, itemList);
+
+
+	var t = document.getElementById("map");
+	t.innerHTML = getmp();
+
+}
+
+function step()
+{
+	logic.step();
+	var t = document.getElementById("map");
+	t.innerHTML = getmp();
+}
+

@@ -14,7 +14,7 @@ var config = {
 			},
 			initExtra: function(block){},
 			generateOps: function(block){
-				return [{"typeID": 0}];
+				return [{typeId: 0}];
 			}
 		},
 		{
@@ -28,7 +28,7 @@ var config = {
 			},
 			initExtra: function(block){},
 			generateOps: function(block){
-				return [{"typeID": 1}];
+				return [{typeId: 1}];
 			}
 		},
 		{
@@ -54,8 +54,8 @@ var config = {
 			initExtra: function(block){},
 			generateOps: function(block){
 				return [{
-					"typeID": 2,
-					"dir": parseInt(block.getFieldValue("ANGLE"))
+					typeId: 2,
+					dir: parseInt(block.getFieldValue("ANGLE"))
 				}];
 			}
 		},
@@ -70,7 +70,7 @@ var config = {
 			},
 			initExtra: function(block){},
 			generateOps: function(block){
-				return [{"typeID": 3}];
+				return [{typeId: 3}];
 			}
 		},
 		{
@@ -84,7 +84,7 @@ var config = {
 			},
 			initExtra: function(block){},
 			generateOps: function(block){
-				return [{"typeID": 3}];
+				return [{typeId: 3}];
 			}
 		}
 	]
