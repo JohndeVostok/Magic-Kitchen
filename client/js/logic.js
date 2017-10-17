@@ -206,7 +206,13 @@ function Logic()
 
 	this.step = function(op)
 	{
-		switch (op["typeId"])
+		console.log(op);
+		if (op == undefined)
+		{
+			code.step();
+			return;
+		}
+		switch (op.typeId)
 		{
 			case 0:
 			break;
@@ -214,7 +220,7 @@ function Logic()
 				singleStepForward();
 			break;
 			case 2:
-				rotate(op["dir"]);
+				rotate(op.dir);
 			break;
 			case 3:
 				loadItem();
