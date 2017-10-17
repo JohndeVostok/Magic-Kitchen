@@ -1,5 +1,6 @@
 var code = function() {
 	var doLoad = function() {
+		Blockly.JavaScript.STATEMENT_PREFIX = "blockID = %1;";
 		this.setBlockTypes([0, 1, 3]);
 	};
 
@@ -20,7 +21,9 @@ var code = function() {
 
 			Blockly.JavaScript[blockDef.name] = function(blockDef) {
 				return function(block) {
-					return blockDef.generateJavaScript(block, operateSequence);
+					return "extCall1(blockID, " + 
+							JSON.stringify(blockDef.generateOps(block)) +
+							");";
 				}
 			}(blockDef);
 
@@ -30,24 +33,51 @@ var code = function() {
 		workspace = Blockly.inject('blocklyDiv', {toolbox: document.getElementById('toolbox')});
 	};
 
+	var highlight = function(id) {
+		workspace.highlightBlock(id);
+	};
+
+	var callLogicOps = function(blockID, ops) {
+		calledLogic = true;
+		highlight(blockID);
+		for (var id in ops.a) logic.step(ops.a[id].a);
+	}
+
 	var start = function() {
-		var code = "operateSequence = [];" + Blockly.JavaScript.workspaceToCode(workspace);
-		eval(code);
+		var code = Blockly.JavaScript.workspaceToCode(workspace);
+		interpreter = new Interpreter(code, function(interpreter, scope){
+			interpreter.setProperty(scope, 'extCall1', interpreter.createNativeFunction(callLogicOps));
+		});
 	};
 
 	var step = function() {
-		return operateSequence;
+		calledLogic = false;
+		while (!calledLogic) {
+			if (!interpreter.step())
+			{
+				highlight();
+				return false;
+			}
+		}
+		return true;
 	};
+
+	var stop = function() {
+		highlight();
+	}
 
 	// Blockly workspace
 	var workspace;
 
-	var operateSequence;
+	var interpreter;
+
+	var calledLogic;
 
 	return {
 		doLoad: doLoad,
 		setBlockTypes: setBlockTypes,
 		start: start,
-		step: step
+		step: step,
+		stop: stop,
 	};
 }();
