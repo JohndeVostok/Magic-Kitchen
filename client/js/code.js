@@ -1,7 +1,6 @@
 var code = function() {
 	var doLoad = function() {
 		Blockly.JavaScript.STATEMENT_PREFIX = "blockID = %1;";
-		this.setBlockTypes([0, 1, 3]);
 	};
 
 	var setBlockTypes = function(blockIDList) {
@@ -44,6 +43,7 @@ var code = function() {
 	}
 
 	var start = function() {
+		highlight();
 		var code = Blockly.JavaScript.workspaceToCode(workspace);
 		interpreter = new Interpreter(code, function(interpreter, scope){
 			interpreter.setProperty(scope, 'extCall1', interpreter.createNativeFunction(callLogicOps));
@@ -51,6 +51,7 @@ var code = function() {
 	};
 
 	var step = function() {
+		if (interpreter == undefined) return false;
 		calledLogic = false;
 		while (!calledLogic) {
 			if (!interpreter.step())
@@ -64,6 +65,7 @@ var code = function() {
 
 	var stop = function() {
 		highlight();
+		interpreter = undefined;
 	}
 
 	// Blockly workspace

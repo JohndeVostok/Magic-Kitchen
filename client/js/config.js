@@ -4,6 +4,20 @@ var config = {
 
 	blocks: [
 		{
+			name: "nop",
+			json: {
+				"message0": "空指令",
+				"tooltip": "什么也不做",
+				"previousStatement": null,
+				"nextStatement": null,
+				"colour": 0
+			},
+			initExtra: function(block){},
+			generateOps: function(block){
+				return [{"typeID": 0}];
+			}
+		},
+		{
 			name: "single_step_forward",
 			json: {
 				"message0": "向前一步",
