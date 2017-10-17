@@ -5,6 +5,7 @@ from django.test import TestCase
 from django.test import Client
 import json
 from models import User
+from models import Level
 
 # Create your tests here.
 
@@ -297,3 +298,47 @@ class CustomSystemTestCase(TestCase):
         ret = json.loads(response.content)
         self.assertEqual(ret['status'], 'failed')
         self.assertEqual(ret['error'], 'wrong identifying code')
+
+
+class LevelSystemTestCase(TestCase):
+    def test_get_level_info(self):
+        c = Client()
+
+        #create level
+        Level.objects.create(level_id = 1, info = json.dumps([1,3,5]))
+
+        #test empty level id
+        response = c.post('/api/get_level_info')
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 'failed')
+        self.assertEqual(ret['error'], 'level id can\'t be empty')
+
+        #test level id not exists
+        response = c.post('/api/get_level_info', {'level_id': 2147483647})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 'failed')
+        self.assertEqual(ret['error'], 'this level doesn\'t exist')
+
+        #test level id is not Integer
+        response = c.post('/api/get_level_info', {'level_id': 'a'})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 'failed')
+        self.assertEqual(ret['error'], 'the input level id needs to be an Integer')
+
+        #test level id is too large
+        response = c.post('/api/get_level_info', {'level_id': '-2147483649'})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 'failed')
+        self.assertEqual(ret['error'], 'the input level id needs to be an Integer')
+
+        #test level id is too large
+        response = c.post('/api/get_level_info', {'level_id': 2147483648})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 'failed')
+        self.assertEqual(ret['error'], 'the input level id needs to be an Integer')
+
+        #test get level info
+        response = c.post('/api/get_level_info', {'level_id': 1})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 'succeeded')
+        self.assertEqual(json.loads(ret['level_info']), [1,3,5])

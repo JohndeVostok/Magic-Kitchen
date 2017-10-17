@@ -67,3 +67,22 @@
             error = 'this name doesn't exist'
             error = 'this password is too long'
             error = 'wrong identifying code'
+
+
+
+### Get Level Info
+        Post('/api/get_level_info'), attributes: level_id = idInt
+        注意，这里的参数Level_id是一个int类型，但如果传类似'233'这样的string也没问题（加入了类型转换），但是类似'abc'或'2.33'就会引起错误，所以还是建议直接传int类型
+        
+        TODO:现在info里面存的json字符串长度只有500，以后根据实际情况修改。
+
+
+        return json:
+        status = 'succeeded' ---------succeeded
+            level_info = json_info_str
+
+        status = 'failed'  ---------failed
+            error = 'level id can't be empty'
+            error = 'this level doesn't exist'
+            error = 'the input level id needs to be an Integer' 类型转换发生错误ValueError时将返回这个error信息
+            

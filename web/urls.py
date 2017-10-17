@@ -1,6 +1,7 @@
 from django.conf.urls import url
 from django.conf import settings
 from . import custom_system
+from . import level_system
 
 from . import views
 
@@ -12,6 +13,7 @@ urlpatterns = [
     url(r'^api/change_password_after_login$', custom_system.change_password_after_login),
     url(r'^api/change_password_by_email$', custom_system.change_password_by_email),
     url(r'^api/change_password_by_identifyingCode$', custom_system.change_password_by_identifyingCode),
+    url(r'^api/get_level_info$', level_system.get_level_info),
     # Force to serve static files, which is not recommended by Django
     url(r'^(?P<path>.*)$', views.static_file),
 ]
