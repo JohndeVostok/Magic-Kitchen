@@ -52,8 +52,10 @@ function Logic()
 				//nothing
 				break;
 			}
-			if (x < 0 || x >= config.mapWidth) return -1;
-			if (y < 0 || y >= config.mapHeight) return -1;
+			if (x < 0 || x >= config.mapWidth)
+				return -1;
+			if (y < 0 || y >= config.mapHeight)
+				return -1;
 			return (y * config.mapWidth + x);
 		};
 
@@ -64,12 +66,12 @@ function Logic()
 			{
 				invalidOp("It's out!");
 				return 0;
-			};
+			}
 			if (map[getFloor()].isOpFloor)
 			{
 				invalidOp("It's a opFloor!");
 				return 0;
-			};
+			}
 			hero.pos = getFloor();
 		};
 
@@ -139,16 +141,16 @@ function Logic()
 			{
 				map[opFloor[j].location].isOpFloor = 1;
 				map[opFloor[j].location].address = opFloor[j].address;
-			};
+			}
 
 			$.extend(itemList, itemInList);
 			for (var k = 0; k < itemInList.length; k++)
 			{
 				map[itemInList[k].location].haveItem = 1;
 				map[itemInList[k].location].itemId = k;
-			};
+			}
 		}
-	};
+	}
 
 	var currentState = new State();
 	var originalState = new State();
@@ -163,8 +165,6 @@ function Logic()
 	{
 		currentState.init();
 		originalState.init();
-		//code.init();
-		//ui.loadLevel();
 	};
 
 	this.loadLevel = function(opFloor, itemList)
@@ -182,8 +182,6 @@ function Logic()
 	this.reset = function()
 	{
 		$.extend(currentState, originalState);
-		//ui.loadLevel();
-		console.log("The world changed!");
 	};
 
 	var singleStepForward = function()
@@ -208,7 +206,6 @@ function Logic()
 
 	this.step = function(op)
 	{
-		code.step();
 		switch (op["typeId"])
 		{
 			case 0:
@@ -232,6 +229,6 @@ function Logic()
 		if (opFlag != "none")
 			console.log(opFlag);
 	};
-};
+}
 
 var logic = new Logic();
