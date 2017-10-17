@@ -108,6 +108,7 @@ function Logic()
 			map[p].haveItem = 0;
 			hero.itemId = map[p].itemId;
 			map[p].itemId = 0;
+			itemList[hero.itemId].location = -1;
 			
 			// Add animations.
 			ui.addAnimation(p, -1, undefined);
@@ -135,6 +136,7 @@ function Logic()
 			map[p].haveItem = 1;
 			map[p].itemId = hero.itemId;
 			hero.itemId = 0;
+			itemList[map[p].itemId].location = p;
 			
 			// Add animations.
 			ui.addAnimation(-1, p, undefined);
@@ -165,22 +167,24 @@ function Logic()
 			// Load player info.
 			hero.pos = playerInfo.pos;
 			hero.dir = playerInfo.dir;
+			hero.hasItem = 0;
+			hero.itemId = 0;
 		}
 	}
 
 	var currentState = new State();
-	var originalState = new State();
+	var opFloor, itemList;
 
-	var initMap = function(opFloor, itemList, playerInfo)
+	var initMap = function(opFloorIn, itemListIn, playerInfo)
 	{
-		currentState.loadLevel(opFloor, itemList, playerInfo);
-		originalState.loadLevel(opFloor, itemList, playerInfo);
+		currentState.loadLevel(opFloorIn, itemListIn, playerInfo);
+		opFloor = opFloorIn;
+		itemList = itemListIn;
 	};
 
 	this.doLoad = function()
 	{
 		currentState.init();
-		originalState.init();
 	};
 
 	this.loadLevel = function(opFloor, itemList, playerInfo)
@@ -196,7 +200,7 @@ function Logic()
 
 	this.reset = function()
 	{
-		$.extend(currentState, originalState);
+		currentState.loadLevel(opFloor, itemList);
 	};
 
 	var singleStepForward = function()
