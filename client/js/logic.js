@@ -91,6 +91,11 @@ function Logic()
 				invalidOp("Nothing There!");
 				return 0;
 			}
+			if (hero.haveItem)
+			{
+				invalidOp("I have something!");
+				return 0;
+			}
 			hero.haveItem = 1;
 			map[p].haveItem = 0;
 			hero.itemId = map[p].itemId;
@@ -108,6 +113,11 @@ function Logic()
 			if (map[p].haveItem)
 			{
 				invalidOp("Something There!");
+				return 0;
+			}
+			if (!hero.haveItem)
+			{
+				invalidOp("I have nothing to store!");
 				return 0;
 			}
 			hero.haveItem = 0;
@@ -180,18 +190,11 @@ function Logic()
 	{
 		initOp();
 		currentState.move();
-
-
-		if (opFlag != "none")
-			console.log(opFlag);
-		else
-			console.log("Forward!");
 	};
 
 	var rotate = function(dir)
 	{
 		currentState.rotate(dir);
-		console.log("I rotated!");
 	};
 
 	var loadItem = function()
@@ -205,6 +208,7 @@ function Logic()
 
 	this.step = function(op)
 	{
+		code.step();
 		switch (op["typeId"])
 		{
 			case 0:
@@ -225,6 +229,8 @@ function Logic()
 			//nothing
 			break;
 		}
+		if (opFlag != "none")
+			console.log(opFlag);
 	};
 };
 

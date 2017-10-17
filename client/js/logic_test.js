@@ -20,7 +20,7 @@ QUnit.test("logic state test", function(assert)
 			{
 				if (i * 13 + j == state.hero.pos)
 				{
-					mp += "x";
+					mp += ["v", ">", "^", "<"][state.hero.dir];
 					if (state.hero.haveItem)
 						mp += state.itemList[state.hero.itemId].type + "  ";
 					else
