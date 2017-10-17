@@ -206,7 +206,6 @@ function Logic()
 
 	this.step = function(op)
 	{
-		console.log(op);
 		if (op == undefined)
 		{
 			code.step();
@@ -232,8 +231,6 @@ function Logic()
 			//nothing
 			break;
 		}
-		if (opFlag != "none")
-			console.log(opFlag);
 	};
 }
 
