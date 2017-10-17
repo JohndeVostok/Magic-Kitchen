@@ -5,6 +5,12 @@ from django.http import HttpResponse
 def json_response(info):
     return HttpResponse(json.dumps(info), content_type="application/json")
 
+def int_range(x):
+    if x >= -2147483648 and x <= 2147483647:
+        return True
+    else:
+        return False
+
 def get_level_info(request):
     content = request.POST
     ret = {}
@@ -18,6 +24,10 @@ def get_level_info(request):
         _id = int(content['level_id'])
     except ValueError,e :
         print e
+        ret['error'] = 'the input level id needs to be an Integer'
+        return json_response(ret)
+
+    if not int_range(_id):
         ret['error'] = 'the input level id needs to be an Integer'
         return json_response(ret)
 

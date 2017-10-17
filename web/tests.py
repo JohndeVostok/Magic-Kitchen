@@ -314,13 +314,25 @@ class LevelSystemTestCase(TestCase):
         self.assertEqual(ret['error'], 'level id can\'t be empty')
 
         #test level id not exists
-        response = c.post('/api/get_level_info', {'level_id': 2})
+        response = c.post('/api/get_level_info', {'level_id': 2147483647})
         ret = json.loads(response.content)
         self.assertEqual(ret['status'], 'failed')
         self.assertEqual(ret['error'], 'this level doesn\'t exist')
 
         #test level id is not Integer
         response = c.post('/api/get_level_info', {'level_id': 'a'})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 'failed')
+        self.assertEqual(ret['error'], 'the input level id needs to be an Integer')
+
+        #test level id is too large
+        response = c.post('/api/get_level_info', {'level_id': '-2147483649'})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 'failed')
+        self.assertEqual(ret['error'], 'the input level id needs to be an Integer')
+
+        #test level id is too large
+        response = c.post('/api/get_level_info', {'level_id': 2147483648})
         ret = json.loads(response.content)
         self.assertEqual(ret['status'], 'failed')
         self.assertEqual(ret['error'], 'the input level id needs to be an Integer')
