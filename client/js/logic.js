@@ -178,8 +178,8 @@ function Logic()
 	var initMap = function(opFloorIn, itemListIn, playerInfo)
 	{
 		currentState.loadLevel(opFloorIn, itemListIn, playerInfo);
-		opFloor = opFloorIn;
-		itemList = itemListIn;
+		opFloor = $.extend(true, opFloorIn);
+		itemList = $.extend(true, itemListIn);
 	};
 
 	this.doLoad = function()
