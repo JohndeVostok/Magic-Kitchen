@@ -80,12 +80,23 @@ var network = function() {
 			callback
 		);
 	};
+
+	var changePasswordAfterLogin = function(new_password, callback) {
+		postRequest(
+			"/api/change_password_after_login",
+			{
+				"new_password": new_password
+			},
+			callback
+		);
+	};
 	
 	return {
 		doLoad: doLoad,
 		register: register,
 		login: login,
 		logout: logout,
-		changePasswordByEmail: changePasswordByEmail
+		changePasswordByEmail: changePasswordByEmail,
+		changePasswordAfterLogin: changePasswordAfterLogin
 	};
 }();

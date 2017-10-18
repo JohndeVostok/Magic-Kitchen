@@ -48,3 +48,14 @@
 						message (when server return "failed")
 						"network timeout" (when server fail to response)
 			return: undefined
+
+		network.changePasswordAfterLogin(new_password, callback)
+			new_password: type = string, content = New Password
+			callback: type = function, content = Callback(result)
+				result: type = json
+					"status": "succeeded" / "failed"
+					"error":
+						undefined (when "status" == "succeeded")
+						message (when server return "failed")
+						"network timeout" (when server fail to response)
+			return: undefined
