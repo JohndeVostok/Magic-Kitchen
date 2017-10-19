@@ -4,17 +4,6 @@ var ui = function() {
 		
 		loadConfig();
 		initUI();
-		
-		// Test CreateJS and Blockly
-		
-		for (var i = 0; i < 1; i++) {
-			var circle = new createjs.Shape();
-			circle.graphics.beginFill("DeepSkyBlue").drawCircle(0, 0, 50 / (i + 1));
-			circle.x = 100 + i * 50;
-			circle.y = 100 + (5 - i) * (5 - i) * 10;
-			stage.addChild(circle);
-		}
-		stage.update();
 	};
 	
 	// CreateJS stage
@@ -23,6 +12,12 @@ var ui = function() {
 	var loadStage = function() {
 		stage = new createjs.Stage("gameCanvas");
 		adjustStageSize();
+		
+		// Start the stage ticker.
+		createjs.Ticker.setFPS(60);
+		createjs.Ticker.addEventListener("tick", stage);
+		createjs.Ticker.addEventListener("tick", tickHandler);
+		stage.update();
 	};
 	
 	var adjustStageSize = function() {
@@ -100,7 +95,14 @@ var ui = function() {
 	};
 	
 	var start = function() {
-		// TODO: implement this after logic is implemented
+		// Grab & start a new level.
+		// The main loop is not present here, because the system event loop already does this.
+		logic.startLevel();
+	};
+	
+	// Handle the ticks from Ticker.
+	var tickHandler = function() {
+		// TODO
 	};
 	
 	var loadMap = function(mapData) {
@@ -244,6 +246,10 @@ var ui = function() {
 		// TODO
 	};
 	
+	var debug = function() {
+		console.log(animationQueue);
+	};
+	
 	return {
 		doLoad: doLoad,
 		start: start,
@@ -256,6 +262,7 @@ var ui = function() {
 		addAnimation: addAnimation,
 		addPlayerAnimation: addPlayerAnimation,
 		setInput: setInput,
-		setOutput: setOutput
+		setOutput: setOutput,
+		debug: debug
 	};
 }();

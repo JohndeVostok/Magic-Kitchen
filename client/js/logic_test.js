@@ -41,7 +41,8 @@ function playTest()
 		map.push({address: i, location: i});
 
 	var itemList = [{type: 1, location: 1}, {type: 2, location: 2}, {type: 1, location: 3}];
-	logic.loadLevel(map, itemList);
+	var playerInfo = {pos: 0, dir: 0};
+	logic.loadLevel(map, itemList, playerInfo);
 
 
 	var t = document.getElementById("map");
