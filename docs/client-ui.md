@@ -134,7 +134,7 @@
 
 **Items**
 * Type of an item is an integer, and currently metadata is not implemented.
-* `0` means apple, `1` means banana.
+* `1` means apple, `2` means banana.
 * These types only differ in textures.
 
 **Animations**

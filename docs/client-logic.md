@@ -24,3 +24,53 @@
 
 		logic.doLoad()
 			return: undefined
+
+		logic.startLevel()
+			Start a new level and tells UI how to initialize it.
+			May need to grab it from server.
+			Currently the fake level is in use.
+			return: undefined
+
+#### Logic Map Specifications
+
+* Map in logic is stored in an object often called `levelInfo`.
+* An example is as following:
+```JavaScript
+fakeLevelInfo: {
+	blockTypes: [0, 1, 2, 3, 4],
+	playerInfo: {pos: 0, dir: 0},
+	map: [
+		{address: 1, location: 1},
+		{address: 2, location: 2},
+		{address: 3, location: 3},
+		{address: 4, location: 4},
+		{address: 5, location: 5},
+		{address: 6, location: 6},
+		{address: 7, location: 7},
+		{address: 8, location: 8},
+		{address: 9, location: 9},
+		{address: 10, location: 10},
+		{address: 11, location: 11}
+	],
+	itemList: [
+		{type: 1, location: 1},
+		{type: 2, location: 2},
+		{type: 1, location: 3}
+	]
+}
+```
+* The `blockTypes` specifies what kinds of blocks can be used in Blockly.
+  * The block-type-ids can be found in `code` module docs.
+* The `playerInfo` specifies the initial player state.
+  * `pos` means position.
+  * `dir` means direction.
+  * See `ui` docs for definitions.
+* The `map` specifies the objects (tables, walls, etc.) on the map.
+  * Currently only table is supported.
+  * Consider one `map`'s element, say `e`.
+  * `e.location` means the position on the map. (See `ui` docs for position definitions)
+  * If `e` is a table, `e.address` means the table's address in the game.
+* The `itemList` specifies the items (apples, bananas, etc.) on the map.
+  * Consider an item `i`.
+  * `i.type` means the item's type, in an Integer. See `ui` docs for more.
+  * `i.location` means the position on the map.
