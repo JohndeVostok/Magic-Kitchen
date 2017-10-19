@@ -8,7 +8,7 @@ var config = {
 	// Please update it when the level specifications change.
 	fakeLevelInfo: {
 		blockTypes: [0, 1, 2, 3, 4],
-		playerInfo: {pos: 0, dir: 0},
+		playerInfo: {pos: 0, dir: 3},
 		map: [
 			{address: 1, location: 1},
 			{address: 2, location: 2},
@@ -27,6 +27,39 @@ var config = {
 			{type: 2, location: 2},
 			{type: 1, location: 3}
 		]
+	},
+	
+	// Config for UI
+	UI: {
+		map: {
+			images: {
+				0: "/images/map/background.png",
+				1: "/images/map/obstacles/input.png",
+				2: "/images/map/obstacles/output.png",
+				3: "/images/map/obstacles/table.png",
+				4: "/images/map/obstacles/wall.png"
+			},
+			imageWidth: 300,
+			imageHeight: 300
+		},
+		object: {
+			images: {
+				1: "/images/map/objects/apple.png",
+				2: "/images/map/objects/banana.png"
+			},
+			imageWidth: 300,
+			imageHeight: 300
+		},
+		player: {
+			images: {
+				0: ["/images/map/player/front0.png", "/images/map/player/front1.png"],
+				1: ["/images/map/player/right0.png", "/images/map/player/right1.png"],
+				2: ["/images/map/player/back0.png", "/images/map/player/back1.png"],
+				3: ["/images/map/player/left0.png", "/images/map/player/left1.png"],
+			},
+			imageWidth: 300,
+			imageHeight: 300
+		},
 	},
 
 	blocks: [

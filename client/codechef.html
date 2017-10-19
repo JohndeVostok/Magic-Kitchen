@@ -36,17 +36,40 @@
 </head>
 
 <body onload="setTimeout(main.doLoad, 100);">
-<script> document.body.style.zoom = 0.9 * Math.max(window.screen.width, 1440) / 1440; </script>
+<script> document.body.style.zoom = 0.95 * Math.max(window.screen.width, 1440) / 1440; </script>
 
 <div id="mainDiv" class="container">
+	<div class="row">
+		<div class="col-xs-6">
+			<h2>
+				CodeCheF
+			</h2>
+		</div>
+		<div class="col-xs-6">
+		</div>
+	</div>
 	<div class="row">
 		<table class="table table-borderless">
 			<tr>
 				<td class="col-xs-6">
-					<canvas id="gameCanvas" width="500" height="500"></canvas>
+					<canvas id="gameCanvas" width="550" height="700"></canvas>
 				</td>
 				<td class="col-xs-6">
-					<div id="blocklyDiv" style="height: 480px; width: 600px;"></div>
+					<div style="height: 150px; width: 550px">
+						<div id="gameObjective" style="height: 100px; width: 550px">
+						</div>
+						<div id="gameControls" style="height: 150px; width: 550px">
+							<h4>
+								<button class="btn btn-primary" id="buttonCompile">
+									<span class="glyphicon glyphicon-off"> 编译 </span>
+								</button>
+								<button class="btn btn-primary" id="buttonStep">
+									<span class="glyphicon glyphicon-step-forward"> 单步 </span>
+								</button>
+							</h4>
+						</div>
+					</div>
+					<div id="blocklyDiv" style="height: 550px; width: 550px;"></div>
 				</td>
 			</tr>
 		</table>

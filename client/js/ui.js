@@ -74,6 +74,17 @@ var ui = function() {
 	// Animation queue
 	var animationQueue = [];
 	
+	// CreateJS map data
+	var mapGridHeight;
+	var mapGridWidth;
+	var mapLeftPos;
+	var mapTopPos;
+	var mapSpriteSheets = {};
+	var mapSprites = [];
+	var objectSpriteSheets = {};
+	var playerSpriteSheet;
+	var playerSprite = undefined;
+	
 	var initUI = function() {
 		// Init map.
 		mapSize = N * M;
@@ -92,6 +103,67 @@ var ui = function() {
 		// Use clear items animation.
 		// Animation queue must be initialized before this.
 		clearItems();
+		
+		// Setup and render on CreateJS.
+		mapLeftPos = 2;
+		mapTopPos = 2 + 150;
+		mapGridHeight = 546 / N;
+		mapGridWidth = 546 / M;
+		
+		mapSpriteSheet = {};
+		for (var i in config.UI.map.images) {
+			mapSpriteSheets[i] = new createjs.SpriteSheet({
+				frames: {
+					width: config.UI.map.imageWidth,
+					height: config.UI.map.imageHeight
+				},
+				images: [config.UI.map.images[i]]
+			});
+		}
+		
+		objectSpriteSheet = {};
+		for (var i in config.UI.object.images) {
+			objectSpriteSheets[i] = new createjs.SpriteSheet({
+				frames: {
+					width: config.UI.object.imageWidth,
+					height: config.UI.object.imageHeight
+				},
+				images: [config.UI.object.images[i]]
+			});
+		}
+		
+		playerSpriteSheet = new createjs.SpriteSheet({
+			images: [
+				config.UI.player.images[0][0],
+				config.UI.player.images[0][1],
+				config.UI.player.images[1][0],
+				config.UI.player.images[1][1],
+				config.UI.player.images[2][0],
+				config.UI.player.images[2][1],
+				config.UI.player.images[3][0],
+				config.UI.player.images[3][1],
+			],
+			frames: {
+				width: config.UI.player.imageWidth,
+				height: config.UI.player.imageHeight
+			},
+			framerate: 2,
+			animations: {
+				a0: [0, 1],
+				a1: [2, 3],
+				a2: [4, 5],
+				a3: [6, 7]
+			}
+		});
+		
+		// Init DOM elements.
+		// For test only.
+		$("#buttonCompile").click(function() {
+			code.start();
+		});
+		$("#buttonStep").click(function() {
+			logic.step();
+		});
 	};
 	
 	var start = function() {
@@ -100,9 +172,19 @@ var ui = function() {
 		logic.startLevel();
 	};
 	
+	var animationRunning = false;
+	
 	// Handle the ticks from Ticker.
 	var tickHandler = function() {
-		// TODO
+		// Handle unapplied animations.
+		if (animationRunning == false && animationQueue.length > 0) {
+			animationRunning = true;
+			runAnimation(animationQueue.shift());
+		}
+	};
+	
+	var setAnimationComplete = function() {
+		animationRunning = false;
 	};
 	
 	var loadMap = function(mapData) {
@@ -115,6 +197,49 @@ var ui = function() {
 			if (isNaN(x)) throw "Invalid mapData[" + i + "]: " + x;
 			map[i] = parseInt(x);
 		}
+		
+		// Remove original mapSprites
+		for (var i in mapSprites) {
+			stage.removeChild(mapSprites[i]);
+		}
+		mapSprites = [];
+		
+		for (var i = 0; i < N; i++) {
+			for (var j = 0; j < M; j++) {
+				var id = i * M + j;
+				var s = new createjs.Sprite(mapSpriteSheets[0]);
+				s.setTransform(
+					mapLeftPos + mapGridWidth * j,
+					mapTopPos + mapGridHeight * i,
+					mapGridWidth / config.UI.map.imageWidth,
+					mapGridHeight / config.UI.map.imageHeight
+				);
+				mapSprites.push(s);
+				stage.addChild(s);
+				
+				s = new createjs.Sprite(mapSpriteSheets[map[id]]);
+				s.setTransform(
+					mapLeftPos + mapGridWidth * j,
+					mapTopPos + mapGridHeight * i,
+					mapGridWidth / config.UI.map.imageWidth,
+					mapGridHeight / config.UI.map.imageHeight
+				);
+				mapSprites.push(s);
+				stage.addChild(s);
+			}
+		}
+		
+		if (playerSprite != undefined) {
+			stage.removeChild(playerSprite);
+		}
+		playerSprite = new createjs.Sprite(playerSpriteSheet);
+		playerSprite.setTransform(
+			-10000,
+			-10000,
+			mapGridWidth / config.UI.player.imageWidth,
+			mapGridHeight / config.UI.player.imageHeight
+		);
+		stage.addChild(playerSprite);
 	};
 	
 	var loadUserInfo = function(userInfo) {
@@ -166,16 +291,120 @@ var ui = function() {
 		return dir;
 	};
 	
+	// Run an animation.
+	var runAnimation = function(animation) {
+		if (animation.type == "clearItems") {
+			runClearItems(animation.args);
+		} else if (animation.type == "newItem") {
+			runNewItem(animation.args);
+		} else if (animation.type == "addPlayerAnimation") {
+			runAddPlayerAnimation(animation.args);
+		} else {
+			throw "Invalid animation " + animation.type;
+		}
+	};
+	
+	var runClearItems = function(args) {
+		for (var i = 0; i < mapSize; i++) {
+			if (items[i] != undefined) {
+				stage.removeChild(items[i].sprite);
+			}
+			items[i] = undefined;
+		}
+		if (itemOnHead != undefined) {
+			stage.removeChild(itemsOnHead.sprite);
+		}
+		itemOnHead = undefined;
+		
+		setTimeout(setAnimationComplete, 100);
+	};
+	
+	// Set an item's pos
+	var setItemPos = function(sprite, pos) {
+		var i = (pos - pos % M) / M;
+		var j = pos % M;
+		
+		sprite.setTransform(
+			mapLeftPos + mapGridWidth * (j + 0.17),
+			mapTopPos + mapGridHeight * (i - 0.07),
+			0.65 * mapGridWidth / config.UI.player.imageWidth,
+			0.65 * mapGridHeight / config.UI.player.imageHeight
+		);
+	};
+	
+	var runNewItem = function(args) {
+		var pos = args.pos;
+		if (pos == -1) {
+			throw "Not implemented";
+		} else {
+			if (items[pos] != undefined) {
+				throw "Invalid newItem on " + pos;
+			}
+			if (objectSpriteSheets[args.type] == undefined) {
+				throw "Invalid newItem type " + type + " on pos " + pos;
+			}
+			var s = new createjs.Sprite(objectSpriteSheets[args.type]);
+			items[pos] = {
+				type: args.type,
+				args: args.args,
+				sprite: s
+			};
+			setItemPos(s, pos);
+			stage.addChild(s);
+		}
+		
+		setTimeout(setAnimationComplete, 100);
+	};
+	
+	// Set player's pos
+	var setPlayerPos = function(sprite, pos) {
+		var i = (pos - pos % M) / M;
+		var j = pos % M;
+		
+		sprite.setTransform(
+			mapLeftPos + mapGridWidth * j,
+			mapTopPos + mapGridHeight * i,
+			mapGridWidth / config.UI.player.imageWidth,
+			mapGridHeight / config.UI.player.imageHeight
+		);
+	};
+	
+	// Move player's pos
+	var movePlayerPos = function(sprite, pos) {
+		var i = (pos - pos % M) / M;
+		var j = pos % M;
+		
+		createjs.Tween.get(sprite).to({
+			x: mapLeftPos + mapGridWidth * j,
+			y: mapTopPos + mapGridHeight * i,
+			scaleX: mapGridWidth / config.UI.player.imageWidth,
+			scaleY: mapGridHeight / config.UI.player.imageHeight
+		}, 500, createjs.Ease.getPowInOut(3));
+	};
+	
+	var runAddPlayerAnimation = function(args) {
+		setPlayerPos(playerSprite, args.pos1);
+		playerSprite.gotoAndPlay("a" + args.dir1);
+		
+		// Move
+		if (args.pos1 != args.pos2 && args.dir1 == args.dir2) {
+			movePlayerPos(playerSprite, args.pos2);
+			createjs.Tween.get(playerSprite).call(setAnimationComplete);
+		} else {
+			setTimeout(function() {
+				setPlayerPos(playerSprite, args.pos2);
+				playerSprite.gotoAndPlay("a" + args.dir2);
+			}, 500);
+			setTimeout(setAnimationComplete, 1000);
+		}
+	};
+	
 	// Below are animation functions, i.e. functions that register animations for later rendering.
 	
 	var clearItems = function() {
 		animationQueue.push({
 			type: "clearItems"
 		});
-		for (var i = 0; i < mapSize; i++) {
-			items[i] = undefined;
-		}
-		itemOnHead = undefined;
 	};
 	
 	var newItem = function(pos, type, args) {
