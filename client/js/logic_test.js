@@ -44,10 +44,16 @@ function playTest()
 	var playerInfo = {pos: 0, dir: 0};
 	logic.loadLevel(map, itemList, playerInfo);
 
-
 	var t = document.getElementById("map");
 	t.innerHTML = getmp();
+}	
 
+function start()
+{
+	logic.reset();
+	code.start();
+	var t = document.getElementById("map");
+	t.innerHTML = getmp();
 }
 
 function step()
@@ -56,4 +62,3 @@ function step()
 	var t = document.getElementById("map");
 	t.innerHTML = getmp();
 }
-
