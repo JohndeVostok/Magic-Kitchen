@@ -8,7 +8,7 @@ var config = {
 	// Please update it when the level specifications change.
 	fakeLevelInfo: {
 		blockTypes: [0, 1, 2, 3, 4],
-		playerInfo: {pos: 0, dir: 3},
+		playerInfo: {pos: 0, dir: 0},
 		map: [
 			{address: 1, location: 1},
 			{address: 2, location: 2},
@@ -144,7 +144,7 @@ var config = {
 			},
 			initExtra: function(block){},
 			generateOps: function(block){
-				return [{typeId: 3}];
+				return [{typeId: 4}];
 			}
 		}
 	]

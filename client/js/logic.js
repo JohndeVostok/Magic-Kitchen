@@ -108,7 +108,9 @@ function Logic()
 			map[p].haveItem = 0;
 			hero.itemId = map[p].itemId;
 			map[p].itemId = 0;
-			// TODO: Add animations.
+			
+			// Add animations.
+			ui.addAnimation(p, -1, undefined);
 		}
 
 		this.storeItem = function()
@@ -133,7 +135,9 @@ function Logic()
 			map[p].haveItem = 1;
 			map[p].itemId = hero.itemId;
 			hero.itemId = 0;
-			// TODO: Add animations.
+			
+			// Add animations.
+			ui.addAnimation(-1, p, undefined);
 		};
 
 

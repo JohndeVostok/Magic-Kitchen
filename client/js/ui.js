@@ -179,7 +179,7 @@ var ui = function() {
 		// Handle unapplied animations.
 		if (animationRunning == false && animationQueue.length > 0) {
 			animationRunning = true;
-			runAnimation(animationQueue.shift());
+			startAnimation(animationQueue.shift());
 		}
 	};
 	
@@ -259,7 +259,7 @@ var ui = function() {
 			throw "Invalid pos " + pos;
 		}
 		pos = parseInt(pos);
-		if (pos < -1 || pos >= mapSize) {
+		if (pos < 0 || pos >= mapSize) {
 			throw "Invalid pos " + pos;
 		}
 		return pos;
@@ -272,7 +272,7 @@ var ui = function() {
 			throw "Invalid pos " + pos;
 		}
 		pos = parseInt(pos);
-		if (pos < 0 || pos >= mapSize) {
+		if (pos < -1 || pos >= mapSize) {
 			throw "Invalid pos " + pos;
 		}
 		return pos;
@@ -292,11 +292,13 @@ var ui = function() {
 	};
 	
 	// Run an animation.
-	var runAnimation = function(animation) {
+	var startAnimation = function(animation) {
 		if (animation.type == "clearItems") {
 			runClearItems(animation.args);
 		} else if (animation.type == "newItem") {
 			runNewItem(animation.args);
+		} else if (animation.type == "addAnimation") {
+			runAddAnimation(animation.args);
 		} else if (animation.type == "addPlayerAnimation") {
 			runAddPlayerAnimation(animation.args);
 		} else {
@@ -319,16 +321,48 @@ var ui = function() {
 		setTimeout(setAnimationComplete, 100);
 	};
 	
-	// Set an item's pos
-	var setItemPos = function(sprite, pos) {
+	// Get item pos on head transform.
+	var getItemPosHeadTransform = function(pos) {
 		var i = (pos - pos % M) / M;
 		var j = pos % M;
 		
+		return {
+			x: mapLeftPos + mapGridWidth * (j + 0.25),
+			y: mapTopPos + mapGridWidth * (i -0.2),
+			scaleX: 0.5 * mapGridWidth / config.UI.object.imageWidth,
+			scaleY: 0.5 * mapGridHeight / config.UI.object.imageHeight
+		};
+	};
+	
+	// Get item pos transform.
+	var getItemPosTransform = function(pos) {
+		if (pos == -1) {
+			return {
+				x: playerSprite.x + mapGridWidth * 0.25,
+				y: playerSprite.y + mapGridWidth * -0.2,
+				scaleX: 0.5 * mapGridWidth / config.UI.object.imageWidth,
+				scaleY: 0.5 * mapGridHeight / config.UI.object.imageHeight
+			}
+		}
+		var i = (pos - pos % M) / M;
+		var j = pos % M;
+		
+		return {
+			x: mapLeftPos + mapGridWidth * (j + 0.17),
+			y: mapTopPos + mapGridHeight * (i - 0.07),
+			scaleX: 0.65 * mapGridWidth / config.UI.object.imageWidth,
+			scaleY: 0.65 * mapGridHeight / config.UI.object.imageHeight
+		};
+	};
+	
+	// Set an item's pos
+	var setItemPos = function(sprite, pos) {
+		var transform = getItemPosTransform(pos);
 		sprite.setTransform(
-			mapLeftPos + mapGridWidth * (j + 0.17),
-			mapTopPos + mapGridHeight * (i - 0.07),
-			0.65 * mapGridWidth / config.UI.player.imageWidth,
-			0.65 * mapGridHeight / config.UI.player.imageHeight
+			transform.x,
+			transform.y,
+			transform.scaleX,
+			transform.scaleY
 		);
 	};
 	
@@ -354,6 +388,42 @@ var ui = function() {
 		}
 		
 		setTimeout(setAnimationComplete, 100);
+	};
+	
+	var runAddAnimation = function(args) {
+		var pos1 = args.pos1;
+		var pos2 = args.pos2;
+		if (pos1 == pos2) {
+			setTimeout(setAnimationComplete, 100);
+			return;
+		}
+		if (pos1 == -1 && itemOnHead == undefined) {
+			throw "No item on head";
+		}
+		if (pos1 != -1 && items[pos1] == undefined) {
+			throw "No such item on " + pos1;
+		}
+		if (pos2 == -1 && itemOnHead != undefined) {
+			throw "There's already an item on head";
+		}
+		if (pos2 != -1 && items[pos2] != undefined) {
+			throw "There's already an item on " + pos2;
+		}
+		var item;
+		if (pos1 == -1) {
+			item = itemOnHead;
+			itemOnHead = undefined;
+		} else {
+			item = items[pos1];
+			items[pos1] = undefined;
+		}
+		if (pos2 == -1) {
+			itemOnHead = item;
+		} else {
+			items[pos2] = item;
+		}
+		createjs.Tween.get(item.sprite).to(getItemPosTransform(pos2), 500, createjs.Ease.getPowInOut(3))
+			.call(setAnimationComplete);
 	};
 	
 	// Set player's pos
@@ -390,6 +460,9 @@ var ui = function() {
 		if (args.pos1 != args.pos2 && args.dir1 == args.dir2) {
 			movePlayerPos(playerSprite, args.pos2);
 			createjs.Tween.get(playerSprite).call(setAnimationComplete);
+			if (itemOnHead != undefined) {
+				createjs.Tween.get(itemOnHead.sprite).to(getItemPosHeadTransform(args.pos2), 500, createjs.Ease.getPowInOut(3));
+			}
 		} else {
 			setTimeout(function() {
 				setPlayerPos(playerSprite, args.pos2);
@@ -476,6 +549,7 @@ var ui = function() {
 	};
 	
 	var debug = function() {
+		console.log(animationRunning);
 		console.log(animationQueue);
 	};
 	
