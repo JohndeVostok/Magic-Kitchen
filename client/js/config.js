@@ -1,4 +1,6 @@
 var config = {
+	debug: false,
+
 	mapWidth: 13,
 	mapHeight: 13,
 
