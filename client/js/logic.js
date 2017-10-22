@@ -682,8 +682,7 @@ function Logic()
 	{
 		if (op == undefined)
 		{
-			code.step();
-			return;
+			return code.step();
 		}
 		switch (op.typeId)
 		{

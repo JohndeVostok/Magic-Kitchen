@@ -162,10 +162,21 @@ var ui = function() {
 		// Init DOM elements.
 		// For test only.
 		$("#buttonCompile").click(function() {
+			logic.reset();
 			logic.start();
+			code.start();
+			$("#buttonCompile").attr("disabled", true);
+			$("#buttonStep").attr("disabled", false);
+			$("#buttonStop").attr("disabled", false);
 		});
 		$("#buttonStep").click(function() {
-			logic.step();
+			if (!logic.step()) $("#buttonStep").attr("disabled", true);
+		});
+		$("#buttonStop").click(function() {
+			$("#buttonCompile").attr("disabled", false);
+			$("#buttonStep").attr("disabled", true);
+			$("#buttonStop").attr("disabled", true);
+			code.stop();
 		});
 	};
 	

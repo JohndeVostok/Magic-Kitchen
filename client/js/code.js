@@ -41,6 +41,16 @@ var code = function() {
 		workspace = Blockly.inject('blocklyDiv', {toolbox: document.getElementById('toolbox')});
 	};
 
+    var setLock = function(state){
+        blocks = workspace.getAllBlocks();
+        for (let bid in blocks)
+        {
+            blocks[bid].setEditable(!state);
+            blocks[bid].setMovable(!state);
+            blocks[bid].setDeletable(!state);
+        }
+    };
+
 	var highlight = function(id) {
 		workspace.highlightBlock(id);
 	};
@@ -52,6 +62,7 @@ var code = function() {
 	}
 
 	var start = function() {
+		setLock(true);
 		highlight();
 		var code = config.blocklyConstants.overallInitialization + Blockly.JavaScript.workspaceToCode(workspace);
 		debug.log(code);
@@ -75,6 +86,7 @@ var code = function() {
 
 	var stop = function() {
 		highlight();
+		setLock(false);
 		interpreter = undefined;
 	}
 
