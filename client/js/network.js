@@ -1,3 +1,5 @@
+var debug = window.debug;
+
 var network = function() {
 	var doLoad = function() {};
 

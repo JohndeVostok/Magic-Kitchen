@@ -1,3 +1,5 @@
+var debug = window.debug;
+
 var code = function() {
 	var doLoad = function() {
 		Blockly.JavaScript.STATEMENT_PREFIX = "blockID = %1;";
