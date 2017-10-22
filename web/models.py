@@ -13,4 +13,4 @@ class User(models.Model):
 
 class Level(models.Model):
     level_id = models.IntegerField()
-    info = models.CharField(max_length = 500)
+    info = models.TextField()
