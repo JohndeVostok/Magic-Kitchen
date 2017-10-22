@@ -67,7 +67,7 @@ def register(request):
         ret['error'] = 'this email address already exists'
         return json_response(ret)
 
-    User.objects.create(name = _name, password = _password, email = _email)
+    #User.objects.create(name = _name, password = _password, email = _email)
     ret['status'] = 'succeeded'
     return json_response(ret)
 

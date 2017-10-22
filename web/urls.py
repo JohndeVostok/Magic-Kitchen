@@ -14,6 +14,7 @@ urlpatterns = [
     url(r'^api/change_password_by_email$', custom_system.change_password_by_email),
     url(r'^api/change_password_by_identifyingCode$', custom_system.change_password_by_identifyingCode),
     url(r'^api/get_level_info$', level_system.get_level_info),
+    url(r'^api/new_default_level$', level_system.new_default_level),
     # Force to serve static files, which is not recommended by Django
     url(r'^(?P<path>.*)$', views.static_file),
 ]

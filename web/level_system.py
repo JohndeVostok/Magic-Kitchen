@@ -11,7 +11,7 @@ def int_range(x):
     else:
         return False
 
-def default_level_range(x):
+def default_level_id_range(x):
     if x >=0 and x <= 100:
         return True
     else:
@@ -71,13 +71,13 @@ def new_default_level(request):
         return json_response(ret)
 
     #0~100 are default levels, others are user-made levels
-    if not default_level_range(_id):
-        ret['error'] = 'the input level id needs to be an Integer'
+    if not default_level_id_range(_id):
+        ret['error'] = 'the input level id needs to be in range [0,100]'
         return json_response(ret)
 
     level_id_filter = Level.objects.filter(level_id = _id)
     if len(level_id_filter) > 0:
-        ret['error'] = 'this level already exists'
+        ret['error'] = 'this level id already exists'
         return json_response(ret)
 
     _info = content['level_info']
