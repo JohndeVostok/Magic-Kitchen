@@ -84,3 +84,19 @@
             error = 'this level doesn't exist'
             error = 'the input level id needs to be an Integer' 类型转换发生错误ValueError时将返回这个error信息
             
+
+### New Default Level
+        Post('/api/new_default_level'), attributes: level_id = idInt, level_info = jsonStr
+        注意：默认关卡的level_id的范围应是[0,100]，其余部分是预留给用户自己创建关卡使用
+
+        TODO:目前只要POST就可以创建默认关卡，而不需要admin权限或其他手段
+
+        return json:
+        status = 'succeeded' ---------succeeded
+
+        status = 'failed'  ---------failed
+            error = 'level id can't be empty'
+            error = 'level info can't be empty'
+            error = 'this level id already exists'
+            error = 'the input level id needs to be an Integer' 类型转换发生错误ValueError时将返回这个error信息
+            error = 'the input level id needs to be in range [0,100]'

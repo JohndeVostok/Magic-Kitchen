@@ -42,14 +42,9 @@ class CustomSystemTestCase(TestCase):
         ret = json.loads(response.content)
         self.assertEqual(ret['status'], 'succeeded')
 
-
-        name_filter = User.objects.filter(name = 'sth')
-        print 'name filter', len(name_filter)
         #test this name already exists
         response = c.post('/api/register', {'name': 'sth', 'password': 'abc', 'email': '123@456.com'})
         ret = json.loads(response.content)
-        name_filter = User.objects.filter(name = 'sth')
-        print len(name_filter)
         self.assertEqual(ret['status'], 'failed')
         self.assertEqual(ret['error'], 'this name already exists')
 
@@ -348,7 +343,7 @@ class LevelSystemTestCase(TestCase):
         self.assertEqual(ret['status'], 'succeeded')
         self.assertEqual(json.loads(ret['level_info']), [1,3,5])
 
-    '''def test_new_default_level(self):
+    def test_new_default_level(self):
         c = Client()
 
         #test empty level id
@@ -364,7 +359,7 @@ class LevelSystemTestCase(TestCase):
         self.assertEqual(ret['error'], 'level info can\'t be empty')
 
         #test level id is not Integer
-        response = c.post('/api/get_level_info', {'level_id': 'a', 'level_info': 'jsonStr'})
+        response = c.post('/api/new_default_level', {'level_id': 'a', 'level_info': 'jsonStr'})
         ret = json.loads(response.content)
         self.assertEqual(ret['status'], 'failed')
         self.assertEqual(ret['error'], 'the input level id needs to be an Integer')
@@ -390,5 +385,4 @@ class LevelSystemTestCase(TestCase):
         response = c.post('/api/new_default_level', {'level_id': 1, 'level_info': 'jsonStr2'})
         ret = json.loads(response.content)
         self.assertEqual(ret['status'], 'failed')
-        self.assertEqual(ret['error'], 'this level id already exists')'''
-
+        self.assertEqual(ret['error'], 'this level id already exists')
