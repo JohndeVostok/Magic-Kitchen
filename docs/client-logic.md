@@ -4,38 +4,62 @@
 
 ### Logic
 	logic.doLoad()
-		init an empty map.
+		Init an empty map.
 		return: undefined
 	
+	logic.loadLevel()
+		fetch level from back-end or use fake level.
+		return: undefined
 
+	logic.initLevel()
+		Callback of fetchLevel.
+		Init map and render to UI.
+		return: undefined
 
-		logic.step(op)
-			op["typeID"]: type == int
-				0: nop
-				1: moveforward
-				2: rotate
-					op["dir"]: type == int
-						1 = +pi/2
-						2 = +pi
-						3 = +3pi/2
-						etc.
-					dir = 0 means down, dir = 1 means right, dir = 2 means up, dir = 3 means left.
-			return: undefined
-
-		logic.getState()
-			return: {
-				x: character position X, type == int
-				y: character position Y, type == int
-			}
-
-		logic.doLoad()
-			return: undefined
-
-		logic.startLevel()
-			Start a new level and tells UI how to initialize it.
-			May need to grab it from server.
-			Currently the fake level is in use.
-			return: undefined
+	logic.start()
+		Start playing.
+		Reset map, render to UI and compile code.
+		return: undefined
+	
+	logic.step(op)
+		op["typeID"]: type == int
+			0: nop
+			1: moveforward
+			2: rotate
+				op["dir"]: type == int
+					1 = +pi/2
+					2 = +pi
+					3 = +3pi/2
+					etc.
+				dir = 0 means down, dir = 1 means right, dir = 2 means up, dir = 3 means left.
+			3: load
+				load from opFloor front.
+			4: store
+				store to opFloor front.
+			5: step with dir
+				op["dir"]: type == int
+					1 = +pi/2
+					2 = +pi
+					3 = +3pi/2
+					etc.
+				single step to dir.
+			6: move with step number
+				op["step"]: type == int
+				move forward for step steps.
+			7: move with dir and step number
+				op["dir"]: type == int
+					1 = +pi/2
+					2 = +pi
+					3 = +3pi/2
+					etc.
+				op["step"]: type == int
+				move toward dir for step steps.
+			8: move to position
+				op["x"]: type == int
+				op["y"]: type == int
+				move to pos(x, y).
+			
+		return: undefined
 
 #### Logic Map Specifications
 
