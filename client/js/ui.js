@@ -163,8 +163,6 @@ var ui = function() {
 		// For test only.
 		$("#buttonCompile").click(function() {
 			logic.start();
-			logic.reset();
-			code.start();
 			$("#buttonCompile").attr("disabled", true);
 			$("#buttonStep").attr("disabled", false);
 			$("#buttonStop").attr("disabled", false);
