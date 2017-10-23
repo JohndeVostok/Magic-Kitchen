@@ -92,6 +92,27 @@ var network = function() {
 			callback
 		);
 	};
+
+	var newDefaultLevel = function(level_id, level_info, callback) {
+		postRequest(
+			"/api/new_default_level",
+			{
+				"level_id": level_id,
+				"level_info": level_info
+			},
+			callback
+		);
+	};
+
+	var getLevelInfo = function(level_id, callback) {
+		postRequest(
+			"/api/get_level_info",
+			{
+				"level_id": level_id
+			},
+			callback
+		);
+	};
 	
 	return {
 		doLoad: doLoad,
@@ -99,6 +120,8 @@ var network = function() {
 		login: login,
 		logout: logout,
 		changePasswordByEmail: changePasswordByEmail,
-		changePasswordAfterLogin: changePasswordAfterLogin
+		changePasswordAfterLogin: changePasswordAfterLogin,
+		newDeFaultLevel: newDefaultLevel,
+		getLevelInfo: getLevelInfo
 	};
 }();

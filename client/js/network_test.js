@@ -103,3 +103,24 @@ QUnit.test( "network change password after login test", function( assert ) {
 		);
 	});
 });
+
+QUnit.test( "network level test", function( assert ) {
+	var done = assert.async();
+	network.logout(function(data){
+		network.newDefaultLevel(0, JSON.stringify(config.fakeLevelInfo),
+			function(data) {
+				if (data["status"] == "succeeded")
+					assert.ok( true, "new level ok" );
+				else assert.ok( data["error"] == "this level id already exists" , data["error"]);
+				network.getLevelInfo(0,
+					function(data) {
+						if (data["status"] == "succeeded")
+							assert.ok( data["level_info"] == JSON.stringify(config.fakeLevelInfo), "load level ok" );
+						else assert.ok( false , data["error"]);
+						done();
+					}
+				);
+			}
+		);
+	});
+});
