@@ -162,8 +162,8 @@ var ui = function() {
 		// Init DOM elements.
 		// For test only.
 		$("#buttonCompile").click(function() {
-			logic.reset();
 			logic.start();
+			logic.reset();
 			code.start();
 			$("#buttonCompile").attr("disabled", true);
 			$("#buttonStep").attr("disabled", false);
