@@ -87,7 +87,7 @@ function Logic()
 
 	//functions for play
 
-		var getFloor = function()
+		var getFront = function()
 		{
 			var x = player.pos % config.mapWidth, y = Math.floor(player.pos / config.mapWidth);
 			switch(player.dir)
@@ -119,26 +119,50 @@ function Logic()
 			return (y * config.mapWidth + x);
 		};
 
-		this.getDir = function()
+		this.getPlayer = function()
 		{
-			return player.dir;
+			return player;
+		};
+
+		this.checkTarget = function(x, y)
+		{
+			if (x < 0 || x >= config.mapWidth || y < 0 || y >= config.mapHeight)
+			{
+				validator.invalid("Target is out!");
+				return undefined;
+			}
+			var pos = y * config.mapWidth + x;
+			if (map[pos].isOpFloor)
+			{
+				validator.invalid("Target is opFloor!");
+				return undefined;
+			}
+		};
+
+		this.checkFloor = function(x, y)
+		{
+			if (x < 0 || x >= config.mapWidth || y < 0 || y >= config.mapHeight)
+				return 1;
+			var pos = y * config.mapWidth + x;
+			if (map[pos].isOpFloor)
+				return -1;
 		};
 
 		this.step = function()
 		{
-			var p = getFloor();
+			var p = getFront();
 			var q = player.pos;
 			if (p == -1)
 			{
 				validator.invalid("It's out!");
 				return 0;
 			}
-			if (map[getFloor()].isOpFloor)
+			if (map[getFront()].isOpFloor)
 			{
 				validator.invalid("It's a opFloor!");
 				return 0;
 			}
-			player.pos = getFloor();
+			player.pos = getFront();
 			ui.addPlayerAnimation(q, p, player.dir, player.dir);
 		};
 
@@ -151,7 +175,7 @@ function Logic()
 
 		this.loadItem = function()
 		{
-			var p = getFloor();
+			var p = getFront();
 			if (p == -1)
 			{
 				validator.invalid("It's out!");
@@ -177,7 +201,7 @@ function Logic()
 
 		this.storeItem = function()
 		{
-			var p = getFloor();
+			var p = getFront();
 			if (p == -1)
 			{
 				validator.invalid("It's out!");
@@ -216,6 +240,9 @@ function Logic()
 			initLevel(config.fakeLevelInfo);
 		//TODO
 		//Ture Level
+		else
+		{
+		}
 	};
 
 	this.doLoad = function()
@@ -242,9 +269,7 @@ function Logic()
 		return state.test();
 	}
 
-//play
-
-
+//function for playing
 	var reset = function()
 	{
 		state.loadLevel(levelInfo.opFloorList, levelInfo.itemList, levelInfo.playerInfo);
@@ -281,7 +306,7 @@ function Logic()
 	var stepWithDir = function(dir)
 	{
 		validator.init();
-		var d = (4 + dir - state.getDir() % 4);
+		var d = (4 + dir - state.getPlayer().dir % 4);
 		state.rotate(d);
 		if (validator.validate()) return undefined;
 		state.step();
@@ -290,7 +315,6 @@ function Logic()
 
 	var moveForward = function(step)
 	{
-		console.log("!!!");
 		validator.init();
 		for (var i = 0; i < step; i++)
 		{
@@ -301,10 +325,8 @@ function Logic()
 
 	var move = function(dir, step)
 	{
-		console.log("???");
-		console.log(dir, step);
 		validator.init();
-		var d = (4 + dir - state.getDir() % 4);
+		var d = (4 + dir - state.getPlayer().dir % 4);
 		state.rotate(d);
 		if (validator.validate()) return undefined;
 		for (var i = 0; i < step; i++)
@@ -314,16 +336,97 @@ function Logic()
 		}
 	};
 
-	var moveToPos = function(pos)
+	var moveToPos = function(tx, ty)
 	{
+		validator.init();
+		state.checkTarget(tx, ty);
+		if (validator.validate()) return undefined;
+		var mp = [];
+		for (var i = 0; i < config.mapWidth; i++)
+			for (var j = 0; j < config.mapHeight; j++)
+				mp[j * config.mapWidth + i] = state.checkFloor(i, j);
+		var x = state.getPlayer().pos % config.mapWidth, y = Math.floor(state.getPlayer().pos / config.mapWidth);
+		mp[y * config.mapWidth + x] = 1;
+		var q = [];
+		var l = 0, r = 1;
+		q[0] = {pos: y * config.mapWidth + x, f: -1};
+		while (l < r)
+		{
+			x = q[l].pos % config.mapWidth;
+			y = Math.floor(q[l].pos / config.mapHeight);
 
+			if (x == tx && y == ty) break;
+			
+			y++;
+			if (!state.checkFloor(x, y) && !mp[y * config.mapWidth + x])
+			{
+				mp[y * config.mapWidth + x] = mp[q[l].pos] + 1;
+				q[r++] = {pos: y * config.mapWidth + x, f: l};
+			}
+			y--;
+			x++;
+			if (!state.checkFloor(x, y) && !mp[y * config.mapWidth + x])
+			{
+				mp[y * config.mapWidth + x] = mp[q[l].pos] + 1;
+				q[r++] = {pos: y * config.mapWidth + x, f: l};
+			}
+			x--;
+			y--;
+			if (!state.checkFloor(x, y) && !mp[y * config.mapWidth + x])
+			{
+				mp[y * config.mapWidth + x] = mp[q[l].pos] + 1;
+				q[r++] = {pos: y * config.mapWidth + x, f: l};
+			}
+			y++;
+			x--;
+			if (!state.checkFloor(x, y) && !mp[y * config.mapWidth + x])
+			{
+				mp[y * config.mapWidth + x] = mp[q[l].pos] + 1;
+				q[r++] = {pos: y * config.mapWidth + x, f: l};
+			}
+			x++;
+			l++;
+		}
+		var p = []
+		while (l != -1)
+		{
+			p.unshift(q[l].pos);
+			l = q[l].f;
+		}
+		for (var i = 1; i < p.length; i++)
+		{
+			var d = state.getPlayer().dir;
+			switch(p[i] - p[i - 1])
+			{
+				case -config.mapWidth:
+					state.rotate((6 - d) % 4);
+				break;
+				case -1:
+					state.rotate((7 - d) % 4);
+				break;
+				case 1:
+					state.rotate((5 - d) % 4);
+				break;
+				case config.mapWidth:
+					state.rotate((4 - d) % 4);
+				break;
+				default:
+				//nothing
+				break;
+			}
+			state.step();
+		}
 	}
+
+//functions for UI
 
 	this.start = function()
 	{
 		reset();
 		code.start();
 	}
+
+	
 
 	this.step = function(op)
 	{
@@ -357,13 +460,14 @@ function Logic()
 			case 7:
 				move(op.dir, op.step);
 			break;
+			case 8:
+				moveToPos(op.x, op.y);
+			break;
 			default:
 			//nothing
 			break;
 		}
 	};
-
-
 }
 
 var logic = new Logic();

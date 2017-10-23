@@ -9,7 +9,7 @@ var config = {
 	// The fake level used in logic.
 	// Please update it when the level specifications change.
 	fakeLevelInfo: {
-		blockTypes: [0, 1, 2, 3, 4, 5, 6, 7, 8],
+		blockTypes: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
 		playerInfo: {pos: 0, dir: 0},
 		opFloorList: [
 			{address: 1, pos: 8},
@@ -254,6 +254,24 @@ var config = {
 			initExtra: function(block){},
 			generateOps: function(block){
 				return [{typeId: 7, dir: parseInt(block.getFieldValue("DIRECTION")), step: parseInt(block.getFieldValue("STEP"))}];
+			}
+		},
+		{
+			name: "walk_to_pos",
+			json: {
+				"message0": "移动到%1 %2",
+				"args0": [
+					{"type": "field_input", "name": "X", "check": "Number", "text": "x"},
+					{"type": "field_input", "name": "Y", "check": "Number", "text": "y"}
+				],
+				"previousStatement": null,
+				"nextStatement": null,
+				"tooltip": "走到这",
+				"colour": 30
+			},
+			initExtra: function(block){},
+			generateOps: function(block){
+				return [{typeId: 8, x: parseInt(block.getFieldValue("X")), y: parseInt(block.getFieldValue("Y"))}];
 			}
 		}
 	]
