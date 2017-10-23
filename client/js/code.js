@@ -2,7 +2,7 @@ var debug = window.debug;
 
 var code = function() {
 	var doLoad = function() {
-		Blockly.JavaScript.STATEMENT_PREFIX = "blockID = %1;";
+		Blockly.JavaScript.STATEMENT_PREFIX = config.blocklyConstants.eachInitialization;
 	};
 
 	var setBlockTypes = function(blockIDList) {
@@ -20,13 +20,20 @@ var code = function() {
 				};
 			}(blockDef);
 
-			Blockly.JavaScript[blockDef.name] = function(blockDef) {
-				return function(block) {
-					return "extCall1(blockID, " + 
-							JSON.stringify(blockDef.generateOps(block)) +
-							");";
-				}
-			}(blockDef);
+			if (blockDef.generateJS != undefined)
+			{
+				Blockly.JavaScript[blockDef.name] = blockDef.generateJS;
+			}
+			else
+			{
+				Blockly.JavaScript[blockDef.name] = function(blockDef) {
+					return function(block) {
+						return "extCall1(blockID[stacklvl], " + 
+								JSON.stringify(blockDef.generateOps(block)) +
+								");";
+					}
+				}(blockDef);
+			}
 
 			var newBlock = $("<block type=\"" + blockDef.name + "\"></block>")
 			$("xml#toolbox").append(newBlock);
@@ -46,7 +53,8 @@ var code = function() {
 
 	var start = function() {
 		highlight();
-		var code = Blockly.JavaScript.workspaceToCode(workspace);
+		var code = config.blocklyConstants.overallInitialization + Blockly.JavaScript.workspaceToCode(workspace);
+		debug.log(code);
 		interpreter = new Interpreter(code, function(interpreter, scope){
 			interpreter.setProperty(scope, 'extCall1', interpreter.createNativeFunction(callLogicOps));
 		});

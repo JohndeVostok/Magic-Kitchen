@@ -9,7 +9,9 @@
 				1: single_step_forward
 				2: rotate
 				3: pick_up
-				4: put down
+				4: put_down
+				5: walk_towards_specific_direction (currently NOT implemented in logic)
+				6: simple_repeat
 			return: undefined
 		
 		code.start()

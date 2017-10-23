@@ -9,7 +9,7 @@ var config = {
 	// The fake level used in logic.
 	// Please update it when the level specifications change.
 	fakeLevelInfo: {
-		blockTypes: [0, 1, 2, 3, 4],
+		blockTypes: [0, 1, 2, 3, 4, 5, 6],
 		playerInfo: {pos: 0, dir: 0},
 		map: [
 			{address: 1, location: 1},
@@ -64,6 +64,10 @@ var config = {
 		},
 	},
 
+	blocklyConstants: {
+		overallInitialization: "stacklvl=0;blockID=[];simpleRepeatVars=[];",
+		eachInitialization: "blockID[stacklvl] = %1;"
+	},
 	blocks: [
 		{
 			name: "nop",
@@ -147,6 +151,58 @@ var config = {
 			initExtra: function(block){},
 			generateOps: function(block){
 				return [{typeId: 4}];
+			}
+		},
+		{
+			name: "walk_towards_specific_direction",
+			json: {
+				"message0": "向%1走一步",
+				"args0": [
+					{
+						"type": "field_dropdown",
+						"name": "DIRECTION",
+						"options": [
+							[ "下", "0" ],
+							[ "右", "1" ],
+							[ "上", "2" ],
+							[ "左", "3" ]
+						]
+					}
+				],
+				"tooltip": "向指定方向移动一格，移动后你将面向这个方向",
+				"previousStatement": null,
+				"nextStatement": null,
+				"colour": 60
+			},
+			initExtra: function(block){},
+			generateOps: function(block){
+				return [{typeId: 5, dir: parseInt(block.getFieldValue("DIRECTION"))}];
+			}
+		},
+		{
+			name: "simple_repeat",
+			json: {
+				"message0": "重复%1次",
+				"args0": [
+					{"type": "field_input", "name": "TIMES", "check": "Number", "text": "若干"}
+				],
+				"message1": "进行下列操作: %1",
+				"args1": [
+					{"type": "input_statement", "name": "DO"}
+				],
+				"previousStatement": null,
+				"nextStatement": null,
+				"tooltip": "最基本的循环，重复执行同一组指令若干次",
+				"colour": 30
+			},
+			initExtra: function(block){},
+			generateJS: function(block) {
+				return "extCall1(blockID[stacklvl++], []);" + 
+					"for (simpleRepeatVars[stacklvl-1]=0; simpleRepeatVars[stacklvl-1]<" +  
+					block.getFieldValue("TIMES") +
+					"; simpleRepeatVars[stacklvl-1]++) {" + 
+					Blockly.JavaScript.statementToCode(block, "DO") +
+					"extCall1(blockID[stacklvl-1], []);}stacklvl--;";
 			}
 		}
 	]
