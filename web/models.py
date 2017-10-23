@@ -17,7 +17,7 @@ class Level(models.Model):
 
 class Solution(models.Model):
     user_name = models.CharField(max_length = 20)
-    solution_id = models.IntegerField()
+    solution_id = models.AutoField()
     level_id = models.IntegerField()
     info = models.TextField() #jsonStr
     score = models.IntegerField() #score range is [0,4], 0 means not pass, 4 means not need to score
