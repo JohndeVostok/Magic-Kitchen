@@ -74,8 +74,6 @@
         Post('/api/get_level_info'), attributes: level_id = idInt
         注意，这里的参数Level_id是一个int类型，但如果传类似'233'这样的string也没问题（加入了类型转换），但是类似'abc'或'2.33'就会引起错误，所以还是建议直接传int类型
         
-        TODO:现在info里面存的json字符串长度只有500，以后根据实际情况修改。
-
 
         return json:
         status = 'succeeded' ---------succeeded
