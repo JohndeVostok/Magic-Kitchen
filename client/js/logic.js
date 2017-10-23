@@ -3,17 +3,29 @@ var debug = window.debug;
 function Logic()
 {
 
-	var opFlag = "none";
-
-	var initOp = function()
+	function Validator()
 	{
-		opFlag = "none";
+		var flag = 0;
+		var str = ""
+		this.init = function()
+		{
+			flag = 0;
+			str = "";
+		};
+		this.invalid = function(s)
+		{
+			flag = 1;
+			str = s;
+		};
+		this.validate = function()
+		{
+			if (flag)
+				debug.log(str);
+			return flag;
+		};
 	}
 
-	var invalidOp = function(str)
-	{
-		opFlag = str;
-	};
+	var validator = new Validator();
 
 	function State()
 	{
@@ -112,18 +124,18 @@ function Logic()
 			return player.dir;
 		};
 
-		this.move = function()
+		this.step = function()
 		{
 			var p = getFloor();
 			var q = player.pos;
 			if (p == -1)
 			{
-				invalidOp("It's out!");
+				validator.invalid("It's out!");
 				return 0;
 			}
 			if (map[getFloor()].isOpFloor)
 			{
-				invalidOp("It's a opFloor!");
+				validator.invalid("It's a opFloor!");
 				return 0;
 			}
 			player.pos = getFloor();
@@ -142,17 +154,17 @@ function Logic()
 			var p = getFloor();
 			if (p == -1)
 			{
-				invalidOp("It's out!");
+				validator.invalid("It's out!");
 				return 0;
 			}
 			if (!map[p].haveItem)
 			{
-				invalidOp("Nothing There!");
+				validator.invalid("Nothing There!");
 				return 0;
 			}
 			if (player.haveItem)
 			{
-				invalidOp("I have something!");
+				validator.invalid("I have something!");
 				return 0;
 			}
 			player.haveItem = 1;
@@ -168,17 +180,17 @@ function Logic()
 			var p = getFloor();
 			if (p == -1)
 			{
-				invalidOp("It's out!");
+				validator.invalid("It's out!");
 				return 0;
 			}
 			if (map[p].haveItem)
 			{
-				invalidOp("Something There!");
+				validator.invalid("Something There!");
 				return 0;
 			}
 			if (!player.haveItem)
 			{
-				invalidOp("I have nothing to store!");
+				validator.invalid("I have nothing to store!");
 				return 0;
 			}
 			player.haveItem = 0;
@@ -192,7 +204,7 @@ function Logic()
 
 //prepare for playing
 	
-	var currentState = new State();
+	var state = new State();
 	var levelInfo;
 
 	
@@ -208,26 +220,26 @@ function Logic()
 
 	this.doLoad = function()
 	{
-		currentState.init();
+		state.init();
 	};
 
 	var renderLevel = function()
 	{
-		currentState.render()
+		state.render()
 	}
 
 	var initLevel = function(levelInfoIn)
 	{
 		levelInfo = $.extend(true, levelInfoIn);
 		code.setBlockTypes(levelInfo.blockTypes);
-		currentState.loadLevel(levelInfo.opFloorList, levelInfo.itemList, levelInfo.playerInfo);
+		state.loadLevel(levelInfo.opFloorList, levelInfo.itemList, levelInfo.playerInfo);
 		renderLevel();
 	};
 
 	//function for test
 	this.test = function()
 	{
-		return currentState.test();
+		return state.test();
 	}
 
 //play
@@ -235,36 +247,77 @@ function Logic()
 
 	var reset = function()
 	{
-		currentState.loadLevel(levelInfo.opFloorList, levelInfo.itemList, levelInfo.playerInfo);
+		state.loadLevel(levelInfo.opFloorList, levelInfo.itemList, levelInfo.playerInfo);
 		renderLevel();
 	};
 
 	var stepForward = function()
 	{
-		initOp();
-		currentState.move();
+		validator.init();
+		state.step();
+		validator.validate();
 	};
 
 	var rotate = function(dir)
 	{
-		currentState.rotate(dir);
+		validator.init();
+		state.rotate(dir);
+		validator.validate();
 	};
 
 	var loadItem = function()
 	{
-		currentState.loadItem();
+		validator.init();
+		state.loadItem();
+		validator.validate();
 	};
 	var storeItem = function()
 	{
-		currentState.storeItem();
+		validator.init();
+		state.storeItem();
+		validator.validate();
 	};
 
 	var stepWithDir = function(dir)
 	{
-		var d = (4 + dir - currentState.getDir() % 4);
-		currentState.rotate(d);
-		currentState.move();
+		validator.init();
+		var d = (4 + dir - state.getDir() % 4);
+		state.rotate(d);
+		if (validator.validate()) return undefined;
+		state.step();
+		validator.validate();
 	};
+
+	var moveForward = function(step)
+	{
+		console.log("!!!");
+		validator.init();
+		for (var i = 0; i < step; i++)
+		{
+			state.step();
+			if (validator.validate()) return undefined;
+		}
+	};
+
+	var move = function(dir, step)
+	{
+		console.log("???");
+		console.log(dir, step);
+		validator.init();
+		var d = (4 + dir - state.getDir() % 4);
+		state.rotate(d);
+		if (validator.validate()) return undefined;
+		for (var i = 0; i < step; i++)
+		{
+			state.step();
+			if (validator.validate()) return undefined;
+		}
+	};
+
+	var moveToPos = function(pos)
+	{
+
+	}
 
 	this.start = function()
 	{
@@ -297,6 +350,12 @@ function Logic()
 			break;
 			case 5:
 				stepWithDir(op.dir);
+			break;
+			case 6:
+				moveForward(op.step);
+			break;
+			case 7:
+				move(op.dir, op.step);
 			break;
 			default:
 			//nothing

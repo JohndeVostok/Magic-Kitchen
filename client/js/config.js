@@ -1,33 +1,37 @@
 var config = {
-	debug: false,
+	debug: true,
 
-	mapWidth: 13,
-	mapHeight: 13,
+	mapWidth: 7,
+	mapHeight: 7,
 
 	// Set `useFakeLevel` to true when you need to load the fake level.
 	useFakeLevel: true,
 	// The fake level used in logic.
 	// Please update it when the level specifications change.
 	fakeLevelInfo: {
-		blockTypes: [0, 1, 2, 3, 4, 5, 6],
+		blockTypes: [0, 1, 2, 3, 4, 5, 6, 7, 8],
 		playerInfo: {pos: 0, dir: 0},
 		opFloorList: [
-			{address: 1, pos: 1},
-			{address: 2, pos: 2},
-			{address: 3, pos: 3},
-			{address: 4, pos: 4},
-			{address: 5, pos: 5},
-			{address: 6, pos: 6},
-			{address: 7, pos: 7},
-			{address: 8, pos: 8},
-			{address: 9, pos: 9},
-			{address: 10, pos: 10},
-			{address: 11, pos: 11}
+			{address: 1, pos: 8},
+			{address: 2, pos: 9},
+			{address: 3, pos: 10},
+			{address: 4, pos: 11},
+			{address: 5, pos: 12},
+			{address: 6, pos: 22},
+			{address: 7, pos: 23},
+			{address: 8, pos: 24},
+			{address: 9, pos: 25},
+			{address: 10, pos: 26},
+			{address: 11, pos: 36},
+			{address: 12, pos: 37},
+			{address: 13, pos: 38},
+			{address: 14, pos: 39},
+			{address: 15, pos: 40},
 		],
 		itemList: [
-			{type: 1, pos: 1},
-			{type: 2, pos: 2},
-			{type: 1, pos: 3}
+			{type: 1, pos: 8},
+			{type: 2, pos: 9},
+			{type: 1, pos: 10}
 		]
 	},
 	
@@ -203,6 +207,53 @@ var config = {
 					"; simpleRepeatVars[stacklvl-1]++) {" + 
 					Blockly.JavaScript.statementToCode(block, "DO") +
 					"extCall1(blockID[stacklvl-1], []);}stacklvl--;";
+			}
+		},
+		{
+			name: "walk_towards_specific_step_number_and_direction",
+			json: {
+				"message0": "向前走%1步",
+				"args0": [
+					{"type": "field_input", "name": "STEP", "check": "Number", "text": "若干"}
+				],
+				"previousStatement": null,
+				"nextStatement": null,
+				"tooltip": "向前走一定步数",
+				"colour": 30
+			},
+			initExtra: function(block){},
+			generateOps: function(block){
+				return [{typeId: 6, step: parseInt(block.getFieldValue("STEP"))}];
+			}
+		},
+		{
+			name: "walk_towards_specific_step_number",
+			json: {
+				"message0": "向%1走",
+				"args0": [
+					{
+						"type": "field_dropdown",
+						"name": "DIRECTION",
+						"options": [
+							[ "下", "0" ],
+							[ "右", "1" ],
+							[ "上", "2" ],
+							[ "左", "3" ]
+						]
+					}
+				],
+				"message1": "%1步",
+				"args1": [
+					{"type": "field_input", "name": "STEP", "check": "Number", "text": "若干"}
+				],
+				"previousStatement": null,
+				"nextStatement": null,
+				"tooltip": "向特定方向走一定步数",
+				"colour": 30
+			},
+			initExtra: function(block){},
+			generateOps: function(block){
+				return [{typeId: 7, dir: parseInt(block.getFieldValue("DIRECTION")), step: parseInt(block.getFieldValue("STEP"))}];
 			}
 		}
 	]
