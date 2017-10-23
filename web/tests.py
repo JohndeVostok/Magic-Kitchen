@@ -342,3 +342,47 @@ class LevelSystemTestCase(TestCase):
         ret = json.loads(response.content)
         self.assertEqual(ret['status'], 'succeeded')
         self.assertEqual(json.loads(ret['level_info']), [1,3,5])
+
+    def test_new_default_level(self):
+        c = Client()
+
+        #test empty level id
+        response = c.post('/api/new_default_level', {'level_info': 'jsonStr'})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 'failed')
+        self.assertEqual(ret['error'], 'level id can\'t be empty')
+
+        #test empty level id
+        response = c.post('/api/new_default_level', {'level_id': 1})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 'failed')
+        self.assertEqual(ret['error'], 'level info can\'t be empty')
+
+        #test level id is not Integer
+        response = c.post('/api/new_default_level', {'level_id': 'a', 'level_info': 'jsonStr'})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 'failed')
+        self.assertEqual(ret['error'], 'the input level id needs to be an Integer')
+
+        #test level id is too large
+        response = c.post('/api/new_default_level', {'level_id': 2147483648, 'level_info': 'jsonStr'})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 'failed')
+        self.assertEqual(ret['error'], 'the input level id needs to be in range [0,100]')
+
+        #test level id out of default level id range
+        response = c.post('/api/new_default_level', {'level_id': 101, 'level_info': 'jsonStr'})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 'failed')
+        self.assertEqual(ret['error'], 'the input level id needs to be in range [0,100]')
+
+        #test new default level
+        response = c.post('/api/new_default_level', {'level_id': 1, 'level_info': 'jsonStr'})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 'succeeded')
+
+        #test level id already exists
+        response = c.post('/api/new_default_level', {'level_id': 1, 'level_info': 'jsonStr2'})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 'failed')
+        self.assertEqual(ret['error'], 'this level id already exists')
