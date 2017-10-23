@@ -31,6 +31,7 @@ function Logic()
 	{
 		var player = {pos: 0, dir: 0, haveItem: 0, itemId: 0}
 		var itemList = [];
+		var opFloor = [];
 		var map = [];
 
 		this.init = function()
@@ -40,26 +41,26 @@ function Logic()
 					map[i * config.mapWidth + j] = {isOpFloor: 0, address: 0, haveItem: 0, itemId: 0};
 		};
 
-		this.loadLevel = function(opFloor, itemInList, playerInfo)
+		this.loadLevel = function(opFloorIn, itemListIn, playerInfo)
 		{
-			for (var j = 0; j < opFloor.length; j++)
-			{
-				map[opFloor[j].pos].isOpFloor = 1;
-				map[opFloor[j].pos].address = opFloor[j].address;
-			}
-
-			$.extend(itemList, itemInList);
-			for (var k = 0; k < itemInList.length; k++)
-			{
-				map[itemInList[k].pos].haveItem = 1;
-				map[itemInList[k].pos].itemId = k;
-			}
-			
-			// Load player info.
 			player.pos = playerInfo.pos;
 			player.dir = playerInfo.dir;
 			player.hasItem = 0;
 			player.itemId = 0;
+
+			opFloor = opFloorIn.slice(0);
+			for (var i = 0; i < opFloor.length; i++)
+			{
+				map[opFloor[i]].isOpFloor = 1;
+				map[opFloor[i]].address = i;
+			}
+
+			itemList = itemListIn.slice(0);
+			for (var i = 0; i < itemList.length; i++)
+			{
+				map[itemList[i].pos].haveItem = 1;
+				map[itemList[i].pos].itemId = i;
+			}
 		}
 
 		this.render = function()
