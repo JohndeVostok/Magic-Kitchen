@@ -11,23 +11,23 @@ var config = {
 	fakeLevelInfo: {
 		blockTypes: [0, 1, 2, 3, 4, 5, 6],
 		playerInfo: {pos: 0, dir: 0},
-		map: [
-			{address: 1, location: 1},
-			{address: 2, location: 2},
-			{address: 3, location: 3},
-			{address: 4, location: 4},
-			{address: 5, location: 5},
-			{address: 6, location: 6},
-			{address: 7, location: 7},
-			{address: 8, location: 8},
-			{address: 9, location: 9},
-			{address: 10, location: 10},
-			{address: 11, location: 11}
+		opFloorList: [
+			{address: 1, pos: 1},
+			{address: 2, pos: 2},
+			{address: 3, pos: 3},
+			{address: 4, pos: 4},
+			{address: 5, pos: 5},
+			{address: 6, pos: 6},
+			{address: 7, pos: 7},
+			{address: 8, pos: 8},
+			{address: 9, pos: 9},
+			{address: 10, pos: 10},
+			{address: 11, pos: 11}
 		],
 		itemList: [
-			{type: 1, location: 1},
-			{type: 2, location: 2},
-			{type: 1, location: 3}
+			{type: 1, pos: 1},
+			{type: 2, pos: 2},
+			{type: 1, pos: 3}
 		]
 	},
 	
