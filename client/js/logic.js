@@ -418,6 +418,14 @@ function Logic()
 		}
 	}
 
+	var load = function(address)
+	{
+	}
+
+	var store = function(address)
+	{
+	}
+
 //functions for UI
 
 	this.start = function()
