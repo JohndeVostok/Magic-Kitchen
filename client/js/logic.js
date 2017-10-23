@@ -260,7 +260,7 @@ function Logic()
 	{
 		levelInfo = $.extend(true, levelInfoIn);
 		code.setBlockTypes(levelInfo.blockTypes);
-		state.loadLevel(levelInfo.opFloorList, levelInfo.itemList, levelInfo.playerInfo);
+		state.loadLevel(levelInfo.opFloor, levelInfo.itemList, levelInfo.playerInfo);
 		renderLevel();
 	};
 
@@ -273,7 +273,7 @@ function Logic()
 //function for playing
 	var reset = function()
 	{
-		state.loadLevel(levelInfo.opFloorList, levelInfo.itemList, levelInfo.playerInfo);
+		state.loadLevel(levelInfo.opFloor, levelInfo.itemList, levelInfo.playerInfo);
 		renderLevel();
 	};
 

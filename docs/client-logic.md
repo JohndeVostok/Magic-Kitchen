@@ -3,63 +3,85 @@
 ## Client
 
 ### Logic
-	logic.doLoad()
-		Init an empty map.
-		return: undefined
-	
-	logic.loadLevel()
-		fetch level from back-end or use fake level.
-		return: undefined
 
-	logic.initLevel()
-		Callback of fetchLevel.
-		Init map and render to UI.
-		return: undefined
+	Functions for initialization.
 
-	logic.start()
-		Start playing.
-		Reset map, render to UI and compile code.
-		return: undefined
-	
-	logic.step(op)
-		op["typeID"]: type == int
-			0: nop
-			1: moveforward
-			2: rotate
-				op["dir"]: type == int
-					1 = +pi/2
-					2 = +pi
-					3 = +3pi/2
-					etc.
-				dir = 0 means down, dir = 1 means right, dir = 2 means up, dir = 3 means left.
-			3: load
-				load from opFloor front.
-			4: store
-				store to opFloor front.
-			5: step with dir
-				op["dir"]: type == int
-					1 = +pi/2
-					2 = +pi
-					3 = +3pi/2
-					etc.
-				single step to dir.
-			6: move with step number
-				op["step"]: type == int
-				move forward for step steps.
-			7: move with dir and step number
-				op["dir"]: type == int
-					1 = +pi/2
-					2 = +pi
-					3 = +3pi/2
-					etc.
-				op["step"]: type == int
-				move toward dir for step steps.
-			8: move to position
-				op["x"]: type == int
-				op["y"]: type == int
-				move to pos(x, y).
-			
-		return: undefined
+		logic.doLoad()
+			Init an empty map.
+			return: undefined
+		logic.loadLevel()
+			fetch level from back-end or use fake level.
+
+			levelInfoFormat:
+				fakeLevelInfo:
+				{
+					blockTypes: [int, int...],
+						Array of int.
+						Check doc of client-code for meaning.
+					playerInfo: {pos: int, dir: int},
+						Player's position and direction.
+					opFloor: [int, int...],
+						Index means address.
+						int means position.
+					itemList: [{type: int, pos: int}, {type: int, pos: int}...]
+						Array of {type, pos}
+							type 1, 2 means apple and banana.
+							pos means position.
+				}
+
+			return: undefined
+
+		logic.initLevel(levelInfo)
+			Callback of fetchLevel.
+			Init map and render to UI.
+			return: undefined
+
+	Functions for playing
+
+		logic.start()
+			Start playing.
+			Reset map, render to UI and compile code.
+			return: undefined
+
+		logic.step(op)
+			op["typeID"]: type == int
+				0: nop
+				1: moveforward
+				2: rotate
+					op["dir"]: type == int
+						1 = +pi/2
+						2 = +pi
+						3 = +3pi/2
+						etc.
+					dir = 0 means down, dir = 1 means right, dir = 2 means up, dir = 3 means left.
+				3: load
+					load from opFloor front.
+				4: store
+					store to opFloor front.
+				5: step with dir
+					op["dir"]: type == int
+						1 = +pi/2
+						2 = +pi
+						3 = +3pi/2
+						etc.
+					single step to dir.
+				6: move with step number
+					op["step"]: type == int
+					move forward for step steps.
+				7: move with dir and step number
+					op["dir"]: type == int
+						1 = +pi/2
+						2 = +pi
+						3 = +3pi/2
+						etc.
+					op["step"]: type == int
+					move toward dir for step steps.
+				8: move to position
+					op["x"]: type == int
+					op["y"]: type == int
+					move to pos(x, y).
+
+			return: undefined
 
 #### Logic Map Specifications
 
@@ -67,27 +89,15 @@
 * An example is as following:
 ```JavaScript
 fakeLevelInfo: {
-	blockTypes: [0, 1, 2, 3, 4],
+	blockTypes: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
 	playerInfo: {pos: 0, dir: 0},
-	opFloorList: [
-		{address: 1, pos: 1},
-		{address: 2, pos: 2},
-		{address: 3, pos: 3},
-		{address: 4, pos: 4},
-		{address: 5, pos: 5},
-		{address: 6, pos: 6},
-		{address: 7, pos: 7},
-		{address: 8, pos: 8},
-		{address: 9, pos: 9},
-		{address: 10, pos: 10},
-		{address: 11, pos: 11}
-	],
+	opFloor: [8, 9, 10, 11, 12, 22, 23, 24, 25, 26, 36, 37, 38, 39, 40],
 	itemList: [
-		{type: 1, pos: 1},
-		{type: 2, pos: 2},
-		{type: 1, pos: 3}
+		{type: 1, pos: 8},
+		{type: 2, pos: 9},
+		{type: 1, pos: 10}
 	]
-}
+},
 ```
 * The `blockTypes` specifies what kinds of blocks can be used in Blockly.
   * The block-type-ids can be found in `code` module docs.
