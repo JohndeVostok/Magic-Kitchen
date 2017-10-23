@@ -121,7 +121,7 @@ var network = function() {
 		logout: logout,
 		changePasswordByEmail: changePasswordByEmail,
 		changePasswordAfterLogin: changePasswordAfterLogin,
-		newDeFaultLevel: newDefaultLevel,
+		newDefaultLevel: newDefaultLevel,
 		getLevelInfo: getLevelInfo
 	};
 }();
