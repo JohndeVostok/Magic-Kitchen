@@ -39,7 +39,7 @@
 fakeLevelInfo: {
 	blockTypes: [0, 1, 2, 3, 4],
 	playerInfo: {pos: 0, dir: 0},
-	map: [
+	opFloorList: [
 		{address: 1, location: 1},
 		{address: 2, location: 2},
 		{address: 3, location: 3},

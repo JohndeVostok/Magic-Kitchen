@@ -159,7 +159,7 @@ var ui = function() {
 		// Init DOM elements.
 		// For test only.
 		$("#buttonCompile").click(function() {
-			code.start();
+			logic.start();
 		});
 		$("#buttonStep").click(function() {
 			logic.step();
@@ -169,7 +169,7 @@ var ui = function() {
 	var start = function() {
 		// Grab & start a new level.
 		// The main loop is not present here, because the system event loop already does this.
-		logic.startLevel();
+		logic.loadLevel();
 	};
 	
 	var animationRunning = false;

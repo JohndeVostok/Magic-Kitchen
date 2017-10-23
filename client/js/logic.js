@@ -17,6 +17,7 @@ function Logic()
 
 	function State()
 	{
+		var player = {pos: 0, dir: 0, haveItem: 0, itemId: 0}
 		var itemList = [];
 		var map = [];
 
@@ -27,12 +28,57 @@ function Logic()
 					map[i * config.mapWidth + j] = {isOpFloor: 0, address: 0, haveItem: 0, itemId: 0};
 		};
 
-		var hero = {pos: 0, dir: 0, haveItem: 0, itemId: 0}
+		this.loadLevel = function(opFloor, itemInList, playerInfo)
+		{
+			for (var j = 0; j < opFloor.length; j++)
+			{
+				map[opFloor[j].pos].isOpFloor = 1;
+				map[opFloor[j].pos].address = opFloor[j].address;
+			}
+
+			$.extend(itemList, itemInList);
+			for (var k = 0; k < itemInList.length; k++)
+			{
+				map[itemInList[k].pos].haveItem = 1;
+				map[itemInList[k].pos].itemId = k;
+			}
+			
+			// Load player info.
+			player.pos = playerInfo.pos;
+			player.dir = playerInfo.dir;
+			player.hasItem = 0;
+			player.itemId = 0;
+		}
+
+		this.render = function()
+		{
+			var mp = [];
+			for (var i in map)
+			{
+				var floorInfo = map[i];
+				if (map[i].isOpFloor)
+					mp[i] = 3;
+				else
+					mp[i] = 0;
+			}
+			ui.loadMap(mp);
+			ui.clearItems();
+			for (var i in itemList)
+			{
+				var item = itemList[i];
+				ui.newItem(item.pos, item.type, undefined);
+			}
+			ui.addPlayerAnimation(player.pos, player.pos, player.dir, player.dir);
+		}
+
+		//function for test
+
+	//functions for play
 
 		var getFloor = function()
 		{
-			var x = hero.pos % config.mapWidth, y = Math.floor(hero.pos / config.mapWidth);
-			switch(hero.dir)
+			var x = player.pos % config.mapWidth, y = Math.floor(player.pos / config.mapWidth);
+			switch(player.dir)
 			{
 				case 0:
 				//down
@@ -61,9 +107,15 @@ function Logic()
 			return (y * config.mapWidth + x);
 		};
 
+		this.getDir = function()
+		{
+			return player.dir;
+		};
+
 		this.move = function()
 		{
 			var p = getFloor();
+			var q = player.pos;
 			if (p == -1)
 			{
 				invalidOp("It's out!");
@@ -74,18 +126,15 @@ function Logic()
 				invalidOp("It's a opFloor!");
 				return 0;
 			}
-			var originalHeroPos = hero.pos;
-			hero.pos = getFloor();
-			// Add animation to UI.
-			ui.addPlayerAnimation(originalHeroPos, hero.pos, hero.dir, hero.dir);
+			player.pos = getFloor();
+			ui.addPlayerAnimation(q, p, player.dir, player.dir);
 		};
 
 		this.rotate = function(dir)
 		{
-			var originalHeroDir = hero.dir;
-			hero.dir = (hero.dir + dir) % 4;
-			// Add animation to UI.
-			ui.addPlayerAnimation(hero.pos, hero.pos, originalHeroDir, hero.dir);
+			var d = player.dir;
+			player.dir = (player.dir + dir) % 4;
+			ui.addPlayerAnimation(player.pos, player.pos, d, player.dir);
 		};
 
 		this.loadItem = function()
@@ -101,18 +150,16 @@ function Logic()
 				invalidOp("Nothing There!");
 				return 0;
 			}
-			if (hero.haveItem)
+			if (player.haveItem)
 			{
 				invalidOp("I have something!");
 				return 0;
 			}
-			hero.haveItem = 1;
+			player.haveItem = 1;
 			map[p].haveItem = 0;
-			hero.itemId = map[p].itemId;
+			player.itemId = map[p].itemId;
 			map[p].itemId = 0;
-			itemList[hero.itemId].location = -1;
-			
-			// Add animations.
+			itemList[player.itemId].pos = -1;
 			ui.addAnimation(p, -1, undefined);
 		}
 
@@ -129,59 +176,34 @@ function Logic()
 				invalidOp("Something There!");
 				return 0;
 			}
-			if (!hero.haveItem)
+			if (!player.haveItem)
 			{
 				invalidOp("I have nothing to store!");
 				return 0;
 			}
-			hero.haveItem = 0;
+			player.haveItem = 0;
 			map[p].haveItem = 1;
-			map[p].itemId = hero.itemId;
-			hero.itemId = 0;
-			itemList[map[p].itemId].location = p;
-			
-			// Add animations.
+			map[p].itemId = player.itemId;
+			player.itemId = 0;
+			itemList[map[p].itemId].pos = p;
 			ui.addAnimation(-1, p, undefined);
 		};
-
-
-		//function for test
-		this.test = function()
-		{
-			return{map: map, hero: hero, itemList: itemList};
-		};
-
-		this.loadLevel = function(opFloor, itemInList, playerInfo)
-		{
-			for (var j = 0; j < opFloor.length; j++)
-			{
-				map[opFloor[j].location].isOpFloor = 1;
-				map[opFloor[j].location].address = opFloor[j].address;
-			}
-
-			$.extend(itemList, itemInList);
-			for (var k = 0; k < itemInList.length; k++)
-			{
-				map[itemInList[k].location].haveItem = 1;
-				map[itemInList[k].location].itemId = k;
-			}
-			
-			// Load player info.
-			hero.pos = playerInfo.pos;
-			hero.dir = playerInfo.dir;
-			hero.hasItem = 0;
-			hero.itemId = 0;
-		}
 	}
 
+//prepare for playing
+	
 	var currentState = new State();
-	var opFloor, itemList;
+	var levelInfo;
 
-	var initMap = function(opFloorIn, itemListIn, playerInfo)
+	
+	// Load a level stored in levelInfo, which sets up the map and Blockly.
+	// Start a new level, may need grabbing it from server.
+	this.loadLevel = function()
 	{
-		currentState.loadLevel(opFloorIn, itemListIn, playerInfo);
-		opFloor = $.extend(true, opFloorIn);
-		itemList = $.extend(true, itemListIn);
+		if (config.useFakeLevel)
+			initLevel(config.fakeLevelInfo);
+		//TODO
+		//Ture Level
 	};
 
 	this.doLoad = function()
@@ -189,9 +211,17 @@ function Logic()
 		currentState.init();
 	};
 
-	this.loadLevel = function(opFloor, itemList, playerInfo)
+	var renderLevel = function()
 	{
-		initMap(opFloor, itemList, playerInfo);
+		currentState.render()
+	}
+
+	var initLevel = function(levelInfoIn)
+	{
+		levelInfo = $.extend(true, levelInfoIn);
+		code.setBlockTypes(levelInfo.blockTypes);
+		currentState.loadLevel(levelInfo.opFloorList, levelInfo.itemList, levelInfo.playerInfo);
+		renderLevel();
 	};
 
 	//function for test
@@ -200,12 +230,16 @@ function Logic()
 		return currentState.test();
 	}
 
-	this.reset = function()
+//play
+
+
+	var reset = function()
 	{
-		currentState.loadLevel(opFloor, itemList);
+		currentState.loadLevel(levelInfo.opFloorList, levelInfo.itemList, levelInfo.playerInfo);
+		renderLevel();
 	};
 
-	var singleStepForward = function()
+	var stepForward = function()
 	{
 		initOp();
 		currentState.move();
@@ -225,6 +259,19 @@ function Logic()
 		currentState.storeItem();
 	};
 
+	var stepWithDir = function(dir)
+	{
+		var d = (4 + dir - currentState.getDir() % 4);
+		currentState.rotate(d);
+		currentState.move();
+	};
+
+	this.start = function()
+	{
+		reset();
+		code.start();
+	}
+
 	this.step = function(op)
 	{
 		if (op == undefined)
@@ -237,7 +284,7 @@ function Logic()
 			case 0:
 			break;
 			case 1:
-				singleStepForward();
+				stepForward();
 			break;
 			case 2:
 				rotate(op.dir);
@@ -248,88 +295,16 @@ function Logic()
 			case 4:
 				storeItem();
 			break;
+			case 5:
+				stepWithDir(op.dir);
+			break;
 			default:
 			//nothing
 			break;
 		}
 	};
-	
-	// Render a logic level's map on UI.
-	// See `ui` docs for UI's map specifications.
-	var renderMap = function(map)
-	{
-		var uiMap = [];
-		var size = config.mapHeight * config.mapWidth;
-		
-		// Fill with empty cells.
-		for (var i = 0; i < size; i++)
-		{
-			uiMap[i] = 0;
-		}
-		
-		for (var i in map)
-		{
-			var e = map[i];
-			
-			// Currently only table is supported.
-			uiMap[e.location] = 3;
-		}
-		
-		ui.loadMap(uiMap);
-	};
-	
-	// Render a logic level's items on UI.
-	// The items' specifications are consistent.
-	// See `ui` docs for more info.
-	var renderItems = function(itemList)
-	{
-		// Clear all items first.
-		ui.clearItems();
-		
-		for (var i in itemList)
-		{
-			var item = itemList[i];
-			
-			// Add a item to UI.
-			ui.newItem(item.location, item.type, undefined);
-		}
-	};
-	
-	// Render the player state on UI.
-	var renderPlayer = function(playerInfo)
-	{
-		// Add an animation with no position change.
-		ui.addPlayerAnimation(playerInfo.pos, playerInfo.pos, playerInfo.dir, playerInfo.dir);
-	};
-	
-	// Load a level stored in levelInfo, which sets up the map and Blockly.
-	var loadLevelInfo = function(levelInfo)
-	{
-		// Set Blockly block types.
-		code.setBlockTypes(levelInfo.blockTypes);
-		
-		// Load level in logic.
-		logic.loadLevel(levelInfo.map, levelInfo.itemList, levelInfo.playerInfo);
-		
-		// Tell UI to render the level.
-		renderMap(levelInfo.map);
-		renderItems(levelInfo.itemList);
-		renderPlayer(levelInfo.playerInfo);
-	};
-	
-	// Start a new level, may need grabbing it from server.
-	this.startLevel = function()
-	{
-		if (config.useFakeLevel)
-		{
-			// Load a fake level for test.
-			loadLevelInfo(config.fakeLevelInfo);
-		}
-		else
-		{
-			throw "Not implemented";
-		}
-	};
+
+
 }
 
 var logic = new Logic();
