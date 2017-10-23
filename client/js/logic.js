@@ -1,3 +1,5 @@
+var debug = window.debug;
+
 function Logic()
 {
 
