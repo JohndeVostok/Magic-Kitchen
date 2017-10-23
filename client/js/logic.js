@@ -142,10 +142,10 @@ function Logic()
 		this.checkFloor = function(x, y)
 		{
 			if (x < 0 || x >= config.mapWidth || y < 0 || y >= config.mapHeight)
-				return 1;
+				return -1;
 			var pos = y * config.mapWidth + x;
 			if (map[pos].isOpFloor)
-				return -1;
+				return map[pos].address;
 		};
 
 		this.step = function()
@@ -344,7 +344,8 @@ function Logic()
 		var mp = [];
 		for (var i = 0; i < config.mapWidth; i++)
 			for (var j = 0; j < config.mapHeight; j++)
-				mp[j * config.mapWidth + i] = state.checkFloor(i, j);
+				if (state.checkFloor(i, j))
+					mp[j * config.mapWidth + i] = -1;
 		var x = state.getPlayer().pos % config.mapWidth, y = Math.floor(state.getPlayer().pos / config.mapWidth);
 		mp[y * config.mapWidth + x] = 1;
 		var q = [];
