@@ -234,6 +234,11 @@ function Logic()
 	
 	// Load a level stored in levelInfo, which sets up the map and Blockly.
 	// Start a new level, may need grabbing it from server.
+	this.doLoad = function()
+	{
+		state.init();
+	};
+
 	this.loadLevel = function()
 	{
 		if (config.useFakeLevel)
@@ -243,11 +248,6 @@ function Logic()
 		else
 		{
 		}
-	};
-
-	this.doLoad = function()
-	{
-		state.init();
 	};
 
 	var renderLevel = function()
@@ -421,6 +421,7 @@ function Logic()
 
 	var load = function(address)
 	{
+		
 	}
 
 	var store = function(address)

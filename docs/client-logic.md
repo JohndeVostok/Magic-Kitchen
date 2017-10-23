@@ -3,6 +3,12 @@
 ## Client
 
 ### Logic
+	logic.doLoad()
+		init an empty map.
+		return: undefined
+	
+
+
 		logic.step(op)
 			op["typeID"]: type == int
 				0: nop
