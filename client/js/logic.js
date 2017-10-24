@@ -35,8 +35,8 @@ function Logic()
 
 		this.init = function()
 		{
-			for (var i = 0; i < config.mapHeight; i++)
-				for (var j = 0; j < config.mapWidth; j++)
+			for (let i = 0; i < config.mapHeight; i++)
+				for (let j = 0; j < config.mapWidth; j++)
 					map[i * config.mapWidth + j] = {isOpFloor: 0, address: 0, haveItem: 0, itemId: 0};
 		};
 
@@ -48,14 +48,14 @@ function Logic()
 			player.itemId = 0;
 
 			opFloor = $.extend(true, [], opFloorIn);
-			for (var i = 0; i < opFloor.length; i++)
+			for (let i = 0; i < opFloor.length; i++)
 			{
 				map[opFloor[i]].isOpFloor = 1;
 				map[opFloor[i]].address = i;
 			}
 
 			itemList = $.extend(true, [], itemListIn);
-			for (var i = 0; i < itemList.length; i++)
+			for (let i = 0; i < itemList.length; i++)
 			{
 				map[itemList[i].pos].haveItem = 1;
 				map[itemList[i].pos].itemId = i;
@@ -65,7 +65,7 @@ function Logic()
 		this.render = function()
 		{
 			var mp = [];
-			for (var i in map)
+			for (let i in map)
 			{
 				var floorInfo = map[i];
 				if (map[i].isOpFloor)
@@ -75,7 +75,7 @@ function Logic()
 			}
 			ui.loadMap(mp);
 			ui.clearItems();
-			for (var i in itemList)
+			for (let i in itemList)
 			{
 				var item = itemList[i];
 				ui.newItem(item.pos, item.type, undefined);
@@ -343,7 +343,7 @@ function Logic()
 	var moveForward = function(step)
 	{
 		validator.init();
-		for (var i = 0; i < step; i++)
+		for (let i = 0; i < step; i++)
 		{
 			state.step();
 			if (validator.validate())
@@ -358,7 +358,7 @@ function Logic()
 		state.rotate(d);
 		if (validator.validate())
 			return undefined;
-		for (var i = 0; i < step; i++)
+		for (let i = 0; i < step; i++)
 		{
 			state.step();
 			if (validator.validate())
@@ -373,8 +373,8 @@ function Logic()
 		if (validator.validate())
 			return undefined;
 		var mp = [];
-		for (var i = 0; i < config.mapWidth; i++)
-			for (var j = 0; j < config.mapHeight; j++)
+		for (let i = 0; i < config.mapWidth; i++)
+			for (let j = 0; j < config.mapHeight; j++)
 				if (state.checkFloor(i, j))
 					mp[j * config.mapWidth + i] = -1;
 		var x = state.getPlayer().pos % config.mapWidth, y = Math.floor(state.getPlayer().pos / config.mapWidth);
@@ -425,7 +425,7 @@ function Logic()
 			p.unshift(q[l].pos);
 			l = q[l].f;
 		}
-		for (var i = 1; i < p.length; i++)
+		for (let i = 1; i < p.length; i++)
 		{
 			var d = state.getPlayer().dir;
 			switch(p[i] - p[i - 1])
@@ -461,8 +461,8 @@ function Logic()
 			return undefined;
 
 		var mp = [];
-		for (var i = 0; i < config.mapWidth; i++)
-			for (var j = 0; j < config.mapHeight; j++)
+		for (let i = 0; i < config.mapWidth; i++)
+			for (let j = 0; j < config.mapHeight; j++)
 				if (state.checkFloor(i, j))
 					mp[j * config.mapWidth + i] = -1;
 		var x = state.getPlayer().pos % config.mapWidth, y = Math.floor(state.getPlayer().pos / config.mapWidth);
@@ -516,7 +516,7 @@ function Logic()
 			p.unshift(q[l].pos);
 			l = q[l].f;
 		}
-		for (var i = 1; i < p.length; i++)
+		for (let i = 1; i < p.length; i++)
 		{
 			var d = state.getPlayer().dir;
 			switch(p[i] - p[i - 1])
@@ -572,8 +572,8 @@ function Logic()
 			return undefined;
 
 		var mp = [];
-		for (var i = 0; i < config.mapWidth; i++)
-			for (var j = 0; j < config.mapHeight; j++)
+		for (let i = 0; i < config.mapWidth; i++)
+			for (let j = 0; j < config.mapHeight; j++)
 				if (state.checkFloor(i, j))
 					mp[j * config.mapWidth + i] = -1;
 		var x = state.getPlayer().pos % config.mapWidth, y = Math.floor(state.getPlayer().pos / config.mapWidth);
@@ -627,7 +627,7 @@ function Logic()
 			p.unshift(q[l].pos);
 			l = q[l].f;
 		}
-		for (var i = 1; i < p.length; i++)
+		for (let i = 1; i < p.length; i++)
 		{
 			var d = state.getPlayer().dir;
 			switch(p[i] - p[i - 1])
