@@ -201,8 +201,9 @@ function Logic()
 			return $.extend(true, map[opFloor[address]], {pos: opFloor[address]});
 		}
 
-		this.route = function(tx, ty)
+		this.route = function(tp)
 		{
+			var tx = tp % config.mapWidth, ty = Math.floor(tp / config.mapWidth);
 			var mp = [];
 			for (let i = 0; i < config.mapWidth; i++)
 				for (let j = 0; j < config.mapHeight; j++)
@@ -278,6 +279,7 @@ function Logic()
 				}
 				opList.push({op: "s"});
 			}
+			opList.pop();
 			return opList;
 		};
 
@@ -461,15 +463,15 @@ function Logic()
 		if (validator.validate())
 			return undefined;
 
-		var p = state.route(tx, ty);
+		var p = state.route(ty * config.mapWidth + tx);
 		for (let i = 0; i < p.length; i++)
 		{
 			if (p[i].op == "s") state.step();
 			if (p[i].op == "r") state.rotate(p[i].dir);
 		}
+		state.step();
 	}
 
-/*
 	var load = function(address)
 	{
 		validator.init();
@@ -480,112 +482,15 @@ function Logic()
 		if (validator.validate())
 			return undefined;
 
-		var mp = [];
-		for (let i = 0; i < config.mapWidth; i++)
-			for (let j = 0; j < config.mapHeight; j++)
-				if (state.checkFloor(i, j))
-					mp[j * config.mapWidth + i] = -1;
-		var x = state.getPlayer().pos % config.mapWidth, y = Math.floor(state.getPlayer().pos / config.mapWidth);
-		mp[y * config.mapWidth + x] = 1;
-		var q = [];
-		var l = 0, r = 1;
-		q[0] = {pos: y * config.mapWidth + x, f: -1};
-		while (l < r)
+		var p = state.route(f.pos);
+		for (let i = 0; i < p.length; i++)
 		{
-			x = q[l].pos % config.mapWidth;
-			y = Math.floor(q[l].pos / config.mapHeight);
-
-			
-			y++;
-			if (state.checkFloor(x, y) == 2 && y * config.mapWidth + x == f.pos)
-				break;
-			if (!state.checkFloor(x, y) && !mp[y * config.mapWidth + x])
-			{
-				mp[y * config.mapWidth + x] = mp[q[l].pos] + 1;
-				q[r++] = {pos: y * config.mapWidth + x, f: l};
-			}
-			y--;
-			x++;
-			if (state.checkFloor(x, y) == 2 && y * config.mapWidth + x == f.pos)
-				break;
-			if (!state.checkFloor(x, y) && !mp[y * config.mapWidth + x])
-			{
-				mp[y * config.mapWidth + x] = mp[q[l].pos] + 1;
-				q[r++] = {pos: y * config.mapWidth + x, f: l};
-			}
-			x--;
-			y--;
-			if (state.checkFloor(x, y) == 2 && y * config.mapWidth + x == f.pos)
-				break;
-			if (!state.checkFloor(x, y) && !mp[y * config.mapWidth + x])
-			{
-				mp[y * config.mapWidth + x] = mp[q[l].pos] + 1;
-				q[r++] = {pos: y * config.mapWidth + x, f: l};
-			}
-			y++;
-			x--;
-			if (state.checkFloor(x, y) == 2 && y * config.mapWidth + x == f.pos)
-				break;
-			if (!state.checkFloor(x, y) && !mp[y * config.mapWidth + x])
-			{
-				mp[y * config.mapWidth + x] = mp[q[l].pos] + 1;
-				q[r++] = {pos: y * config.mapWidth + x, f: l};
-			}
-			x++;
-			l++;
-		}
-		var p = []
-		while (l != -1)
-		{
-			p.unshift(q[l].pos);
-			l = q[l].f;
-		}
-		var d;
-		for (let i = 1; i < p.length; i++)
-		{
-			d = state.getPlayer().dir;
-			switch(p[i] - p[i - 1])
-			{
-				case -config.mapWidth:
-					state.rotate((6 - d) % 4);
-				break;
-				case -1:
-					state.rotate((7 - d) % 4);
-				break;
-				case 1:
-					state.rotate((5 - d) % 4);
-				break;
-				case config.mapWidth:
-					state.rotate((4 - d) % 4);
-				break;
-				default:
-				//nothing
-				break;
-			}
-			state.step();
-		}
-		d = state.getPlayer().dir;
-		switch(f.pos - p[p.length - 1])
-		{
-			case -config.mapWidth:
-				state.rotate((6 - d) % 4);
-			break;
-			case -1:
-				state.rotate((7 - d) % 4);
-			break;
-			case 1:
-				state.rotate((5 - d) % 4);
-			break;
-			case config.mapWidth:
-				state.rotate((4 - d) % 4);
-			break;
-			default:
-			//nothing
-			break;
+			if (p[i].op == "s") state.step();
+			if (p[i].op == "r") state.rotate(p[i].dir);
 		}
 		state.loadItem();
 	}
-
+/*
 	var store = function(address)
 	{
 		validator.init();
