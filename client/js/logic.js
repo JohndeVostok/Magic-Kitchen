@@ -1,4 +1,5 @@
 var debug = window.debug;
+var ui = window.ui;
 
 function Logic()
 {
@@ -213,7 +214,7 @@ function Logic()
 						mp[j * config.mapWidth + i] = 0;
 
 			var pos = player.pos;
-			var x = pos % config.mapWidth, y = Math.floor(pos / config.mapWidth);
+			var x, y;
 			mp[pos] = 1;
 			var q = [];
 			var l = 0, r = 1, flag = 0;
@@ -241,7 +242,8 @@ function Logic()
 					x -= config.offset[i].x;
 					y -= config.offset[i].y;
 				}
-				if (flag) break;
+				if (flag)
+					break;
 				l++;
 			}
 			var p = [];
@@ -258,20 +260,32 @@ function Logic()
 				switch(p[i] - p[i - 1])
 				{
 					case -config.mapWidth:
-						if (d != 2) opList.push({op: "r", dir: (6 - d) % 4});
-						d = 2;
+						if (d != 2)
+						{
+							opList.push({op: "r", dir: (6 - d) % 4});
+							d = 2;
+						}
 					break;
 					case -1:
-						if (d != 3) opList.push({op: "r", dir: (7 - d) % 4});
-						d = 3;
+						if (d != 3)
+						{
+							opList.push({op: "r", dir: (7 - d) % 4});
+							d = 3;
+						}
 					break;
 					case 1:
-						if (d != 1) opList.push({op: "r", dir: (5 - d) % 4});
-						d = 1;
+						if (d != 1)
+						{
+							opList.push({op: "r", dir: (5 - d) % 4});
+							d = 1;
+						}
 					break;
 					case config.mapWidth:
-						if (d != 0) opList.push({op: "r", dir: (4 - d) % 4});
-						d = 0;
+						if (d != 0)
+						{
+							opList.push({op: "r", dir: (4 - d) % 4});
+							d = 0;
+						}
 					break;
 					default:
 					//nothing
@@ -362,8 +376,6 @@ function Logic()
 	{
 		if (config.useFakeLevel)
 			initLevel(config.fakeLevelInfo);
-		//TODO
-		//else fetch a real level.
 	};
 
 	var renderLevel = function()
@@ -466,8 +478,10 @@ function Logic()
 		var p = state.route(ty * config.mapWidth + tx);
 		for (let i = 0; i < p.length; i++)
 		{
-			if (p[i].op == "s") state.step();
-			if (p[i].op == "r") state.rotate(p[i].dir);
+			if (p[i].op == "s")
+				state.step();
+			if (p[i].op == "r")
+				state.rotate(p[i].dir);
 		}
 		state.step();
 	}
@@ -485,8 +499,10 @@ function Logic()
 		var p = state.route(f.pos);
 		for (let i = 0; i < p.length; i++)
 		{
-			if (p[i].op == "s") state.step();
-			if (p[i].op == "r") state.rotate(p[i].dir);
+			if (p[i].op == "s")
+				state.step();
+			if (p[i].op == "r")
+				state.rotate(p[i].dir);
 		}
 		state.loadItem();
 	}
@@ -504,8 +520,10 @@ function Logic()
 		var p = state.route(f.pos);
 		for (let i = 0; i < p.length; i++)
 		{
-			if (p[i].op == "s") state.step();
-			if (p[i].op == "r") state.rotate(p[i].dir);
+			if (p[i].op == "s")
+				state.step();
+			if (p[i].op == "r")
+				state.rotate(p[i].dir);
 		}
 		state.storeItem();
 	}
