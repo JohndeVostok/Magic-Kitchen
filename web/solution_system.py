@@ -15,12 +15,6 @@ def int_range(x):
     else:
         return False
 
-def default_level_id_range(x):
-    if x >=0 and x <= 100:
-        return True
-    else:
-        return False
-
 def new_solution(request):
     content = request.POST
     ret = {}
