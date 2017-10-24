@@ -99,6 +99,12 @@
 			err = undefined if no error occurred else error message
 			res = {status: "failed|succeeded"}
 
+		logic.doRegister(username, email, password, password2, callback):
+			Call network to register and call callback when ready.
+			callback = function(err, res)
+			err = undefined if no error occurred else error message
+			res = {status: "failed|succeeded"}
+
 #### Logic Map Specifications
 
 * Map in logic is stored in an object often called `levelInfo`.

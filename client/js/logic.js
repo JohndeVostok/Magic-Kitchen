@@ -742,6 +742,15 @@ function Logic()
 			status: "failed"
 		});
 	}
+	
+	// Do register with network module
+	this.doRegister = function(username, email, password, password2, callback)
+	{
+		// TODO
+		callback("TODO", {
+			status: "failed"
+		});
+	}
 }
 
 var logic = new Logic();

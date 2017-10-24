@@ -195,6 +195,7 @@ var ui = function() {
 				$("#loginModal").modal("hide");
 				$("#loginButton").css("display", "none");
 				$("#logoutButton").css("display", "");
+				$("#registerButton").css("display", "none");
 			});
 		});
 		
@@ -214,6 +215,37 @@ var ui = function() {
 				// Logout ok
 				$("#logoutButton").css("display", "none");
 				$("#loginButton").css("display", "");
+				$("#registerButton").css("display", "");
+			});
+		});
+		
+		// For register function.
+		$("#registerButton").click(function() {
+			// Init register modal.
+			$("#registerUsername").val("");
+			$("#registerEmail").val("");
+			$("#registerPassword").val("");
+			$("#registerPassword2").val("");
+			
+			$("#registerModal").modal();
+		});
+		$("#registerSubmitButton").click(function() {
+			$("#registerSubmitButton").attr("disabled", "disabled");
+			
+			// Call logic register interface.
+			logic.doRegister($("#registerUsername").val(), $("#registerEmail").val(), $("#registerPassword").val(), $("#registerPassword2").val(), function(err, res) {
+				$("#registerSubmitButton").removeAttr("disabled");
+				
+				if (err != undefined) {
+					alert("注册失败： " + err);
+					$("#registerPassword").val("");
+					$("#registerPassword2").val("");
+					return;
+				}
+				
+				// Register ok
+				alert("注册成功！");
+				$("#registerModal").modal("hide");
 			});
 		});
 	};
