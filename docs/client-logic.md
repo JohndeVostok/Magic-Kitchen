@@ -83,6 +83,22 @@
 
 			return: undefined
 
+#### Logic operations called by UI
+
+	Functions for user systems
+
+		logic.doLogin(username, password, callback):
+			Call network to login and call callback when ready.
+			callback = function(err, res)
+			err = undefined if no error occurred else error message
+			res = {status: "failed|succeeded", username: theUsernameOfUser}
+
+		logic.doLogout(callback):
+			Call network to logout and call callback when ready.
+			callback = function(err, res)
+			err = undefined if no error occurred else error message
+			res = {status: "failed|succeeded"}
+
 #### Logic Map Specifications
 
 * Map in logic is stored in an object often called `levelInfo`.

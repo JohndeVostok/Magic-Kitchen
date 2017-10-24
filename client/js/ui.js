@@ -4,6 +4,7 @@ var ui = function() {
 		
 		loadConfig();
 		initUI();
+		initUIControls();
 	};
 	
 	// CreateJS stage
@@ -165,6 +166,55 @@ var ui = function() {
 		});
 		$("#buttonStep").click(function() {
 			logic.step();
+		});
+	};
+	
+	var initUIControls = function() {
+		// For login function.
+		$("#loginButton").click(function() {
+			// Init login modal.
+			$("#loginUsername").val("");
+			$("#loginPassword").val("");
+			
+			$("#loginModal").modal();
+		});
+		$("#loginSubmitButton").click(function() {
+			$("#loginSubmitButton").attr("disabled", "disabled");
+			
+			// Call logic login interface.
+			logic.doLogin($("#loginUsername").val(), $("#loginPassword").val(), function(err, res) {
+				$("#loginSubmitButton").removeAttr("disabled");
+				
+				if (err != undefined) {
+					alert("登录失败： " + err);
+					$("#loginPassword").val("");
+					return;
+				}
+				
+				// Login ok
+				$("#loginModal").modal("hide");
+				$("#loginButton").css("display", "none");
+				$("#logoutButton").css("display", "");
+			});
+		});
+		
+		// For logout function.
+		$("#logoutButton").click(function() {
+			$("#logoutButton").attr("disabled", "disabled");
+			
+			// Call logic logout interface.
+			logic.doLogout(function(err, res) {
+				$("#logoutButton").removeAttr("disabled");
+				
+				if (err != undefined) {
+					alert("登出失败： " + err);
+					return;
+				}
+				
+				// Logout ok
+				$("#logoutButton").css("display", "none");
+				$("#loginButton").css("display", "");
+			});
 		});
 	};
 	
