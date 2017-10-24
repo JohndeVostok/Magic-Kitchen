@@ -3,18 +3,21 @@ var debug = window.debug;
 var network = function() {
 	var doLoad = function() {};
 
-	var nRetry = 3;
+	var nRetry = 2;
+	var requestTimeout = 500;
+	var retryDelay = 1000;
 
 	var getRequest = function(url, contents, callback, retry = nRetry) {
 		$.ajax({
 			url: url,
 			data: contents,
-			timeout: 500,
+			timeout: requestTimeout,
 			success: function(data) {
 				callback(data)
 			},
 			error: function() {
-				if (retry > 0) getRequest(url, contents, callback, retry - 1);
+				if (retry > 0)
+					setTimeout(function(){getRequest(url, contents, callback, retry - 1);}, retryDelay);
 				else callback({
 					"status": "failed",
 					"error": "network timeout"
@@ -24,16 +27,18 @@ var network = function() {
 	};
 
 	var postRequest = function(url, contents, callback, retry = nRetry) {
+		console.log(retry);
 		$.ajax({
             method: "POST",
 			url: url,
 			data: contents,
-			timeout: 500,
+			timeout: requestTimeout,
 			success: function(data) {
 				callback(data)
 			},
 			error: function() {
-				if (retry > 0) getRequest(url, contents, callback, retry - 1);
+				if (retry > 0)
+					setTimeout(function(){postRequest(url, contents, callback, retry - 1);}, retryDelay);
 				else callback({
 					"status": "failed",
 					"error": "network timeout"
