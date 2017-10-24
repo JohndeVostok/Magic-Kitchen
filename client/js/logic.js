@@ -2,7 +2,6 @@ var debug = window.debug;
 
 function Logic()
 {
-
 	function Validator()
 	{
 		var flag = 0;
@@ -335,7 +334,8 @@ function Logic()
 		validator.init();
 		var d = (4 + dir - state.getPlayer().dir % 4);
 		state.rotate(d);
-		if (validator.validate()) return undefined;
+		if (validator.validate())
+			return undefined;
 		state.step();
 		validator.validate();
 	};
@@ -346,7 +346,8 @@ function Logic()
 		for (var i = 0; i < step; i++)
 		{
 			state.step();
-			if (validator.validate()) return undefined;
+			if (validator.validate())
+				return undefined;
 		}
 	};
 
@@ -355,11 +356,13 @@ function Logic()
 		validator.init();
 		var d = (4 + dir - state.getPlayer().dir % 4);
 		state.rotate(d);
-		if (validator.validate()) return undefined;
+		if (validator.validate())
+			return undefined;
 		for (var i = 0; i < step; i++)
 		{
 			state.step();
-			if (validator.validate()) return undefined;
+			if (validator.validate())
+				return undefined;
 		}
 	};
 
@@ -367,7 +370,8 @@ function Logic()
 	{
 		validator.init();
 		state.checkTarget(tx, ty);
-		if (validator.validate()) return undefined;
+		if (validator.validate())
+			return undefined;
 		var mp = [];
 		for (var i = 0; i < config.mapWidth; i++)
 			for (var j = 0; j < config.mapHeight; j++)
