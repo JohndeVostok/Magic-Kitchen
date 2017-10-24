@@ -1,6 +1,5 @@
 from models import Level
 from models import Solution
-from models import Game
 import json
 from django.http import HttpResponse
 
@@ -52,13 +51,13 @@ def new_solution(request):
         ret['error'] = 'this level doesn\'t exist'
         return json_response(ret)
 
-    if not 'level_info' in content:
-        ret['error'] = 'level info can\'t be empty'
+    if not 'solution_info' in content:
+        ret['error'] = 'solution info can\'t be empty'
         return json_response(ret)
-    _level_info = content['level_info']
+    _solution_info = content['solution_info']
 
     if not 'score' in content:
-        ret['error'] = 'level info can\'t be empty'
+        ret['error'] = 'score can\'t be empty'
         return json_response(ret)
 
     try:
@@ -72,7 +71,7 @@ def new_solution(request):
         ret['error'] = 'the input score needs to be in range[0,4]'
         return json_response(ret)
 
-    Solution.objects.create(user_name = session, level_id = _level_id, info = _level_info, score = _score)
+    Solution.objects.create(user_name = session, level_id = _level_id, info = _solution_info, score = _score)
 
     ret['status'] = 'succeeded'
     return json_response(ret)
