@@ -81,7 +81,60 @@ def new_default_level(request):
         return json_response(ret)
 
     _info = content['level_info']
-    Level.objects.create(level_id = _id, info = _info)
+    Level.objects.create(level_id = _id, info = _info, user_name = 'admin')
+
+    ret['status'] = 'succeeded'
+
+    return json_response(ret)
+
+def get_level_info(request):
+    content = request.POST
+    ret = {}
+    ret['status'] = 'failed'
+
+    if not 'level_id' in content:
+        ret['error'] = 'level id can\'t be empty'
+        return json_response(ret)
+
+    try:
+        _id = int(content['level_id'])
+    except ValueError,e :
+        print e
+        ret['error'] = 'the input level id needs to be an Integer'
+        return json_response(ret)
+
+    if not int_range(_id):
+        ret['error'] = 'the input level id needs to be an Integer'
+        return json_response(ret)
+
+    level_id_filter = Level.objects.filter(level_id = _id)
+    if len(level_id_filter) == 0:
+        ret['error'] = 'this level doesn\'t exist'
+        return json_response(ret)
+
+    ret['status'] = 'succeeded'
+    ret['level_info'] = level_id_filter[0].info #json
+
+    return json_response(ret)
+
+def new_usermade_level(request):
+    
+    content = request.POST
+    ret = {}
+    ret['status'] = 'failed'
+
+    session = get_session(request)
+    if (session == None):
+        ret['error'] = 'please log in first'
+        return json_response(ret)
+
+
+    if not 'level_info' in content:
+        ret['error'] = 'level info can\'t be empty'
+        return json_response(ret)
+
+    _info = content['level_info']
+    Level.objects.create(level_id = -1, info = _info, user_name = session)
 
     ret['status'] = 'succeeded'
 

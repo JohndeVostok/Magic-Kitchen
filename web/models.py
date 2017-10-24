@@ -14,6 +14,7 @@ class User(models.Model):
 class Level(models.Model):
     level_id = models.IntegerField()
     info = models.TextField()
+<<<<<<< HEAD
 
 class Solution(models.Model):
     user_name = models.CharField(max_length = 20)
@@ -21,3 +22,6 @@ class Solution(models.Model):
     level_id = models.IntegerField()
     info = models.TextField() #jsonStr
     score = models.IntegerField() #score range is [0,4], 0 means not pass, 4 means not need to score
+=======
+    user_name = models.CharField(max_length = 20)
+>>>>>>> d68a937... back-end.web.*:Add new user-made level interface.(#47)
