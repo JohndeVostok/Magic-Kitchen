@@ -3,7 +3,7 @@
 ## Back-end
 
 ### Register
-        POST('/api/register'), attributes: name = nameStr, password = passwordStr, email = eamilStr
+        POST('/api/register'), attributes: name = nameStr, password = passwordStr, email = emailStr
         return json:
             status = 'succeeded' ---------succeeded
             status = 'failed'  ---------failed
