@@ -374,6 +374,15 @@ function Logic()
 			}
 			if (!this.checkStore(p))
 				return undefined;
+
+			if (map[p].address == opFloor.length - 2)
+			{
+				player.haveItem = 0;
+				itemList[player.itemId].pos = -2;
+				player.itemId = 0;
+				ui.addAnimation(-1, p, undefined);
+				ui.deleteItem(p, undefined);
+			}
 			player.haveItem = 0;
 			map[p].haveItem = 1;
 			map[p].itemId = player.itemId;
