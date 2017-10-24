@@ -65,7 +65,7 @@ function Logic()
 		this.render = function()
 		{
 			var mp = [];
-			for (let i in map)
+			for (let i = 0; i < map.length; i++)
 			{
 				if (map[i].isOpFloor)
 					mp[i] = 3;
@@ -74,7 +74,7 @@ function Logic()
 			}
 			ui.loadMap(mp);
 			ui.clearItems();
-			for (let i in itemList)
+			for (let i = 0; i < itemList.length; i++)
 			{
 				var item = itemList[i];
 				ui.newItem(item.pos, item.type, undefined);
@@ -267,10 +267,8 @@ function Logic()
 	{
 		if (config.useFakeLevel)
 			initLevel(config.fakeLevelInfo);
-		else
 		//TODO
-		{
-		}
+		//else fetch a real level.
 	};
 
 	var renderLevel = function()
@@ -384,7 +382,8 @@ function Logic()
 			x = q[l].pos % config.mapWidth;
 			y = Math.floor(q[l].pos / config.mapHeight);
 
-			if (x == tx && y == ty) break;
+			if (x == tx && y == ty)
+				break;
 			
 			y++;
 			if (!state.checkFloor(x, y) && !mp[y * config.mapWidth + x])
@@ -475,7 +474,8 @@ function Logic()
 
 			
 			y++;
-			if (state.checkFloor(x, y) == 2 && y * config.mapWidth + x == f.pos) break;
+			if (state.checkFloor(x, y) == 2 && y * config.mapWidth + x == f.pos)
+				break;
 			if (!state.checkFloor(x, y) && !mp[y * config.mapWidth + x])
 			{
 				mp[y * config.mapWidth + x] = mp[q[l].pos] + 1;
@@ -483,7 +483,8 @@ function Logic()
 			}
 			y--;
 			x++;
-			if (state.checkFloor(x, y) == 2 && y * config.mapWidth + x == f.pos) break;
+			if (state.checkFloor(x, y) == 2 && y * config.mapWidth + x == f.pos)
+				break;
 			if (!state.checkFloor(x, y) && !mp[y * config.mapWidth + x])
 			{
 				mp[y * config.mapWidth + x] = mp[q[l].pos] + 1;
@@ -491,7 +492,8 @@ function Logic()
 			}
 			x--;
 			y--;
-			if (state.checkFloor(x, y) == 2 && y * config.mapWidth + x == f.pos) break;
+			if (state.checkFloor(x, y) == 2 && y * config.mapWidth + x == f.pos)
+				break;
 			if (!state.checkFloor(x, y) && !mp[y * config.mapWidth + x])
 			{
 				mp[y * config.mapWidth + x] = mp[q[l].pos] + 1;
@@ -499,7 +501,8 @@ function Logic()
 			}
 			y++;
 			x--;
-			if (state.checkFloor(x, y) == 2 && y * config.mapWidth + x == f.pos) break;
+			if (state.checkFloor(x, y) == 2 && y * config.mapWidth + x == f.pos)
+				break;
 			if (!state.checkFloor(x, y) && !mp[y * config.mapWidth + x])
 			{
 				mp[y * config.mapWidth + x] = mp[q[l].pos] + 1;
@@ -587,7 +590,8 @@ function Logic()
 
 			
 			y++;
-			if (state.checkFloor(x, y) == 2 && y * config.mapWidth + x == f.pos) break;
+			if (state.checkFloor(x, y) == 2 && y * config.mapWidth + x == f.pos)
+				break;
 			if (!state.checkFloor(x, y) && !mp[y * config.mapWidth + x])
 			{
 				mp[y * config.mapWidth + x] = mp[q[l].pos] + 1;
@@ -595,7 +599,8 @@ function Logic()
 			}
 			y--;
 			x++;
-			if (state.checkFloor(x, y) == 2 && y * config.mapWidth + x == f.pos) break;
+			if (state.checkFloor(x, y) == 2 && y * config.mapWidth + x == f.pos)
+				break;
 			if (!state.checkFloor(x, y) && !mp[y * config.mapWidth + x])
 			{
 				mp[y * config.mapWidth + x] = mp[q[l].pos] + 1;
@@ -603,7 +608,8 @@ function Logic()
 			}
 			x--;
 			y--;
-			if (state.checkFloor(x, y) == 2 && y * config.mapWidth + x == f.pos) break;
+			if (state.checkFloor(x, y) == 2 && y * config.mapWidth + x == f.pos)
+				break;
 			if (!state.checkFloor(x, y) && !mp[y * config.mapWidth + x])
 			{
 				mp[y * config.mapWidth + x] = mp[q[l].pos] + 1;
@@ -611,7 +617,8 @@ function Logic()
 			}
 			y++;
 			x--;
-			if (state.checkFloor(x, y) == 2 && y * config.mapWidth + x == f.pos) break;
+			if (state.checkFloor(x, y) == 2 && y * config.mapWidth + x == f.pos)
+				break;
 			if (!state.checkFloor(x, y) && !mp[y * config.mapWidth + x])
 			{
 				mp[y * config.mapWidth + x] = mp[q[l].pos] + 1;
