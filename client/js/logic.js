@@ -67,7 +67,6 @@ function Logic()
 			var mp = [];
 			for (let i in map)
 			{
-				var floorInfo = map[i];
 				if (map[i].isOpFloor)
 					mp[i] = 3;
 				else
@@ -186,8 +185,7 @@ function Logic()
 				validator.invalid("Address doesn't exist.");
 				return undefined;
 			}
-			var ans = $.extend(true, map[opFloor[address]], {pos: opFloor[address]});
-			return ans;
+			return $.extend(true, map[opFloor[address]], {pos: opFloor[address]});
 		}
 
 		this.step = function()
@@ -269,9 +267,8 @@ function Logic()
 	{
 		if (config.useFakeLevel)
 			initLevel(config.fakeLevelInfo);
-		//TODO
-		//Ture Level
 		else
+		//TODO
 		{
 		}
 	};
@@ -425,9 +422,10 @@ function Logic()
 			p.unshift(q[l].pos);
 			l = q[l].f;
 		}
+		var d;
 		for (let i = 1; i < p.length; i++)
 		{
-			var d = state.getPlayer().dir;
+			d = state.getPlayer().dir;
 			switch(p[i] - p[i - 1])
 			{
 				case -config.mapWidth:
@@ -516,9 +514,10 @@ function Logic()
 			p.unshift(q[l].pos);
 			l = q[l].f;
 		}
+		var d;
 		for (let i = 1; i < p.length; i++)
 		{
-			var d = state.getPlayer().dir;
+			d = state.getPlayer().dir;
 			switch(p[i] - p[i - 1])
 			{
 				case -config.mapWidth:
@@ -539,7 +538,7 @@ function Logic()
 			}
 			state.step();
 		}
-		var d = state.getPlayer().dir;
+		d = state.getPlayer().dir;
 		switch(f.pos - p[p.length - 1])
 		{
 			case -config.mapWidth:
@@ -627,9 +626,10 @@ function Logic()
 			p.unshift(q[l].pos);
 			l = q[l].f;
 		}
+		var d;
 		for (let i = 1; i < p.length; i++)
 		{
-			var d = state.getPlayer().dir;
+			d = state.getPlayer().dir;
 			switch(p[i] - p[i - 1])
 			{
 				case -config.mapWidth:
@@ -650,7 +650,7 @@ function Logic()
 			}
 			state.step();
 		}
-		var d = state.getPlayer().dir;
+		d = state.getPlayer().dir;
 		switch(f.pos - p[p.length - 1])
 		{
 			case -config.mapWidth:
