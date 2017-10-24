@@ -131,6 +131,16 @@ function Logic()
 			return (y * config.mapWidth + x);
 		};
 
+		var checkFloor = function(x, y)
+		{
+			if (x < 0 || x >= config.mapWidth || y < 0 || y >= config.mapHeight)
+				return 1;
+			var pos = y * config.mapWidth + x;
+			if (map[pos].isOpFloor)
+				return 2;
+			return 0;
+		};
+
 		this.getPlayer = function()
 		{
 			return player;
@@ -149,16 +159,6 @@ function Logic()
 				validator.invalid("Target is opFloor!");
 				return undefined;
 			}
-		};
-
-		this.checkFloor = function(x, y)
-		{
-			if (x < 0 || x >= config.mapWidth || y < 0 || y >= config.mapHeight)
-				return 1;
-			var pos = y * config.mapWidth + x;
-			if (map[pos].isOpFloor)
-				return 2;
-			return 0;
 		};
 
 		this.checkLoad = function(pos)
@@ -200,6 +200,86 @@ function Logic()
 			}
 			return $.extend(true, map[opFloor[address]], {pos: opFloor[address]});
 		}
+
+		this.route = function(tx, ty)
+		{
+			var mp = [];
+			for (let i = 0; i < config.mapWidth; i++)
+				for (let j = 0; j < config.mapHeight; j++)
+					if (checkFloor(i, j))
+						mp[j * config.mapWidth + i] = -1;
+					else
+						mp[j * config.mapWidth + i] = 0;
+
+			var pos = player.pos;
+			var x = pos % config.mapWidth, y = Math.floor(pos / config.mapWidth);
+			mp[pos] = 1;
+			var q = [];
+			var l = 0, r = 1, flag = 0;
+			q[0] = {pos: pos, f: -1};
+			while (l < r)
+			{
+				pos = q[l].pos;
+				x = pos % config.mapWidth;
+				y = Math.floor(pos / config.mapHeight);
+
+				for (let i = 0; i < config.offset.length; i++)
+				{
+					x += config.offset[i].x;
+					y += config.offset[i].y;
+					if (x == tx && y == ty)
+					{
+						flag = 1;
+						break;
+					}
+					if (!checkFloor(x, y) && !mp[y * config.mapWidth + x])
+					{
+						mp[y * config.mapWidth + x] = mp[pos] + 1;
+						q[r++] = {pos: y * config.mapWidth + x, f: l};
+					}
+					x -= config.offset[i].x;
+					y -= config.offset[i].y;
+				}
+				if (flag) break;
+				l++;
+			}
+			var p = [];
+			var opList = [];
+			while (l != -1)
+			{
+				p.unshift(q[l].pos);
+				l = q[l].f;
+			}
+			p.push(ty * config.mapWidth + tx);
+			var d = player.dir;
+			for (let i = 1; i < p.length; i++)
+			{
+				switch(p[i] - p[i - 1])
+				{
+					case -config.mapWidth:
+						if (d != 2) opList.push({op: "r", dir: (6 - d) % 4});
+						d = 2;
+					break;
+					case -1:
+						if (d != 3) opList.push({op: "r", dir: (7 - d) % 4});
+						d = 3;
+					break;
+					case 1:
+						if (d != 1) opList.push({op: "r", dir: (5 - d) % 4});
+						d = 1;
+					break;
+					case config.mapWidth:
+						if (d != 0) opList.push({op: "r", dir: (4 - d) % 4});
+						d = 0;
+					break;
+					default:
+					//nothing
+					break;
+				}
+				opList.push({op: "s"});
+			}
+			return opList;
+		};
 
 		this.step = function()
 		{
@@ -380,86 +460,16 @@ function Logic()
 		state.checkTarget(tx, ty);
 		if (validator.validate())
 			return undefined;
-		var mp = [];
-		for (let i = 0; i < config.mapWidth; i++)
-			for (let j = 0; j < config.mapHeight; j++)
-				if (state.checkFloor(i, j))
-					mp[j * config.mapWidth + i] = -1;
-		var x = state.getPlayer().pos % config.mapWidth, y = Math.floor(state.getPlayer().pos / config.mapWidth);
-		mp[y * config.mapWidth + x] = 1;
-		var q = [];
-		var l = 0, r = 1;
-		q[0] = {pos: y * config.mapWidth + x, f: -1};
-		while (l < r)
-		{
-			x = q[l].pos % config.mapWidth;
-			y = Math.floor(q[l].pos / config.mapHeight);
 
-			if (x == tx && y == ty)
-				break;
-			
-			y++;
-			if (!state.checkFloor(x, y) && !mp[y * config.mapWidth + x])
-			{
-				mp[y * config.mapWidth + x] = mp[q[l].pos] + 1;
-				q[r++] = {pos: y * config.mapWidth + x, f: l};
-			}
-			y--;
-			x++;
-			if (!state.checkFloor(x, y) && !mp[y * config.mapWidth + x])
-			{
-				mp[y * config.mapWidth + x] = mp[q[l].pos] + 1;
-				q[r++] = {pos: y * config.mapWidth + x, f: l};
-			}
-			x--;
-			y--;
-			if (!state.checkFloor(x, y) && !mp[y * config.mapWidth + x])
-			{
-				mp[y * config.mapWidth + x] = mp[q[l].pos] + 1;
-				q[r++] = {pos: y * config.mapWidth + x, f: l};
-			}
-			y++;
-			x--;
-			if (!state.checkFloor(x, y) && !mp[y * config.mapWidth + x])
-			{
-				mp[y * config.mapWidth + x] = mp[q[l].pos] + 1;
-				q[r++] = {pos: y * config.mapWidth + x, f: l};
-			}
-			x++;
-			l++;
-		}
-		var p = []
-		while (l != -1)
+		var p = state.route(tx, ty);
+		for (let i = 0; i < p.length; i++)
 		{
-			p.unshift(q[l].pos);
-			l = q[l].f;
-		}
-		var d;
-		for (let i = 1; i < p.length; i++)
-		{
-			d = state.getPlayer().dir;
-			switch(p[i] - p[i - 1])
-			{
-				case -config.mapWidth:
-					state.rotate((6 - d) % 4);
-				break;
-				case -1:
-					state.rotate((7 - d) % 4);
-				break;
-				case 1:
-					state.rotate((5 - d) % 4);
-				break;
-				case config.mapWidth:
-					state.rotate((4 - d) % 4);
-				break;
-				default:
-				//nothing
-				break;
-			}
-			state.step();
+			if (p[i].op == "s") state.step();
+			if (p[i].op == "r") state.rotate(p[i].dir);
 		}
 	}
 
+/*
 	var load = function(address)
 	{
 		validator.init();
@@ -691,7 +701,7 @@ function Logic()
 		}
 		state.storeItem();
 	}
-
+*/
 //functions for UI
 
 	this.start = function()

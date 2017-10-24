@@ -18,6 +18,7 @@ var config = {
 			{type: 1, pos: 3}
 		]
 	},
+	offset: [{x: 0, y: 1}, {x: 1, y: 0}, {x: 0, y: -1}, {x: -1, y: 0}],
 	
 	// Config for UI
 	UI: {
