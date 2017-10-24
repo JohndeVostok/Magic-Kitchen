@@ -146,6 +146,11 @@ function Logic()
 			return 0;
 		};
 
+		var itemEqual = function(itemA, itemB)
+		{
+			return (itemA.type == itemB.type)
+		}
+
 		this.getPlayer = function()
 		{
 			return player;
@@ -199,6 +204,11 @@ function Logic()
 			if (map[pos].haveItem)
 			{
 				validator.invalid("Something There!");
+				return 0;
+			}
+			if (map[pos].address == opFloor.length - 2 && !itemEqual(itemList[player.itemId], output[0][0]))
+			{
+				validator.invalid("It's not what we want!");
 				return 0;
 			}
 			return 1;
@@ -380,6 +390,7 @@ function Logic()
 				player.haveItem = 0;
 				itemList[player.itemId].pos = -2;
 				player.itemId = 0;
+				output[0].shift();
 				ui.addAnimation(-1, p, undefined);
 				ui.deleteItem(p, undefined);
 			}
