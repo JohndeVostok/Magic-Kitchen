@@ -48,14 +48,14 @@ function Logic()
 			player.hasItem = 0;
 			player.itemId = 0;
 
-			opFloor = opFloorIn.slice(0);
+			opFloor = $.extend(true, [], opFloorIn);
 			for (var i = 0; i < opFloor.length; i++)
 			{
 				map[opFloor[i]].isOpFloor = 1;
 				map[opFloor[i]].address = i;
 			}
 
-			itemList = itemListIn.slice(0);
+			itemList = $.extend(true, [], itemListIn);
 			for (var i = 0; i < itemList.length; i++)
 			{
 				map[itemList[i].pos].haveItem = 1;
@@ -143,11 +143,53 @@ function Logic()
 		this.checkFloor = function(x, y)
 		{
 			if (x < 0 || x >= config.mapWidth || y < 0 || y >= config.mapHeight)
-				return -1;
+				return 1;
 			var pos = y * config.mapWidth + x;
 			if (map[pos].isOpFloor)
-				return map[pos].address;
+				return 2;
+			return 0;
 		};
+
+		this.checkLoad = function(pos)
+		{
+			if (!map[pos].haveItem)
+			{
+				validator.invalid("Nothing There!");
+				return 0;
+			}
+			if (player.haveItem)
+			{
+				validator.invalid("I have something!");
+				return 0;
+			}
+			return 1;
+		};
+
+		this.checkStore = function(pos)
+		{
+			if (map[pos].haveItem)
+			{
+				validator.invalid("Something There!");
+				return 0;
+			}
+			if (!player.haveItem)
+			{
+				validator.invalid("I have nothing to store!");
+				return 0;
+			}
+			return 1;
+		};
+
+		this.getFloor = function(address)
+		{
+			if (address >= opFloor.length)
+			{
+				validator.invalid("Address doesn't exist.");
+				return undefined;
+			}
+			var ans = $.extend(true, map[opFloor[address]], {pos: opFloor[address]});
+			return ans;
+		}
 
 		this.step = function()
 		{
@@ -156,12 +198,12 @@ function Logic()
 			if (p == -1)
 			{
 				validator.invalid("It's out!");
-				return 0;
+				return undefined;
 			}
 			if (map[getFront()].isOpFloor)
 			{
 				validator.invalid("It's a opFloor!");
-				return 0;
+				return undefined;
 			}
 			player.pos = getFront();
 			ui.addPlayerAnimation(q, p, player.dir, player.dir);
@@ -180,18 +222,10 @@ function Logic()
 			if (p == -1)
 			{
 				validator.invalid("It's out!");
-				return 0;
+				return undefined;
 			}
-			if (!map[p].haveItem)
-			{
-				validator.invalid("Nothing There!");
-				return 0;
-			}
-			if (player.haveItem)
-			{
-				validator.invalid("I have something!");
-				return 0;
-			}
+			if (!this.checkLoad(p))
+				return undefined;
 			player.haveItem = 1;
 			map[p].haveItem = 0;
 			player.itemId = map[p].itemId;
@@ -206,18 +240,10 @@ function Logic()
 			if (p == -1)
 			{
 				validator.invalid("It's out!");
-				return 0;
+				return undefined;
 			}
-			if (map[p].haveItem)
-			{
-				validator.invalid("Something There!");
-				return 0;
-			}
-			if (!player.haveItem)
-			{
-				validator.invalid("I have nothing to store!");
-				return 0;
-			}
+			if (!this.checkStore(p))
+				return undefined;
 			player.haveItem = 0;
 			map[p].haveItem = 1;
 			map[p].itemId = player.itemId;
@@ -422,11 +448,224 @@ function Logic()
 
 	var load = function(address)
 	{
-		
+		validator.init();
+		var f = state.getFloor(address);
+		if (validator.validate())
+			return undefined;
+		state.checkLoad(f.pos);
+		if (validator.validate())
+			return undefined;
+
+		var mp = [];
+		for (var i = 0; i < config.mapWidth; i++)
+			for (var j = 0; j < config.mapHeight; j++)
+				if (state.checkFloor(i, j))
+					mp[j * config.mapWidth + i] = -1;
+		var x = state.getPlayer().pos % config.mapWidth, y = Math.floor(state.getPlayer().pos / config.mapWidth);
+		mp[y * config.mapWidth + x] = 1;
+		var q = [];
+		var l = 0, r = 1;
+		q[0] = {pos: y * config.mapWidth + x, f: -1};
+		while (l < r)
+		{
+			x = q[l].pos % config.mapWidth;
+			y = Math.floor(q[l].pos / config.mapHeight);
+
+			
+			y++;
+			if (state.checkFloor(x, y) == 2 && y * config.mapWidth + x == f.pos) break;
+			if (!state.checkFloor(x, y) && !mp[y * config.mapWidth + x])
+			{
+				mp[y * config.mapWidth + x] = mp[q[l].pos] + 1;
+				q[r++] = {pos: y * config.mapWidth + x, f: l};
+			}
+			y--;
+			x++;
+			if (state.checkFloor(x, y) == 2 && y * config.mapWidth + x == f.pos) break;
+			if (!state.checkFloor(x, y) && !mp[y * config.mapWidth + x])
+			{
+				mp[y * config.mapWidth + x] = mp[q[l].pos] + 1;
+				q[r++] = {pos: y * config.mapWidth + x, f: l};
+			}
+			x--;
+			y--;
+			if (state.checkFloor(x, y) == 2 && y * config.mapWidth + x == f.pos) break;
+			if (!state.checkFloor(x, y) && !mp[y * config.mapWidth + x])
+			{
+				mp[y * config.mapWidth + x] = mp[q[l].pos] + 1;
+				q[r++] = {pos: y * config.mapWidth + x, f: l};
+			}
+			y++;
+			x--;
+			if (state.checkFloor(x, y) == 2 && y * config.mapWidth + x == f.pos) break;
+			if (!state.checkFloor(x, y) && !mp[y * config.mapWidth + x])
+			{
+				mp[y * config.mapWidth + x] = mp[q[l].pos] + 1;
+				q[r++] = {pos: y * config.mapWidth + x, f: l};
+			}
+			x++;
+			l++;
+		}
+		var p = []
+		while (l != -1)
+		{
+			p.unshift(q[l].pos);
+			l = q[l].f;
+		}
+		for (var i = 1; i < p.length; i++)
+		{
+			var d = state.getPlayer().dir;
+			switch(p[i] - p[i - 1])
+			{
+				case -config.mapWidth:
+					state.rotate((6 - d) % 4);
+				break;
+				case -1:
+					state.rotate((7 - d) % 4);
+				break;
+				case 1:
+					state.rotate((5 - d) % 4);
+				break;
+				case config.mapWidth:
+					state.rotate((4 - d) % 4);
+				break;
+				default:
+				//nothing
+				break;
+			}
+			state.step();
+		}
+		var d = state.getPlayer().dir;
+		switch(f.pos - p[p.length - 1])
+		{
+			case -config.mapWidth:
+				state.rotate((6 - d) % 4);
+			break;
+			case -1:
+				state.rotate((7 - d) % 4);
+			break;
+			case 1:
+				state.rotate((5 - d) % 4);
+			break;
+			case config.mapWidth:
+				state.rotate((4 - d) % 4);
+			break;
+			default:
+			//nothing
+			break;
+		}
+		state.loadItem();
 	}
 
 	var store = function(address)
 	{
+		validator.init();
+		var f = state.getFloor(address);
+		if (validator.validate())
+			return undefined;
+		state.checkStore(f.pos);
+		if (validator.validate())
+			return undefined;
+
+		var mp = [];
+		for (var i = 0; i < config.mapWidth; i++)
+			for (var j = 0; j < config.mapHeight; j++)
+				if (state.checkFloor(i, j))
+					mp[j * config.mapWidth + i] = -1;
+		var x = state.getPlayer().pos % config.mapWidth, y = Math.floor(state.getPlayer().pos / config.mapWidth);
+		mp[y * config.mapWidth + x] = 1;
+		var q = [];
+		var l = 0, r = 1;
+		q[0] = {pos: y * config.mapWidth + x, f: -1};
+		while (l < r)
+		{
+			x = q[l].pos % config.mapWidth;
+			y = Math.floor(q[l].pos / config.mapHeight);
+
+			
+			y++;
+			if (state.checkFloor(x, y) == 2 && y * config.mapWidth + x == f.pos) break;
+			if (!state.checkFloor(x, y) && !mp[y * config.mapWidth + x])
+			{
+				mp[y * config.mapWidth + x] = mp[q[l].pos] + 1;
+				q[r++] = {pos: y * config.mapWidth + x, f: l};
+			}
+			y--;
+			x++;
+			if (state.checkFloor(x, y) == 2 && y * config.mapWidth + x == f.pos) break;
+			if (!state.checkFloor(x, y) && !mp[y * config.mapWidth + x])
+			{
+				mp[y * config.mapWidth + x] = mp[q[l].pos] + 1;
+				q[r++] = {pos: y * config.mapWidth + x, f: l};
+			}
+			x--;
+			y--;
+			if (state.checkFloor(x, y) == 2 && y * config.mapWidth + x == f.pos) break;
+			if (!state.checkFloor(x, y) && !mp[y * config.mapWidth + x])
+			{
+				mp[y * config.mapWidth + x] = mp[q[l].pos] + 1;
+				q[r++] = {pos: y * config.mapWidth + x, f: l};
+			}
+			y++;
+			x--;
+			if (state.checkFloor(x, y) == 2 && y * config.mapWidth + x == f.pos) break;
+			if (!state.checkFloor(x, y) && !mp[y * config.mapWidth + x])
+			{
+				mp[y * config.mapWidth + x] = mp[q[l].pos] + 1;
+				q[r++] = {pos: y * config.mapWidth + x, f: l};
+			}
+			x++;
+			l++;
+		}
+		var p = []
+		while (l != -1)
+		{
+			p.unshift(q[l].pos);
+			l = q[l].f;
+		}
+		for (var i = 1; i < p.length; i++)
+		{
+			var d = state.getPlayer().dir;
+			switch(p[i] - p[i - 1])
+			{
+				case -config.mapWidth:
+					state.rotate((6 - d) % 4);
+				break;
+				case -1:
+					state.rotate((7 - d) % 4);
+				break;
+				case 1:
+					state.rotate((5 - d) % 4);
+				break;
+				case config.mapWidth:
+					state.rotate((4 - d) % 4);
+				break;
+				default:
+				//nothing
+				break;
+			}
+			state.step();
+		}
+		var d = state.getPlayer().dir;
+		switch(f.pos - p[p.length - 1])
+		{
+			case -config.mapWidth:
+				state.rotate((6 - d) % 4);
+			break;
+			case -1:
+				state.rotate((7 - d) % 4);
+			break;
+			case 1:
+				state.rotate((5 - d) % 4);
+			break;
+			case config.mapWidth:
+				state.rotate((4 - d) % 4);
+			break;
+			default:
+			//nothing
+			break;
+		}
+		state.storeItem();
 	}
 
 //functions for UI
@@ -473,6 +712,12 @@ function Logic()
 			break;
 			case 8:
 				moveToPos(op.x, op.y);
+			break;
+			case 9:
+				load(op.address);
+			break;
+			case 10:
+				store(op.address);
 			break;
 			default:
 			//nothing

@@ -1,5 +1,5 @@
 var config = {
-	debug: false,
+	debug: true,
 
 	mapWidth: 7,
 	mapHeight: 7,
@@ -9,7 +9,7 @@ var config = {
 	// The fake level used in logic.
 	// Please update it when the level specifications change.
 	fakeLevelInfo: {
-		blockTypes: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
+		blockTypes: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
 		playerInfo: {pos: 0, dir: 0},
 		opFloor: [8, 9, 10, 11, 12, 22, 23, 24, 25, 26, 36, 37, 38, 39, 40],
 		itemList: [
@@ -257,6 +257,41 @@ var config = {
 			generateOps: function(block){
 				return [{typeId: 8, x: parseInt(block.getFieldValue("X")), y: parseInt(block.getFieldValue("Y"))}];
 			}
+		},
+		{
+			name: "load",
+			json: {
+				"message0": "从%1读取",
+				"args0": [
+					{"type": "field_input", "name": "ADDRESS", "check": "Number", "text": "address"},
+				],
+				"previousStatement": null,
+				"nextStatement": null,
+				"tooltip": "load",
+				"colour": 30
+			},
+			initExtra: function(block){},
+			generateOps: function(block){
+				return [{typeId: 9, address: parseInt(block.getFieldValue("ADDRESS"))}];
+			}
+		},
+		{
+			name: "store",
+			json: {
+				"message0": "存到%1",
+				"args0": [
+					{"type": "field_input", "name": "ADDRESS", "check": "Number", "text": "address"},
+				],
+				"previousStatement": null,
+				"nextStatement": null,
+				"tooltip": "load",
+				"colour": 30
+			},
+			initExtra: function(block){},
+			generateOps: function(block){
+				return [{typeId: 10, address: parseInt(block.getFieldValue("ADDRESS"))}];
+			}
 		}
+
 	]
 };
