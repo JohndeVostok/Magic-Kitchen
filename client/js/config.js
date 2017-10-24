@@ -1,5 +1,5 @@
 var config = {
-	debug: false,
+	debug: true,
 
 	mapWidth: 7,
 	mapHeight: 7,
@@ -12,11 +12,9 @@ var config = {
 		blockTypes: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
 		playerInfo: {pos: 7, dir: 0},
 		opFloor: [1, 2, 3, 4, 5, 22, 23, 24, 25, 26, 36, 37, 38, 39, 40, 6, 0],
-		itemList: [
-			{type: 1, pos: 1},
-			{type: 2, pos: 2},
-			{type: 1, pos: 3}
-		]
+		input: [[{type: 1}]],
+		output: [[{type: 2}, {type: 2}]],
+		itemList: []
 	},
 	offset: [{x: 0, y: 1}, {x: 1, y: 0}, {x: 0, y: -1}, {x: -1, y: 0}],
 	
