@@ -49,6 +49,8 @@ var ui = function() {
 			canvas.style.height = height+"px";
 			// set CreateJS to render scaled
 			stage.scaleX = stage.scaleY = window.devicePixelRatio;
+			// set canvas context image smoothing
+			canvas.getContext("2d").imageSmoothingQuality = "high";
 		}
 		stage.update();
 	};
