@@ -49,6 +49,7 @@ var code = function() {
             blocks[bid].setMovable(!state);
             blocks[bid].setDeletable(!state);
         }
+		workspace.clearUndo();
     };
 
 	var highlight = function(id) {
@@ -90,6 +91,14 @@ var code = function() {
 		interpreter = undefined;
 	}
 
+	var undo = function() {
+		workspace.undo(false);
+	}
+
+	var redo = function() {
+		workspace.undo(true);
+	}
+
 	// Blockly workspace
 	var workspace;
 
@@ -103,5 +112,7 @@ var code = function() {
 		start: start,
 		step: step,
 		stop: stop,
+		undo: undo,
+		redo: redo
 	};
 }();

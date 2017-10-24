@@ -161,8 +161,17 @@ var ui = function() {
 		
 		// Init DOM elements.
 		// For test only.
+		$("#buttonUndo").click(function() {
+			code.undo();
+			$("#buttonRedo").attr("disabled", false);
+		});
+		$("#buttonRedo").click(function() {
+			code.redo();
+		});
 		$("#buttonCompile").click(function() {
 			logic.start();
+			$("#buttonUndo").attr("disabled", true);
+			$("#buttonRedo").attr("disabled", true);
 			$("#buttonCompile").attr("disabled", true);
 			$("#buttonStep").attr("disabled", false);
 			$("#buttonStop").attr("disabled", false);
@@ -171,6 +180,8 @@ var ui = function() {
 			if (!logic.step()) $("#buttonStep").attr("disabled", true);
 		});
 		$("#buttonStop").click(function() {
+			$("#buttonUndo").attr("disabled", false);
+			$("#buttonRedo").attr("disabled", true);
 			$("#buttonCompile").attr("disabled", false);
 			$("#buttonStep").attr("disabled", true);
 			$("#buttonStop").attr("disabled", true);
