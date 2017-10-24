@@ -46,7 +46,19 @@
 				CodeCheF
 			</h2>
 		</div>
-		<div class="col-xs-6">
+		<div class="col-xs-6" style="text-align:center;padding-top:20px;">
+			<button class="btn btn-primary" id="loginButton">
+				<span class="glyphicon glyphicon-user"></span>
+				<span> 登录 </span>
+			</button>
+			<button class="btn btn-danger" id="logoutButton" style="display:none">
+				<span class="glyphicon glyphicon-user"></span>
+				<span> 登出 </span>
+			</button>
+			<button class="btn btn-success" id="registerButton">
+				<span class="glyphicon glyphicon-plus"></span>
+				<span> 注册 </span>
+			</button>
 		</div>
 	</div>
 	<div class="row">
@@ -80,6 +92,149 @@
 
 <xml id="toolbox" style="display: none">
 </xml>
+
+<div class="modal fade" id="loginModal" tabindex="-1" role="dialog">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal">
+					<span aria-hidden="true"> &times; </span>
+				</button>
+				<h4 class="modal-title">
+					登录
+				</h4>
+			</div>
+			<div class="modal-body">
+				<form action="javascript:void(0);">
+					<div class="form-group">
+						<label for="loginUsername" class="control-label">
+							<span class="glyphicon glyphicon-user" />
+							<span> 用户名： </span>
+						</label>
+						<input class="form-control" id="loginUserName" />
+					</div>
+					<div class="form-group">
+						<label for="loginPassword" class="control-label">
+							<span class="glyphicon glyphicon-asterisk" />
+							<span> 密码： </span>
+						</label>
+						<input class="form-control" id="loginPassword" type="password" />
+					</div>
+				</form>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-primary" id="loginSubmitButton">
+					<span class="glyphicon glyphicon-ok" />
+					<span> 登录 </span>
+				</button>
+				<button type="button" class="btn btn-default" data-dismiss="modal">
+					<span class="glyphicon glyphicon-remove" />
+					<span> 取消 </span>
+				</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="modal fade" id="registerModal" tabindex="-1" role="dialog">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal">
+					<span aria-hidden="true"> &times; </span>
+				</button>
+				<h4 class="modal-title">
+					注册
+				</h4>
+			</div>
+			<div class="modal-body">
+				<form action="javascript:void(0);">
+					<div class="form-group">
+						<label for="registerUsername" class="control-label">
+							<span class="glyphicon glyphicon-user" />
+							<span> 用户名： </span>
+						</label>
+						<input class="form-control" id="registerUsername" />
+					</div>
+					<div class="form-group">
+						<label for="registerPassword" class="control-label">
+							<span class="glyphicon glyphicon-asterisk" />
+							<span> 密码： </span>
+						</label>
+						<input class="form-control" id="registerPassword" type="password" />
+					</div>
+					<div class="form-group">
+						<label for="registerPassword2" class="control-label">
+							<span class="glyphicon glyphicon-asterisk" />
+							<span> 重复密码： </span>
+						</label>
+						<input class="form-control" id="registerPassword2" type="password" />
+					</div>
+				</form>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-primary" id="registerSubmitButton">
+					<span class="glyphicon glyphicon-ok" />
+					<span> 注册 </span>
+				</button>
+				<button type="button" class="btn btn-default" data-dismiss="modal">
+					<span class="glyphicon glyphicon-remove" />
+					<span> 取消 </span>
+				</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="modal fade" id="changePasswordModal" tabindex="-1" role="dialog">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal">
+					<span aria-hidden="true"> &times; </span>
+				</button>
+				<h4 class="modal-title">
+					修改密码
+				</h4>
+			</div>
+			<div class="modal-body">
+				<form action="javascript:void(0);">
+					<div class="form-group">
+						<label class="control-label">
+							<span class="glyphicon glyphicon-user" />
+							<span> 用户名：&nbsp; </span>
+							<span id="changePasswordUsername"></span>
+						</label>
+					</div>
+					<div class="form-group">
+						<label for="changePasswordNewPassword" class="control-label">
+							<span class="glyphicon glyphicon-asterisk" />
+							<span> 新密码： </span>
+						</label>
+						<input class="form-control" id="changePasswordNewPassword" type="password" />
+					</div>
+					<div class="form-group">
+						<label for="changePasswordNewPassword2" class="control-label">
+							<span class="glyphicon glyphicon-asterisk" />
+							<span> 重复密码： </span>
+						</label>
+						<input class="form-control" id="changePasswordNewPassword2" type="password" />
+					</div>
+				</form>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-primary" id="changePasswordSubmitButton">
+					<span class="glyphicon glyphicon-ok" />
+					<span> 修改密码 </span>
+				</button>
+				<button type="button" class="btn btn-default" data-dismiss="modal">
+					<span class="glyphicon glyphicon-remove" />
+					<span> 取消 </span>
+				</button>
+			</div>
+		</div>
+	</div>
+</div>
 
 </body>
 
