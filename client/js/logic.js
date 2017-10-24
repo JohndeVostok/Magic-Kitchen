@@ -45,7 +45,7 @@ function Logic()
 		{
 			player.pos = playerInfo.pos;
 			player.dir = playerInfo.dir;
-			player.hasItem = 0;
+			player.haveItem = 0;
 			player.itemId = 0;
 
 			opFloor = $.extend(true, [], opFloorIn);
