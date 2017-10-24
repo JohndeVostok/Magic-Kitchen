@@ -316,9 +316,9 @@ var ui = function() {
 			items[i] = undefined;
 		}
 		if (itemOnHead != undefined) {
-			stage.removeChild(itemsOnHead.sprite);
+			stage.removeChild(itemOnHead.sprite);
+			itemOnHead = undefined;
 		}
-		itemOnHead = undefined;
 		
 		setTimeout(setAnimationComplete, 100);
 	};
