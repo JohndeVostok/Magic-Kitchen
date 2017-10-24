@@ -3,6 +3,9 @@
 ## Client
 
 ### Network
+		All functions may try 3 times before timeout.
+		All callback functions are called with <5s delay.
+
 		network.register(name, password, email, callback)
 			name: type = string, content = User Name
 			password: type = string, content = Pass Phrase
