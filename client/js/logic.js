@@ -16,12 +16,11 @@ function Logic()
 		{
 			flag = 1;
 			str = s;
-			ui.blockStep();
 		};
 		this.validate = function()
 		{
 			if (flag)
-				debug.log(str);
+				ui.blockStep(str);
 			return flag;
 		};
 	}
