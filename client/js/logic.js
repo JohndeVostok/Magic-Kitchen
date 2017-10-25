@@ -206,10 +206,18 @@ function Logic()
 				validator.invalid("Something There!");
 				return 0;
 			}
-			if (map[pos].address == opFloor.length - 2 && !itemEqual(itemList[player.itemId], output[0][0]))
+			if (map[pos].address == opFloor.length - 2)
 			{
-				validator.invalid("It's not what we want!");
-				return 0;
+				if (output[0].length == 0)
+				{
+					validator.invalid("It's full.");
+					return 0;
+				}
+				if (!itemEqual(itemList[player.itemId], output[0][0]))
+				{
+					validator.invalid("It's not what we want!");
+					return 0;
+				}
 			}
 			return 1;
 		};
@@ -391,15 +399,19 @@ function Logic()
 				itemList[player.itemId].pos = -2;
 				player.itemId = 0;
 				output[0].shift();
+				console.log("!!!");
 				ui.addAnimation(-1, p, undefined);
 				ui.deleteItem(p, undefined);
 			}
-			player.haveItem = 0;
-			map[p].haveItem = 1;
-			map[p].itemId = player.itemId;
-			player.itemId = 0;
-			itemList[map[p].itemId].pos = p;
-			ui.addAnimation(-1, p, undefined);
+			else
+			{
+				player.haveItem = 0;
+				map[p].haveItem = 1;
+				map[p].itemId = player.itemId;
+				player.itemId = 0;
+				itemList[map[p].itemId].pos = p;
+				ui.addAnimation(-1, p, undefined);
+			}
 		};
 	}
 
