@@ -90,6 +90,16 @@ var ui = function() {
 	// We store player direction just for animation fluency.
 	var playerDirection = 0;
 	
+	// Input/Output
+	const IOItemsWidth = 50;
+	const IOItemsHeight = 50;
+	const IOItemsHorizontalGap = 20;
+	const IOItemsLeftPos = 100;
+	const inputTopPos = 0;
+	const outputTopPos = 75;
+	var inputItems = [];
+	var outputItems = [];
+	
 	var initUI = function() {
 		// Init map.
 		mapSize = N * M;
@@ -161,6 +171,10 @@ var ui = function() {
 			}
 		});
 		playerDirection = 0;
+		
+		// Draw I/O queue.
+		stage.addChild(setInputItemPos(new createjs.Sprite(mapSpriteSheets[1]), -1.2));
+		stage.addChild(setOutputItemPos(new createjs.Sprite(mapSpriteSheets[2]), -1.2));
 		
 		// Init DOM elements.
 		// For test only.
@@ -456,6 +470,10 @@ var ui = function() {
 			runAddPlayerAnimation(animation.args);
 		} else if (animation.type == "deleteItem") {
 			runDeleteItem(animation.args);
+		} else if (animation.type == "setInput") {
+			runSetInput(animation.args);
+		} else if (animation.type == "setOutput") {
+			runSetOutput(animation.args);
 		} else {
 			throw "Invalid animation " + animation.type;
 		}
@@ -659,6 +677,68 @@ var ui = function() {
 		setTimeout(setAnimationComplete, 0);
 	};
 	
+	var setInputItemPos = function(sprite, pos) {
+		sprite.setTransform(
+			IOItemsLeftPos + pos * (IOItemsWidth + IOItemsHorizontalGap),
+			inputTopPos,
+			IOItemsWidth / config.UI.map.imageWidth,
+			IOItemsHeight / config.UI.map.imageHeight
+		);
+		return sprite;
+	};
+	
+	var setOutputItemPos = function(sprite, pos) {
+		sprite.setTransform(
+			IOItemsLeftPos + pos * (IOItemsWidth + IOItemsHorizontalGap),
+			outputTopPos,
+			IOItemsWidth / config.UI.map.imageWidth,
+			IOItemsHeight / config.UI.map.imageHeight
+		);
+		return sprite;
+	};
+	
+	var runSetInput = function(args) {
+		for (let i in inputItems) {
+			stage.removeChild(inputItems[i].sprite);
+		}
+		inputItems = [];
+		
+		for (let i in args.itemList) {
+			let item = args.itemList[i];
+			let s = new createjs.Sprite(objectSpriteSheets[item.type]);
+			let id = inputItems.length;
+			inputItems.push({
+				type: item.type,
+				sprite: s
+			});
+			setInputItemPos(s, id);
+			stage.addChild(s);
+		}
+		
+		setTimeout(setAnimationComplete, 0);
+	};
+	
+	var runSetOutput = function(args) {
+		for (let i in outputItems) {
+			stage.removeChild(outputItems[i].sprite);
+		}
+		outputItems = [];
+		
+		for (let i in args.itemList) {
+			let item = args.itemList[i];
+			let s = new createjs.Sprite(objectSpriteSheets[item.type]);
+			let id = outputItems.length;
+			outputItems.push({
+				type: item.type,
+				sprite: s
+			});
+			setOutputItemPos(s, id);
+			stage.addChild(s);
+		}
+		
+		setTimeout(setAnimationComplete, 0);
+	};
+	
 	// Below are animation functions, i.e. functions that register animations for later rendering.
 	
 	var clearItems = function() {
@@ -727,12 +807,41 @@ var ui = function() {
 		});
 	};
 	
+	var deepCopyItemList = function(itemList) {
+		var ret = [];
+		for (var i in itemList) {
+			var item = itemList[i];
+			ret[i] = {
+				type: item.type
+			};
+		}
+		return ret;
+	};
+	
 	var setInput = function(itemList) {
-		// TODO
+		if (!itemList || itemList.length == undefined) {
+			throw "invalid item list";
+		}
+		
+		animationQueue.push({
+			type: "setInput",
+			args: {
+				itemList: deepCopyItemList(itemList)
+			}
+		});
 	};
 	
 	var setOutput = function(itemList) {
-		// TODO
+		if (!itemList || itemList.length == undefined) {
+			throw "invalid item list";
+		}
+		
+		animationQueue.push({
+			type: "setOutput",
+			args: {
+				itemList: deepCopyItemList(itemList)
+			}
+		});
 	};
 	
 	var debug = function() {
