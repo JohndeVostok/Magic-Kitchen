@@ -843,6 +843,10 @@ var ui = function() {
 			}
 		});
 	};
+
+	var blockStep = function() {
+		$("#buttonStep").attr("disabled", true);
+	};
 	
 	var debug = function() {
 		console.log(animationRunning);
@@ -862,6 +866,7 @@ var ui = function() {
 		addPlayerAnimation: addPlayerAnimation,
 		setInput: setInput,
 		setOutput: setOutput,
+		blockStep: blockStep,
 		debug: debug
 	};
 }();

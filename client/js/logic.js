@@ -16,6 +16,7 @@ function Logic()
 		{
 			flag = 1;
 			str = s;
+			ui.blockStep();
 		};
 		this.validate = function()
 		{
