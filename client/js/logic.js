@@ -742,9 +742,18 @@ function Logic()
 			status: "failed"
 		});
 	}
-	
+
 	// Do register with network module
 	this.doRegister = function(username, email, password, password2, callback)
+	{
+		// TODO
+		callback("TODO", {
+			status: "failed"
+		});
+	}
+
+	// Do change password with network module
+	this.doChangePassword = function(newPassword, newPassword2, callback)
 	{
 		// TODO
 		callback("TODO", {
