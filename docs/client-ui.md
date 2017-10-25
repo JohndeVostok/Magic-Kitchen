@@ -91,12 +91,12 @@
 		ui.setInput(itemList)
 			Set the input queue to itemList.
 			(Currently we don't have the detailed animations of input/output queue)
-			itemList: array of Integer (which is the type of item type)
+			itemList: array of objects, where each object represents an item such as `{type: theTypeOfItem}`
 			return: undefined
 
 		ui.setOutput(itemList)
 			Set the output queue to itemList.
-			itemList: array of Integer (which is the type of item type)
+			itemList: array of objects, where each object represents an item such as `{type: theTypeOfItem}`
 			return: undefined
 ```
 
