@@ -170,6 +170,10 @@ var ui = function() {
 	};
 	
 	var initUIControls = function() {
+		// TODO: Use "get user info" API to resolve this issue. (#50)
+		// Force logout to prevent "you have already logged in" bug.
+		logic.doLogout(function() {});
+		
 		// For login function.
 		$("#loginButton").click(function() {
 			// Init login modal.
