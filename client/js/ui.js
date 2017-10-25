@@ -424,6 +424,8 @@ var ui = function() {
 			runAddAnimation(animation.args);
 		} else if (animation.type == "addPlayerAnimation") {
 			runAddPlayerAnimation(animation.args);
+		} else if (animation.type == "deleteItem") {
+			runDeleteItem(animation.args);
 		} else {
 			throw "Invalid animation " + animation.type;
 		}
@@ -592,6 +594,25 @@ var ui = function() {
 			}, 500);
 			setTimeout(setAnimationComplete, 1000);
 		}
+	};
+	
+	var runDeleteItem = function(args) {
+		var pos = args.pos;
+		if (pos == -1) {
+			if (itemOnHead == undefined) {
+				throw "No item on head";
+			}
+			stage.removeChild(itemOnHead.sprite);
+			itemOnHead = undefined;
+		} else {
+			if (items[pos] == undefined) {
+				throw "No such item on " + pos;
+			}
+			stage.removeChild(items[pos].sprite);
+			items[pos] = undefined;
+		}
+		
+		setTimeout(setAnimationComplete, 100);
 	};
 	
 	// Below are animation functions, i.e. functions that register animations for later rendering.
