@@ -49,7 +49,6 @@ var code = function() {
             blocks[bid].setMovable(!state);
             blocks[bid].setDeletable(!state);
         }
-		workspace.clearUndo();
     };
 
 	var highlight = function(id) {

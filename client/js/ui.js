@@ -184,7 +184,7 @@ var ui = function() {
 		});
 		$("#buttonStop").click(function() {
 			$("#buttonUndo").attr("disabled", false);
-			$("#buttonRedo").attr("disabled", true);
+			$("#buttonRedo").attr("disabled", false);
 			$("#buttonCompile").attr("disabled", false);
 			$("#buttonStep").attr("disabled", true);
 			$("#buttonStop").attr("disabled", true);
