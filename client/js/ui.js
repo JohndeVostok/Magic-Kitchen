@@ -87,6 +87,8 @@ var ui = function() {
 	var objectSpriteSheets = {};
 	var playerSpriteSheet;
 	var playerSprite = undefined;
+	// We store player direction just for animation fluency.
+	var playerDirection = 0;
 	
 	var initUI = function() {
 		// Init map.
@@ -158,6 +160,7 @@ var ui = function() {
 				a3: [6, 7]
 			}
 		});
+		playerDirection = 0;
 		
 		// Init DOM elements.
 		// For test only.
@@ -470,7 +473,7 @@ var ui = function() {
 			itemOnHead = undefined;
 		}
 		
-		setAnimationComplete();
+		setTimeout(setAnimationComplete, 0);
 	};
 	
 	// Get item pos on head transform.
@@ -539,14 +542,14 @@ var ui = function() {
 			stage.addChild(s);
 		}
 		
-		setAnimationComplete();
+		setTimeout(setAnimationComplete, 0);
 	};
 	
 	var runAddAnimation = function(args) {
 		var pos1 = args.pos1;
 		var pos2 = args.pos2;
 		if (pos1 == pos2) {
-			setAnimationComplete();
+			setTimeout(setAnimationComplete, 0);
 			return;
 		}
 		if (pos1 == -1 && itemOnHead == undefined) {
@@ -606,7 +609,10 @@ var ui = function() {
 	
 	var runAddPlayerAnimation = function(args) {
 		setPlayerPos(playerSprite, args.pos1);
-		playerSprite.gotoAndPlay("a" + args.dir1);
+		if (playerDirection != args.dir1) {
+			playerSprite.gotoAndPlay("a" + args.dir1);
+			playerDirection = args.dir1;
+		}
 		
 		// Move
 		if (args.pos1 != args.pos2 && args.dir1 == args.dir2) {
@@ -614,11 +620,22 @@ var ui = function() {
 			if (itemOnHead != undefined) {
 				createjs.Tween.get(itemOnHead.sprite).to(getItemPosHeadTransform(args.pos2), 500, createjs.Ease.getPowInOut(3));
 			}
-		} else {
+		} else if (args.pos1 == args.pos2 && args.dir1 != args.dir2) {
 			setTimeout(function() {
 				setPlayerPos(playerSprite, args.pos2);
 				playerSprite.gotoAndPlay("a" + args.dir2);
-			}, 500);
+			}, 250);
+			setTimeout(setAnimationComplete, 500);
+		} else if (args.pos1 == args.pos2 && args.dir1 == args.dir2) {
+			setTimeout(setAnimationComplete, 0);
+		} else {
+			movePlayerPos(playerSprite, args.pos2);
+			if (itemOnHead != undefined) {
+				createjs.Tween.get(itemOnHead.sprite).to(getItemPosHeadTransform(args.pos2), 500, createjs.Ease.getPowInOut(3));
+			}
+			setTimeout(function() {
+				playerSprite.gotoAndPlay("a" + args.dir2);
+			}, 750);
 			setTimeout(setAnimationComplete, 1000);
 		}
 	};
@@ -639,7 +656,7 @@ var ui = function() {
 			items[pos] = undefined;
 		}
 		
-		setAnimationComplete();
+		setTimeout(setAnimationComplete, 0);
 	};
 	
 	// Below are animation functions, i.e. functions that register animations for later rendering.
