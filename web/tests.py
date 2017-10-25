@@ -6,6 +6,7 @@ from django.test import Client
 import json
 from models import User
 from models import Level
+from models import Solution
 
 # Create your tests here.
 
@@ -386,3 +387,86 @@ class LevelSystemTestCase(TestCase):
         ret = json.loads(response.content)
         self.assertEqual(ret['status'], 'failed')
         self.assertEqual(ret['error'], 'this level id already exists')
+
+class SolutionSystemTestCase(TestCase):
+    def test_new_solution(self):
+        c = Client()
+
+        #test not login
+        response = c.post('/api/new_solution', {'level_id': 1, 'solution_info': 'jsonStr', 'score': 0})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 'failed')
+        self.assertEqual(ret['error'], 'please log in first')
+
+        #register
+        response = c.post('/api/register', {'name': 'sth', 'password': 'abc', 'email': '123@111.com'})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 'succeeded')
+
+        #login
+        response = c.post('/api/login', {'name': 'sth', 'password': 'abc'})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 'succeeded')
+
+        #test empty level id
+        response = c.post('/api/new_solution', {'solution_info': 'jsonStr', 'score': 0})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 'failed')
+        self.assertEqual(ret['error'], 'level id can\'t be empty')
+
+        #test level id is not Integer
+        response = c.post('/api/new_solution', {'level_id': 'a', 'solution_info': 'jsonStr', 'score': 0})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 'failed')
+        self.assertEqual(ret['error'], 'the input level id needs to be an Integer')
+
+        #test level id is too large
+        response = c.post('/api/new_solution', {'level_id': 2147483648, 'solution_info': 'jsonStr', 'score': 0})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 'failed')
+        self.assertEqual(ret['error'], 'the input level id needs to be an Integer')
+
+        #test level id not exists
+        response = c.post('/api/new_solution', {'level_id': 1, 'solution_info': 'jsonStr', 'score': 0})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 'failed')
+        self.assertEqual(ret['error'], 'this level doesn\'t exist')
+
+        #new default level
+        response = c.post('/api/new_default_level', {'level_id': 1, 'level_info': 'jsonStr'})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 'succeeded')
+
+        #test empty solution info
+        response = c.post('/api/new_solution', {'level_id': 1, 'score': 0})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 'failed')
+        self.assertEqual(ret['error'], 'solution info can\'t be empty')
+
+        #test empty solution info
+        response = c.post('/api/new_solution', {'level_id': 1, 'solution_info': 'jsonStr'})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 'failed')
+        self.assertEqual(ret['error'], 'score can\'t be empty')
+
+        #test score is not Integer
+        response = c.post('/api/new_solution', {'level_id': 1, 'solution_info': 'jsonStr', 'score': 'a'})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 'failed')
+        self.assertEqual(ret['error'], 'the input score needs to be an Integer')
+
+        #test score is not in range[0,4]
+        response = c.post('/api/new_solution', {'level_id': 1, 'solution_info': 'jsonStr', 'score': 5})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 'failed')
+        self.assertEqual(ret['error'], 'the input score needs to be in range[0,4]')
+
+        #test new solution
+        response = c.post('/api/new_solution', {'level_id': 1, 'solution_info': 'jsonStr', 'score': 0})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 'succeeded')
+
+        name_filter = Solution.objects.all()
+        self.assertEqual(len(name_filter), 1)
+        self.assertEqual(name_filter[0].solution_id, 1)
+        self.assertEqual(name_filter[0].info, 'jsonStr')

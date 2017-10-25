@@ -100,3 +100,22 @@
             error = 'this level id already exists'
             error = 'the input level id needs to be an Integer' 类型转换发生错误ValueError时将返回这个error信息
             error = 'the input level id needs to be in range [0,100]'
+
+### New Solution
+        c.post('/api/new_solution') , attributes: level_id: idInt, solution_info: jsonStr, score: scoreInt
+        其中，score应该是[0,4]的整数，0表示未通过，1～3表示评级，4表示通过（用户自定义关卡仅记是否通过，不评级）
+        必须登录才能够post，会将session作为username存入该Solution
+
+        return json:
+        status = 'succeeded' ---------succeeded
+
+        status = 'failed'  ---------failed
+            error = 'please log in first'
+            error = 'level id can't be empty'
+            error = 'solution info can't be empty'
+            error = 'score can't be empty'
+            error = 'this level doesn't exist'
+            error = 'the input level id needs to be an Integer' 类型转换发生错误ValueError时将返回这个error信息
+            error = 'the input level id needs to be in range [0,100]'
+            error = 'the input score needs to be an Integer'
+            error = 'the input score needs to be in range[0,4]'
