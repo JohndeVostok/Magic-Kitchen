@@ -724,6 +724,42 @@ function Logic()
 			break;
 		}
 	};
+
+	// Do login using network module
+	this.doLogin = function(username, password, callback)
+	{
+		// TODO
+		callback("TODO", {
+			status: "failed"
+		});
+	};
+
+	// Do logout with network module
+	this.doLogout = function(callback)
+	{
+		// TODO
+		callback("TODO", {
+			status: "failed"
+		});
+	}
+
+	// Do register with network module
+	this.doRegister = function(username, email, password, password2, callback)
+	{
+		// TODO
+		callback("TODO", {
+			status: "failed"
+		});
+	}
+
+	// Do change password with network module
+	this.doChangePassword = function(newPassword, newPassword2, callback)
+	{
+		// TODO
+		callback("TODO", {
+			status: "failed"
+		});
+	}
 }
 
 var logic = new Logic();

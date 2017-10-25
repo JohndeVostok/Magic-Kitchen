@@ -47,9 +47,20 @@
 			</h2>
 		</div>
 		<div class="col-xs-6" style="text-align:center;padding-top:20px;">
+			<span id="usernameSpan" style="display:none">
+				欢迎您，
+				<span id="usernameSpanText">
+					user
+				</span>
+				&nbsp;
+			</span>
 			<button class="btn btn-primary" id="loginButton">
 				<span class="glyphicon glyphicon-user"></span>
 				<span> 登录 </span>
+			</button>
+			<button class="btn btn-warning" id="changePasswordButton" style="display:none">
+				<span class="glyphicon glyphicon-asterisk"></span>
+				<span> 修改密码 </span>
 			</button>
 			<button class="btn btn-danger" id="logoutButton" style="display:none">
 				<span class="glyphicon glyphicon-user"></span>
@@ -111,7 +122,7 @@
 							<span class="glyphicon glyphicon-user" />
 							<span> 用户名： </span>
 						</label>
-						<input class="form-control" id="loginUserName" />
+						<input class="form-control" id="loginUsername" />
 					</div>
 					<div class="form-group">
 						<label for="loginPassword" class="control-label">
@@ -155,6 +166,13 @@
 							<span> 用户名： </span>
 						</label>
 						<input class="form-control" id="registerUsername" />
+					</div>
+					<div class="form-group">
+						<label for="registerEmail" class="control-label">
+							<span class="glyphicon glyphicon-envelope" />
+							<span> 邮箱： </span>
+						</label>
+						<input class="form-control" id="registerEmail" />
 					</div>
 					<div class="form-group">
 						<label for="registerPassword" class="control-label">

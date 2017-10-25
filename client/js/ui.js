@@ -4,6 +4,7 @@ var ui = function() {
 		
 		loadConfig();
 		initUI();
+		initUIControls();
 	};
 	
 	// CreateJS stage
@@ -165,6 +166,122 @@ var ui = function() {
 		});
 		$("#buttonStep").click(function() {
 			logic.step();
+		});
+	};
+	
+	var initUIControls = function() {
+		// For login function.
+		$("#loginButton").click(function() {
+			// Init login modal.
+			$("#loginUsername").val("");
+			$("#loginPassword").val("");
+			
+			$("#loginModal").modal();
+		});
+		$("#loginSubmitButton").click(function() {
+			$("#loginSubmitButton").attr("disabled", "disabled");
+			
+			// Call logic login interface.
+			logic.doLogin($("#loginUsername").val(), $("#loginPassword").val(), function(err, res) {
+				$("#loginSubmitButton").removeAttr("disabled");
+				
+				if (err != undefined) {
+					alert("登录失败： " + err);
+					$("#loginPassword").val("");
+					return;
+				}
+				
+				// Login ok
+				$("#loginModal").modal("hide");
+				$("#loginButton").css("display", "none");
+				$("#changePasswordButton").css("display", "");
+				$("#logoutButton").css("display", "");
+				$("#registerButton").css("display", "none");
+				$("#usernameSpanText").text(res.username);
+				$("#usernameSpan").css("display", "");
+			});
+		});
+		
+		// For logout function.
+		$("#logoutButton").click(function() {
+			$("#logoutButton").attr("disabled", "disabled");
+			
+			// Call logic logout interface.
+			logic.doLogout(function(err, res) {
+				$("#logoutButton").removeAttr("disabled");
+				
+				if (err != undefined) {
+					alert("登出失败： " + err);
+					return;
+				}
+				
+				// Logout ok
+				$("#logoutButton").css("display", "none");
+				$("#changePasswordButton").css("display", "none");
+				$("#loginButton").css("display", "");
+				$("#registerButton").css("display", "");
+				$("#usernameSpanText").text("");
+				$("#usernameSpan").css("display", "none");
+			});
+		});
+		
+		// For register function.
+		$("#registerButton").click(function() {
+			// Init register modal.
+			$("#registerUsername").val("");
+			$("#registerEmail").val("");
+			$("#registerPassword").val("");
+			$("#registerPassword2").val("");
+			
+			$("#registerModal").modal();
+		});
+		$("#registerSubmitButton").click(function() {
+			$("#registerSubmitButton").attr("disabled", "disabled");
+			
+			// Call logic register interface.
+			logic.doRegister($("#registerUsername").val(), $("#registerEmail").val(), $("#registerPassword").val(), $("#registerPassword2").val(), function(err, res) {
+				$("#registerSubmitButton").removeAttr("disabled");
+				
+				if (err != undefined) {
+					alert("注册失败： " + err);
+					$("#registerPassword").val("");
+					$("#registerPassword2").val("");
+					return;
+				}
+				
+				// Register ok
+				alert("注册成功！");
+				$("#registerModal").modal("hide");
+			});
+		});
+		
+		// For change password function.
+		$("#changePasswordButton").click(function() {
+			// Init changePassword modal.
+			$("#changePasswordUsername").text($("#usernameSpanText").text());
+			$("#changePasswordNewPassword").val("");
+			$("#changePasswordNewPassword2").val("");
+			
+			$("#changePasswordModal").modal();
+		});
+		$("#changePasswordSubmitButton").click(function() {
+			$("#changePasswordSubmitButton").attr("disabled", "disabled");
+			
+			// Call logic changePassword interface.
+			logic.doChangePassword($("#changePasswordNewPassword").val(), $("#changePasswordNewPassword2").val(), function(err, res) {
+				$("#changePasswordSubmitButton").removeAttr("disabled");
+				
+				if (err != undefined) {
+					alert("修改失败： " + err);
+					$("#changePasswordNewPassword").val("");
+					$("#changePasswordNewPassword2").val("");
+					return;
+				}
+				
+				// Change password ok
+				alert("修改成功！");
+				$("#changePasswordModal").modal("hide");
+			});
 		});
 	};
 	
