@@ -317,17 +317,24 @@ var ui = function() {
 	
 	var animationRunning = false;
 	
-	// Handle the ticks from Ticker.
-	var tickHandler = function() {
+	var checkAnimationQueue = function() {
 		// Handle unapplied animations.
-		if (animationRunning == false && animationQueue.length > 0) {
+		if (animationQueue.length > 0) {
 			animationRunning = true;
 			startAnimation(animationQueue.shift());
+		}
+	}
+	
+	// Handle the ticks from Ticker.
+	var tickHandler = function() {
+		if (animationRunning == false) {
+			checkAnimationQueue();
 		}
 	};
 	
 	var setAnimationComplete = function() {
 		animationRunning = false;
+		checkAnimationQueue();
 	};
 	
 	var loadMap = function(mapData) {
@@ -463,7 +470,7 @@ var ui = function() {
 			itemOnHead = undefined;
 		}
 		
-		setTimeout(setAnimationComplete, 100);
+		setAnimationComplete();
 	};
 	
 	// Get item pos on head transform.
@@ -532,14 +539,14 @@ var ui = function() {
 			stage.addChild(s);
 		}
 		
-		setTimeout(setAnimationComplete, 100);
+		setAnimationComplete();
 	};
 	
 	var runAddAnimation = function(args) {
 		var pos1 = args.pos1;
 		var pos2 = args.pos2;
 		if (pos1 == pos2) {
-			setTimeout(setAnimationComplete, 100);
+			setAnimationComplete();
 			return;
 		}
 		if (pos1 == -1 && itemOnHead == undefined) {
@@ -632,7 +639,7 @@ var ui = function() {
 			items[pos] = undefined;
 		}
 		
-		setTimeout(setAnimationComplete, 100);
+		setAnimationComplete();
 	};
 	
 	// Below are animation functions, i.e. functions that register animations for later rendering.
