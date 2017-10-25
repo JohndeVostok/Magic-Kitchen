@@ -27,7 +27,6 @@ var network = function() {
 	};
 
 	var postRequest = function(url, contents, callback, retry = nRetry) {
-		console.log(retry);
 		$.ajax({
             method: "POST",
 			url: url,
