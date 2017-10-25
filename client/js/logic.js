@@ -44,6 +44,7 @@ function Logic()
 
 		this.loadLevel = function(levelInfo)
 		{
+			this.init();
 			player.pos = levelInfo.playerInfo.pos;
 			player.dir = levelInfo.playerInfo.dir;
 			player.haveItem = 0;
@@ -98,6 +99,8 @@ function Logic()
 				ui.newItem(item.pos, item.type, undefined);
 			}
 			ui.addPlayerAnimation(player.pos, player.pos, player.dir, player.dir);
+			ui.setInput(input[0]);
+			ui.setOutput(output[0]);
 		}
 
 		//function for test
@@ -383,6 +386,7 @@ function Logic()
 				player.haveItem = 1;
 				itemList.push($.extend(true, input[0].pop(), {pos: -1}));
 				player.itemId = itemList.length - 1;
+				ui.setInput(input[0]);
 				ui.newItem(p, itemList[itemList.length - 1].type, undefined);
 				ui.addAnimation(p, -1, undefined);
 			}
@@ -415,9 +419,9 @@ function Logic()
 				itemList[player.itemId].pos = -2;
 				player.itemId = 0;
 				output[0].shift();
-				console.log("!!!");
 				ui.addAnimation(-1, p, undefined);
 				ui.deleteItem(p, undefined);
+				ui.setOutput(output[0]);
 			}
 			else
 			{
