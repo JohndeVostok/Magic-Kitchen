@@ -24,6 +24,12 @@
 					opFloor: [int, int...],
 						Index means address.
 						int means position.
+					input: [[{type: typeId0}, {type: typeId1}, ...], ...]
+						Array of test inputs.
+						Each input is an array of items.
+					output: [[{type: typeId0}, {type: typeId1}, ...], ...]
+						Array of test outputs.
+						Each output is an array of items.
 					itemList: [{type: int, pos: int}, {type: int, pos: int}...]
 						Array of {type, pos}
 							type 1, 2 means apple and banana.
@@ -126,15 +132,14 @@
 * An example is as following:
 ```JavaScript
 fakeLevelInfo: {
-	blockTypes: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
-	playerInfo: {pos: 0, dir: 0},
-	opFloor: [8, 9, 10, 11, 12, 22, 23, 24, 25, 26, 36, 37, 38, 39, 40],
-	itemList: [
-		{type: 1, pos: 8},
-		{type: 2, pos: 9},
-		{type: 1, pos: 10}
-	]
-},
+	blockTypes: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
+	playerInfo: {pos: 7, dir: 0},
+	opFloor: [1, 2, 3, 4, 5, 22, 23, 24, 25, 26, 36, 37, 38, 39, 40, 6, 0],
+	input: [[{type: 1}]],
+	output: [[{type: 2}]],
+	itemList: [{type: 2, pos: 1}]
+}
+
 ```
 * The `blockTypes` specifies what kinds of blocks can be used in Blockly.
   * The block-type-ids can be found in `code` module docs.
