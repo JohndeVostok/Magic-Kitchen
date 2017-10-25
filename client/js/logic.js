@@ -238,6 +238,12 @@ function Logic()
 					return 0;
 				}
 			}
+
+			if (map[pos].address == opFloor.length - 1)
+			{
+				validator.invalid("You can't store to input.");
+				return 0;
+			}
 			return 1;
 		};
 
