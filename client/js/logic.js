@@ -728,18 +728,66 @@ function Logic()
 	// Do login using network module
 	this.doLogin = function(username, password, callback)
 	{
-		// TODO
-		callback("TODO", {
-			status: "failed"
+		if (username == "")
+		{
+			return callback("用户名不能为空！", {status: "failed"});
+		}
+		if (password == "")
+		{
+			return callback("密码不能为空！", {status: "failed"});
+		}
+		network.login(username, password, function(res) {
+			if (res.status == "succeeded")
+			{
+				// TODO: Store user info in logic for further use (e.g. fetching level).
+
+				callback(undefined, {
+					status: "succeeded",
+					username: username
+				});
+			}
+			else
+			{
+				var err = "未知错误";
+				const arr = [
+					["network timeout", "网络超时"],
+					["user name can't be empty", "用户名不能为空！"],
+					["password can't be empty", "密码不能为空！"],
+					["this name doesn't exist", "该用户不存在！"],
+					["wrong password", "密码错误！"],
+					["you have already logged in", "你已经登录了！"]
+				];
+				for (var i in arr)
+				{
+					if (res.error == arr[i][0])
+					{
+						err = arr[i][1];
+					}
+				}
+				callback(err, {status: "failed"});
+			}
 		});
 	};
 
 	// Do logout with network module
 	this.doLogout = function(callback)
 	{
-		// TODO
-		callback("TODO", {
-			status: "failed"
+		network.logout(function(res) {
+			if (res.status == "succeeded")
+			{
+				callback(undefined, {
+					status: "succeeded"
+				});
+			}
+			else
+			{
+				var err = "未知错误";
+				if (res.error == "network timeout")
+				{
+					err = "网络超时";
+				}
+				callback(err, {status: "failed"});
+			}
 		});
 	}
 
