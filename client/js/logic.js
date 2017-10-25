@@ -178,6 +178,13 @@ function Logic()
 				validator.invalid("I have something in my hand.");
 				return 0;
 			}
+
+			if (!map[pos].isOpFloor)
+			{
+				validator.invalid("It's not an opFloor!");
+				return 0;
+			}
+
 			if (!map[pos].haveItem)
 			{
 				if (map[pos].address == opFloor.length - 1)
@@ -201,11 +208,19 @@ function Logic()
 				validator.invalid("I have nothing to store!");
 				return 0;
 			}
+
+			if (!map[pos].isOpFloor)
+			{
+				validator.invalid("It's not an opFloor!");
+				return 0;
+			}
+
 			if (map[pos].haveItem)
 			{
 				validator.invalid("Something There!");
 				return 0;
 			}
+
 			if (map[pos].address == opFloor.length - 2)
 			{
 				if (output[0].length == 0)
@@ -392,6 +407,7 @@ function Logic()
 			}
 			if (!this.checkStore(p))
 				return undefined;
+
 
 			if (map[p].address == opFloor.length - 2)
 			{
