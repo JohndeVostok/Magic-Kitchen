@@ -567,7 +567,7 @@ var ui = function() {
 		var i = (pos - pos % M) / M;
 		var j = pos % M;
 		
-		createjs.Tween.get(sprite).to({
+		return createjs.Tween.get(sprite).to({
 			x: mapLeftPos + mapGridWidth * j,
 			y: mapTopPos + mapGridHeight * i,
 			scaleX: mapGridWidth / config.UI.player.imageWidth,
@@ -581,8 +581,7 @@ var ui = function() {
 		
 		// Move
 		if (args.pos1 != args.pos2 && args.dir1 == args.dir2) {
-			movePlayerPos(playerSprite, args.pos2);
-			createjs.Tween.get(playerSprite).call(setAnimationComplete);
+			movePlayerPos(playerSprite, args.pos2).call(setAnimationComplete);
 			if (itemOnHead != undefined) {
 				createjs.Tween.get(itemOnHead.sprite).to(getItemPosHeadTransform(args.pos2), 500, createjs.Ease.getPowInOut(3));
 			}
