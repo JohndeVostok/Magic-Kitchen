@@ -460,6 +460,13 @@ function Logic()
 	{
 		if (config.useFakeLevel)
 			initLevel(config.fakeLevelInfo);
+		else network.getLevelInfo(
+			config.defaultOnlineLevelId,
+			function(data){
+				if (data["status"] == "succeeded")
+					initLevel(eval("(" + data["level_info"] + ")"));
+			}
+		);
 	};
 
 	var renderLevel = function()

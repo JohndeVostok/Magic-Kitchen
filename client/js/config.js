@@ -10,7 +10,8 @@ var config = {
 	},
 
 	// Set `useFakeLevel` to true when you need to load the fake level.
-	useFakeLevel: true,
+	useFakeLevel: false,
+	defaultOnlineLevelId: 1,
 	// The fake level used in logic.
 	// Please update it when the level specifications change.
 	fakeLevelInfo: {

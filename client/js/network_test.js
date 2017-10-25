@@ -124,3 +124,32 @@ QUnit.test( "network level test", function( assert ) {
 		);
 	});
 });
+
+QUnit.test( "network level test extra", function( assert ) {
+	var done = assert.async();
+	network.logout(function(data){
+		network.newDefaultLevel(1,
+			JSON.stringify({
+				blockTypes: [1, 2, 3, 4, 6],
+				playerInfo: {pos: 3, dir: 1},
+				opFloor: [10, 0, 6],
+				input: [[{type: 1}, {type: 2}, {type: 1}, {type: 2}]],
+				output: [[{type: 2}, {type: 1}, {type: 1}, {type: 2}]],
+				itemList: [{type: 2, pos: 10}]
+			}),
+			function(data) {
+				if (data["status"] == "succeeded")
+					assert.ok( true, "new level ok" );
+				else assert.ok( data["error"] == "this level id already exists" , data["error"]);
+				network.getLevelInfo(1,
+					function(data) {
+						if (data["status"] == "succeeded")
+							assert.ok( data["level_info"] != JSON.stringify(config.fakeLevelInfo), "load level ok" );
+						else assert.ok( false , data["error"]);
+						done();
+					}
+				);
+			}
+		);
+	});
+});
