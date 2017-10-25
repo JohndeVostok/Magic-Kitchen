@@ -16,7 +16,7 @@
 		
 		code.start()
 			Setup interpreter.
-			*TODO: Disable movements of blocks.*
+			*TODO: Disable creation of blocks.*
 			return: undefined
 
 		code.step()
@@ -27,7 +27,14 @@
 		code.stop()
 			Discard interpreter.
 			Disable highlight of current block.
-			*TODO: Reenable movements of blocks.*
+			return: undefined
+
+		code.undo()
+			Undo blockly.
+			return: undefined
+
+		code.redo()
+			Redo blockly.
 			return: undefined
 
 #### Tests

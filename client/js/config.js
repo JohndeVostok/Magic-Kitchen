@@ -174,8 +174,10 @@ var config = {
 				"args0": [
 					{"type": "field_input", "name": "TIMES", "check": "Number", "text": "若干"}
 				],
-				"message1": "进行下列操作: %1",
-				"args1": [
+				"message1": "进行下列操作:",
+				"args1": [],
+				"message2": "%1",
+				"args2": [
 					{"type": "input_statement", "name": "DO"}
 				],
 				"previousStatement": null,
