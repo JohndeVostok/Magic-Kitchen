@@ -9,6 +9,7 @@
 		logic.doLoad()
 			Init an empty map.
 			return: undefined
+
 		logic.loadLevel()
 			fetch level from back-end or use fake level.
 
@@ -31,12 +32,13 @@
 
 			return: undefined
 
-		logic.initLevel(levelInfo)
+		initLevel(levelInfo)
 			Callback of fetchLevel.
 			Init map and render to UI.
+			Can't be called.
 			return: undefined
 
-	Functions for playing
+	Functions for UI
 
 		logic.start()
 			Start playing.
@@ -44,6 +46,8 @@
 			return: undefined
 
 		logic.step(op)
+			Single step run of code.
+			Must be called after logic.start.
 			op["typeID"]: type == int
 				0: nop
 				1: moveforward
@@ -80,7 +84,12 @@
 					op["x"]: type == int
 					op["y"]: type == int
 					move to pos(x, y).
-
+				9: load from address
+					op["address"]: type == int
+					load from address.
+				10: store to address
+					op["address"]: type == int
+					store to address
 			return: undefined
 
 #### Logic operations called by UI
