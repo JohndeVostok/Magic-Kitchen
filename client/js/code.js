@@ -6,6 +6,10 @@ var code = function() {
 	};
 
 	var setBlockTypes = function(blockIDList) {
+
+		enabledToolbox = $("<xml id=\"toolbox\" style=\"display: none\"></xml>");
+		disabledToolbox = $("<xml id=\"toolbox\" style=\"display: none\"></xml>");
+
 		for (var id=0; id<blockIDList.length; id++)
 		{
 			var blockDef = config.blocks[blockIDList[id]];
@@ -35,13 +39,18 @@ var code = function() {
 				}(blockDef);
 			}
 
-			var newBlock = $("<block type=\"" + blockDef.name + "\"></block>")
-			$("xml#toolbox").append(newBlock);
+			var disableBlock = $("<block type=\"" + blockDef.name + "\" disabled=\"true\"></block>");
+			disabledToolbox.append(disableBlock);
+
+			var newBlock = $("<block type=\"" + blockDef.name + "\"></block>");
+			enabledToolbox.append(newBlock);
 		}
-		workspace = Blockly.inject('blocklyDiv', {toolbox: document.getElementById('toolbox')});
+		workspace = Blockly.inject('blocklyDiv', {toolbox: enabledToolbox[0]});
 	};
 
     var setLock = function(state){
+		if (state) workspace.updateToolbox(disabledToolbox[0]);
+		else workspace.updateToolbox(enabledToolbox[0]);
         blocks = workspace.getAllBlocks();
         for (let bid in blocks)
         {
@@ -104,6 +113,9 @@ var code = function() {
 	var interpreter;
 
 	var calledLogic;
+
+	var enabledToolbox;
+	var disabledToolbox;
 
 	return {
 		doLoad: doLoad,
