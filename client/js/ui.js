@@ -400,6 +400,8 @@ var ui = function() {
 			stage.removeChild(playerSprite);
 		}
 		playerSprite = new createjs.Sprite(playerSpriteSheet);
+		playerDirection = 0;
+		playerSprite.gotoAndPlay("a0");
 		playerSprite.setTransform(
 			-10000,
 			-10000,
