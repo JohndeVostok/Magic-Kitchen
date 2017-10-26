@@ -1,5 +1,7 @@
 var debug = window.debug;
 var ui = window.ui;
+var code = window.code;
+var msg = window.msg;
 
 function Logic()
 {
