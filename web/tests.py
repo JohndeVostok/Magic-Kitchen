@@ -157,7 +157,7 @@ class CustomSystemTestCase(TestCase):
     def test_change_password_after_login(self):
         c = Client()
 
-        #test change password before 
+        #test change password before  login
         response = c.post('/api/change_password_after_login', {'new_password' : 'newpw'})
         ret = json.loads(response.content)
         self.assertEqual(ret['status'], 'failed')
@@ -353,7 +353,7 @@ class LevelSystemTestCase(TestCase):
         self.assertEqual(ret['status'], 'failed')
         self.assertEqual(ret['error'], 'level id can\'t be empty')
 
-        #test empty level id
+        #test empty level info
         response = c.post('/api/new_default_level', {'level_id': 1})
         ret = json.loads(response.content)
         self.assertEqual(ret['status'], 'failed')
@@ -387,6 +387,36 @@ class LevelSystemTestCase(TestCase):
         ret = json.loads(response.content)
         self.assertEqual(ret['status'], 'failed')
         self.assertEqual(ret['error'], 'this level id already exists')
+
+    def test_new_usermade_level(self):
+        c = Client()
+
+        #test new usermade level before login
+        response = c.post('/api/new_usermade_level', {'level_info': 'jsonStr'})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 'failed')
+        self.assertEqual(ret['error'], 'please log in first')
+
+        #register
+        response = c.post('/api/register', {'name': 'sth', 'password': 'abc', 'email': '765215342@qq.com'})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 'succeeded')
+
+        #login
+        response = c.post('/api/login', {'name': 'sth', 'password': 'abc'})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 'succeeded')
+
+        #test empty level info
+        response = c.post('/api/new_usermade_level')
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 'failed')
+        self.assertEqual(ret['error'], 'level info can\'t be empty')
+
+        #test new user-made level
+        response = c.post('/api/new_usermade_level', {'level_info': 'jsonStr'})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 'succeeded')
 
 class SolutionSystemTestCase(TestCase):
     def test_new_solution(self):
