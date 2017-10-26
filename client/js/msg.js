@@ -34,9 +34,12 @@ function Msg()
 
 	this.getMessage = function(msgId)
 	{
-		var str = content.logic[msgId][language];
-		if (str == undefined)
+		var msgStr = content[msgId];
+		var str = "";
+		if (msgStr == undefined)
 			str = "INVALID MSG CODE";
+		else
+			str = msgStr[language];
 		return str;
 	};
 }
