@@ -846,8 +846,9 @@ var ui = function() {
 		});
 	};
 
-	var blockStep = function() {
+	var blockStep = function(s) {
 		$("#buttonStep").attr("disabled", true);
+		alert(s);
 	};
 	
 	var debug = function() {
