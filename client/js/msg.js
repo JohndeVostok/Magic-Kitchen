@@ -1,8 +1,11 @@
 function Msg()
 {
 	var content = {
-		EMPTY_USERNAME: ["Username can't be empty.", "用户名不能为空！"],
-		EMPTY_PASSWORD: ["Password can't be empty.", "密码不能为空！", ]
+		logic: [
+			["ERROR", "ERROR"],
+			["Target is out of map.", "目标超出地图边界。"],
+			["Target is an opFloor.", "目标是操作台。"]
+		]
 	}
 	var language = 0;
 
@@ -22,13 +25,13 @@ function Msg()
 		}
 	};
 
-	this.getMessage = function(str)
+	this.getMessage = function(msgId)
 	{
-		var s = content[str][language];
-		if (s == undefined)
-			return undefined;
-		else
-			return s;
+		if (3000 <= msgId && msgId < 4000)
+		{
+			return content.logic[msgId - 3000][language];
+		}
+		return undefined;
 	};
 }
 

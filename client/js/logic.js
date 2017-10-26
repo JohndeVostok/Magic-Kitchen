@@ -8,21 +8,21 @@ function Logic()
 	function Validator()
 	{
 		var flag = 0;
-		var str = ""
+		var msgId = 3000;
 		this.init = function()
 		{
 			flag = 0;
-			str = "";
+			msgId = 3000;
 		};
-		this.invalid = function(s)
+		this.invalid = function(id)
 		{
 			flag = 1;
-			str = s;
+			msgId = id;
 		};
 		this.validate = function()
 		{
 			if (flag)
-				ui.blockStep(str);
+				ui.blockStep(msg.getMessage(msgId));
 			return flag;
 		};
 	}
@@ -165,13 +165,13 @@ function Logic()
 		{
 			if (x < 0 || x >= config.mapWidth || y < 0 || y >= config.mapHeight)
 			{
-				validator.invalid("Target is out!");
+				validator.invalid(3001);
 				return undefined;
 			}
 			var pos = y * config.mapWidth + x;
 			if (map[pos].isOpFloor)
 			{
-				validator.invalid("Target is opFloor!");
+				validator.invalid(3002);
 				return undefined;
 			}
 		};
@@ -359,12 +359,12 @@ function Logic()
 			var q = player.pos;
 			if (p == -1)
 			{
-				validator.invalid("It's out!");
+				validator.invalid(3001);
 				return undefined;
 			}
 			if (map[getFront()].isOpFloor)
 			{
-				validator.invalid("It's a opFloor!");
+				validator.invalid(3002);
 				return undefined;
 			}
 			player.pos = getFront();
