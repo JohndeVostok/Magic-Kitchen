@@ -37,6 +37,10 @@ def new_default_level(request):
         ret['error'] = 'the input default level id needs to be an Integer'
         return json_response(ret)
 
+    if not int_range(_id):
+            ret['error'] = 'the input default level id needs to be an Integer'
+            return json_response(ret)
+
     default_level_id_filter = Level.objects.filter(default_level_id = _id)
     if len(default_level_id_filter) > 0:
         ret['error'] = 'this default level id already exists'
@@ -68,7 +72,7 @@ def get_level_info(request):
             ret['error'] = 'the input default level id needs to be an Integer'
             return json_response(ret)
 
-        if not int_range(_id):
+        if not int_range(_default_level_id):
             ret['error'] = 'the input default level id needs to be an Integer'
             return json_response(ret)
 
@@ -88,7 +92,7 @@ def get_level_info(request):
             ret['error'] = 'the input level id needs to be an Integer'
             return json_response(ret)
 
-        if not int_range(_id):
+        if not int_range(_level_id):
             ret['error'] = 'the input level id needs to be an Integer'
             return json_response(ret)
 
