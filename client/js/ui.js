@@ -204,6 +204,11 @@ var ui = function() {
 			$("#buttonStop").attr("disabled", true);
 			code.stop();
 		});
+		$("#buttonChangeLevel").click(function() {
+			var targetLevelId = $("input#targetLevelId").val();
+			if (isNaN(targetLevelId)) alert("请输入正确的关卡编号");
+			else logic.loadLevel(parseInt(targetLevelId));
+		});
 	};
 	
 	var initUIControls = function() {

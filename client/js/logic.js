@@ -456,15 +456,18 @@ function Logic()
 		state.init();
 	};
 
-	this.loadLevel = function()
+	this.loadLevel = function(levelId)
 	{
+		if (levelId == undefined)
+			levelId = config.defaultOnlineLevelId;
 		if (config.useFakeLevel)
 			initLevel(config.fakeLevelInfo);
 		else network.getLevelInfo(
-			config.defaultOnlineLevelId,
+			levelId,
 			function(data){
 				if (data["status"] == "succeeded")
 					initLevel(eval("(" + data["level_info"] + ")"));
+				else alert("关卡加载失败：网络超时");
 			}
 		);
 	};

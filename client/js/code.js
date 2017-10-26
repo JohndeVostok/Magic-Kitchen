@@ -45,6 +45,7 @@ var code = function() {
 			var newBlock = $("<block type=\"" + blockDef.name + "\"></block>");
 			enabledToolbox.append(newBlock);
 		}
+		$("#blocklyDiv").children().remove();
 		workspace = Blockly.inject('blocklyDiv', {toolbox: enabledToolbox[0]});
 	};
 
