@@ -390,7 +390,7 @@ function Logic()
 			if (map[p].address == opFloor.length - 1)
 			{
 				player.haveItem = 1;
-				itemList.push($.extend(true, input[0].pop(), {pos: -1}));
+				itemList.push($.extend(true, input[0].shift(), {pos: -1}));
 				player.itemId = itemList.length - 1;
 				ui.setInput(input[0]);
 				ui.newItem(p, itemList[itemList.length - 1].type, undefined);
