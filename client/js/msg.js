@@ -4,7 +4,17 @@ function Msg()
 		logic: [
 			["ERROR", "ERROR"],
 			["Target is out of map.", "目标超出地图边界。"],
-			["Target is an opFloor.", "目标是操作台。"]
+			["Target is an operation floor.", "目标是操作台。"],
+			["Invalid address.", "地址不存在"],
+			[],[],[],[],[],[],[],
+			["Target is not an operation floor.", "目标不是操作台。"],
+			["I have something in my hand.", "我手里有东西。"],
+			["There is nothing there to load", "那没什么可拿的。"],
+			["Inbox in empty.", "进材口已经空了。"],
+			["I have nothing in my hand.", "我手里没东西。"],
+			["There is something there.", "那已经有东西了。"],
+			["I can't store to there.", "我不能向进材口丢东西。"],
+			["It's not what we want.", "那个不是我们想要的。"]
 		]
 	}
 	var language = 0;

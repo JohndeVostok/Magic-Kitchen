@@ -180,13 +180,13 @@ function Logic()
 		{
 			if (player.haveItem)
 			{
-				validator.invalid("I have something in my hand.");
+				validator.invalid(3012);
 				return 0;
 			}
 
 			if (!map[pos].isOpFloor)
 			{
-				validator.invalid("It's not an opFloor!");
+				validator.invalid(3011);
 				return 0;
 			}
 
@@ -197,10 +197,10 @@ function Logic()
 					if (input[0].length)
 						return 1;
 					else
-						validator.invalid("It's empty!");
+						validator.invalid(3014);
 				}
 				else
-					validator.invalid("I can't load from here.");
+					validator.invalid(3013);
 				return 0;
 			}
 			return 1;
@@ -210,19 +210,19 @@ function Logic()
 		{
 			if (!player.haveItem)
 			{
-				validator.invalid("I have nothing to store!");
+				validator.invalid(3015);
 				return 0;
 			}
 
 			if (!map[pos].isOpFloor)
 			{
-				validator.invalid("It's not an opFloor!");
+				validator.invalid(3011);
 				return 0;
 			}
 
 			if (map[pos].haveItem)
 			{
-				validator.invalid("Something There!");
+				validator.invalid(3016);
 				return 0;
 			}
 
@@ -230,19 +230,19 @@ function Logic()
 			{
 				if (output[0].length == 0)
 				{
-					validator.invalid("It's full.");
+					validator.invalid(3018);
 					return 0;
 				}
 				if (!itemEqual(itemList[player.itemId], output[0][0]))
 				{
-					validator.invalid("It's not what we want!");
+					validator.invalid(3018);
 					return 0;
 				}
 			}
 
 			if (map[pos].address == opFloor.length - 1)
 			{
-				validator.invalid("You can't store to input.");
+				validator.invalid(3017);
 				return 0;
 			}
 			return 1;
@@ -252,7 +252,7 @@ function Logic()
 		{
 			if (address >= opFloor.length)
 			{
-				validator.invalid("Address doesn't exist.");
+				validator.invalid(3003);
 				return undefined;
 			}
 			return $.extend(true, map[opFloor[address]], {pos: opFloor[address]});
@@ -383,7 +383,7 @@ function Logic()
 			var p = getFront();
 			if (p == -1)
 			{
-				validator.invalid("It's out!");
+				validator.invalid(3001);
 				return undefined;
 			}
 			if (!this.checkLoad(p))
@@ -414,7 +414,7 @@ function Logic()
 			var p = getFront();
 			if (p == -1)
 			{
-				validator.invalid("It's out!");
+				validator.invalid(3001);
 				return undefined;
 			}
 			if (!this.checkStore(p))
