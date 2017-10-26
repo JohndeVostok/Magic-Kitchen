@@ -644,6 +644,7 @@ var ui = function() {
 			setTimeout(function() {
 				setPlayerPos(playerSprite, args.pos2);
 				playerSprite.gotoAndPlay("a" + args.dir2);
+				playerDirection = args.dir2;
 			}, 250);
 			setTimeout(setAnimationComplete, 500);
 		} else if (args.pos1 == args.pos2 && args.dir1 == args.dir2) {
@@ -655,6 +656,7 @@ var ui = function() {
 			}
 			setTimeout(function() {
 				playerSprite.gotoAndPlay("a" + args.dir2);
+				playerDirection = args.dir2;
 			}, 750);
 			setTimeout(setAnimationComplete, 1000);
 		}
