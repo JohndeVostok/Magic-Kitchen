@@ -14,7 +14,7 @@ class User(models.Model):
 class Level(models.Model):
     level_id = models.IntegerField()
     info = models.TextField()
-    user_name = models.CharField(max_length = 20)
+    user_name = models.CharField(max_length = 20, default = "")
 
 class Solution(models.Model):
     user_name = models.CharField(max_length = 20)
