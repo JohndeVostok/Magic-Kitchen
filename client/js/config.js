@@ -5,9 +5,9 @@ var config = {
 	mapHeight: 7,
 
 	msgCode: {
-		width: 1000;
-		logicBegin: 3000;
-	}
+		width: 1000,
+		logicBegin: 3000
+	},
 
 	// Set `useFakeLevel` to true when you need to load the fake level.
 	useFakeLevel: true,
