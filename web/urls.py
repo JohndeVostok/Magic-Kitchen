@@ -17,6 +17,7 @@ urlpatterns = [
     url(r'^api/get_level_info$', level_system.get_level_info),
     url(r'^api/new_default_level$', level_system.new_default_level),
     url(r'^api/new_solution$', solution_system.new_solution),
+    url(r'^api/new_usermade_level$', level_system.new_usermade_level),
     # Force to serve static files, which is not recommended by Django
     url(r'^(?P<path>.*)$', views.static_file),
 ]
