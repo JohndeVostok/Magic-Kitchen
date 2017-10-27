@@ -12,7 +12,7 @@ var code = function() {
 
 		for (var id=0; id<blockIDList.length; id++)
 		{
-			var blockDef = config.blocks[blockIDList[id]];
+			var blockDef = blocks[blockIDList[id]];
 
 			Blockly.Blocks[blockDef.name] = function(blockDef){
 				var init = function() {
@@ -51,12 +51,12 @@ var code = function() {
     var setLock = function(state){
 		if (state) workspace.updateToolbox(disabledToolbox[0]);
 		else workspace.updateToolbox(enabledToolbox[0]);
-        blocks = workspace.getAllBlocks();
-        for (let bid in blocks)
+        currentBlocks = workspace.getAllBlocks();
+        for (let bid in currentBlocks)
         {
-            blocks[bid].setEditable(!state);
-            blocks[bid].setMovable(!state);
-            blocks[bid].setDeletable(!state);
+            currentBlocks[bid].setEditable(!state);
+            currentBlocks[bid].setMovable(!state);
+            currentBlocks[bid].setDeletable(!state);
         }
     };
 
