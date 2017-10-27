@@ -485,7 +485,7 @@ function Logic()
 
 	var initLevel = function(levelInfoIn)
 	{
-		levelInfo = $.extend(true, levelInfoIn);
+		levelInfo = $.extend(true, [], levelInfoIn);
 		code.setBlockTypes(levelInfo.blockTypes);
 		reset();
 	};

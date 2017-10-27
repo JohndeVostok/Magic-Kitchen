@@ -12,8 +12,8 @@ var config = {
 	// Set `useFakeLevel` to true when you need to load the fake level.
 	// If you set it to false to use online level, remember to init the level first.
 	// A temporary initialization method is to access test.html
-	useFakeLevel: false,
-	defaultOnlineLevelId: 1,
+	useFakeLevel: true,
+	defaultOnlineLevelId: 0,
 	// The fake level used in logic.
 	// Please update it when the level specifications change.
 	fakeLevelInfo: {

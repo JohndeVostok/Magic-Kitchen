@@ -130,7 +130,7 @@ QUnit.test( "network level test extra", function( assert ) {
 	network.logout(function(data){
 		network.newDefaultLevel(1,
 			JSON.stringify({
-				blockTypes: [1, 2, 3, 4, 6],
+				blockTypes: [2, 5, 7, 8, 11],
 				playerInfo: {pos: 3, dir: 1},
 				opFloor: [10, 0, 6],
 				input: [[{type: 1}, {type: 2}, {type: 1}, {type: 2}]],
