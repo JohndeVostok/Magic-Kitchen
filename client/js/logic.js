@@ -1,26 +1,28 @@
 var debug = window.debug;
 var ui = window.ui;
+var code = window.code;
+var msg = window.msg;
 
 function Logic()
 {
 	function Validator()
 	{
 		var flag = 0;
-		var str = ""
+		var msgId = 3000;
 		this.init = function()
 		{
 			flag = 0;
-			str = "";
+			msgId = 3000;
 		};
-		this.invalid = function(s)
+		this.invalid = function(id)
 		{
 			flag = 1;
-			str = s;
+			msgId = id;
 		};
 		this.validate = function()
 		{
 			if (flag)
-				ui.blockStep(str);
+				ui.blockStep(msg.getMessage(msgId));
 			return flag;
 		};
 	}
@@ -163,13 +165,13 @@ function Logic()
 		{
 			if (x < 0 || x >= config.mapWidth || y < 0 || y >= config.mapHeight)
 			{
-				validator.invalid("Target is out!");
+				validator.invalid(3001);
 				return undefined;
 			}
 			var pos = y * config.mapWidth + x;
 			if (map[pos].isOpFloor)
 			{
-				validator.invalid("Target is opFloor!");
+				validator.invalid(3002);
 				return undefined;
 			}
 		};
@@ -178,13 +180,13 @@ function Logic()
 		{
 			if (player.haveItem)
 			{
-				validator.invalid("I have something in my hand.");
+				validator.invalid(3012);
 				return 0;
 			}
 
 			if (!map[pos].isOpFloor)
 			{
-				validator.invalid("It's not an opFloor!");
+				validator.invalid(3011);
 				return 0;
 			}
 
@@ -195,10 +197,10 @@ function Logic()
 					if (input[0].length)
 						return 1;
 					else
-						validator.invalid("It's empty!");
+						validator.invalid(3014);
 				}
 				else
-					validator.invalid("I can't load from here.");
+					validator.invalid(3013);
 				return 0;
 			}
 			return 1;
@@ -208,19 +210,19 @@ function Logic()
 		{
 			if (!player.haveItem)
 			{
-				validator.invalid("I have nothing to store!");
+				validator.invalid(3015);
 				return 0;
 			}
 
 			if (!map[pos].isOpFloor)
 			{
-				validator.invalid("It's not an opFloor!");
+				validator.invalid(3011);
 				return 0;
 			}
 
 			if (map[pos].haveItem)
 			{
-				validator.invalid("Something There!");
+				validator.invalid(3016);
 				return 0;
 			}
 
@@ -228,19 +230,19 @@ function Logic()
 			{
 				if (output[0].length == 0)
 				{
-					validator.invalid("It's full.");
+					validator.invalid(3018);
 					return 0;
 				}
 				if (!itemEqual(itemList[player.itemId], output[0][0]))
 				{
-					validator.invalid("It's not what we want!");
+					validator.invalid(3018);
 					return 0;
 				}
 			}
 
 			if (map[pos].address == opFloor.length - 1)
 			{
-				validator.invalid("You can't store to input.");
+				validator.invalid(3017);
 				return 0;
 			}
 			return 1;
@@ -250,7 +252,7 @@ function Logic()
 		{
 			if (address >= opFloor.length)
 			{
-				validator.invalid("Address doesn't exist.");
+				validator.invalid(3003);
 				return undefined;
 			}
 			return $.extend(true, map[opFloor[address]], {pos: opFloor[address]});
@@ -357,12 +359,12 @@ function Logic()
 			var q = player.pos;
 			if (p == -1)
 			{
-				validator.invalid("It's out!");
+				validator.invalid(3001);
 				return undefined;
 			}
 			if (map[getFront()].isOpFloor)
 			{
-				validator.invalid("It's a opFloor!");
+				validator.invalid(3002);
 				return undefined;
 			}
 			player.pos = getFront();
@@ -381,7 +383,7 @@ function Logic()
 			var p = getFront();
 			if (p == -1)
 			{
-				validator.invalid("It's out!");
+				validator.invalid(3001);
 				return undefined;
 			}
 			if (!this.checkLoad(p))
@@ -412,7 +414,7 @@ function Logic()
 			var p = getFront();
 			if (p == -1)
 			{
-				validator.invalid("It's out!");
+				validator.invalid(3001);
 				return undefined;
 			}
 			if (!this.checkStore(p))
