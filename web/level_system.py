@@ -40,13 +40,13 @@ def new_default_level(request):
             ret['status'] = 1018 #'the input default level id needs to be an Integer'
             return json_response(ret)
 
-    _edit = ""
+    _edit = 'False'
     if 'edit' in content:
         _edit = content['edit']
 
     default_level_id_filter = Level.objects.filter(default_level_id = _id)
     if len(default_level_id_filter) > 0:
-        if _edit == "True":
+        if str(_edit) == 'True':
             default_level_id_filter[0].info = content['level_info']
             default_level_id_filter[0].save()
             ret['status'] = 1000 #'succeeded'
@@ -54,7 +54,7 @@ def new_default_level(request):
         ret['status'] = 1022 #'this default level id already exists'
         return json_response(ret)
 
-    if _edit == "True":
+    if str(_edit) == 'True':
         ret['status'] = 1017 #'this level doesn't exist'
         return json_response(ret)
 

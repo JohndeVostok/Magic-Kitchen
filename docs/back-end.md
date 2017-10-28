@@ -84,7 +84,7 @@
             
 
 ### New Default Level
-        Post('/api/new_default_level'), attributes: default_level_id = idInt, level_info = jsonStr, edit = 'True'(optional)
+        Post('/api/new_default_level'), attributes: default_level_id = idInt, level_info = jsonStr, edit = boolStr(optional, default = 'False')
         创建预置关卡
         若想修改已存在的预置关卡，则传入参数edit = 'True';  注意，传入这个参数时要求该关卡已经存在。
 
