@@ -83,7 +83,7 @@
             level_info = json_info_str
 
         status = 'failed'  ---------failed
-            error = level id and default level id can't be empty in the same time'
+            error = 'level id and default level id can't be empty in the same time'
             error = 'this level doesn't exist'
             error = 'the input level id needs to be an Integer' 类型转换发生错误ValueError时将返回这个error信息
             error = 'the input default level id needs to be an Integer'
