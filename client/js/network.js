@@ -101,7 +101,7 @@ var network = function() {
 		postRequest(
 			"/api/new_default_level",
 			{
-				"level_id": level_id,
+				"default_level_id": level_id,
 				"level_info": level_info
 			},
 			callback
@@ -112,7 +112,7 @@ var network = function() {
 		postRequest(
 			"/api/get_level_info",
 			{
-				"level_id": level_id
+				"default_level_id": level_id
 			},
 			callback
 		);
