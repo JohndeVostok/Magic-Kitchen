@@ -71,6 +71,7 @@
             status = 1000
                 user_name = user_name_str
                 email = email_str
+                solution_dict = solution_dict_jsonStr #这是一个dict的json字符串，dict格式为{ level_id : solution_id},level_id本应是int，但由于json的key只能是str，所以解析json后，dict的key会是str，如{'2' : 3}
 
             status = 1001
 

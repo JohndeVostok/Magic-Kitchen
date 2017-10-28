@@ -1,3 +1,4 @@
+from models import User
 from models import Level
 from models import Solution
 import json
@@ -64,7 +65,14 @@ def new_solution(request):
         ret['status'] = 1026 #'the input score needs to be in range[0,4]'
         return json_response(ret)
 
-    Solution.objects.create(user_name = session, level_id = _level_id, info = _solution_info, score = _score)
+    _solution = Solution.objects.create(user_name = session, level_id = _level_id, info = _solution_info, score = _score)
+    name_filter = User.objects.filter(name = session)
+    user = name_filter[0]
+    solution_dict = json.loads(user.solution_dict)
+    solution_dict[str(_level_id)] = _solution.solution_id
+    user.solution_dict = json.dumps(solution_dict)
+    user.save()
+
 
     ret['status'] = 1000 #'succeeded'
     return json_response(ret)

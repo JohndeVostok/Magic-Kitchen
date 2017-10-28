@@ -10,6 +10,7 @@ class User(models.Model):
     password = models.CharField(max_length = 20)
     email = models.CharField(max_length = 50)
     identifyingCode = models.CharField(max_length = 20, default = "")
+    solution_dict = models.TextField() #jsonStr(stored dict{level_id : solution_id})
 
 class Level(models.Model):
     default_level_id = models.IntegerField()
