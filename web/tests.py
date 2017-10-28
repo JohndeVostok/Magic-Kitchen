@@ -272,6 +272,30 @@ class CustomSystemTestCase(TestCase):
         ret = json.loads(response.content)
         self.assertEqual(ret['status'], 1015) #'wrong identifying code'
 
+    def test_get_current_user_info(self):
+        c = Client()
+
+        #test get info before login
+        response = c.post('/api/get_current_user_info')
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 1001) #'please log in first'
+
+        #register
+        response = c.post('/api/register', {'name': 'sth', 'password': 'abc', 'email': '123@111.com'})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 1000) #'succeeded'
+
+        #login
+        response = c.post('/api/login', {'name': 'sth', 'password': 'abc'})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 1000) #'succeeded'
+
+        #test get current user info
+        response = c.post('/api/get_current_user_info')
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 1000) #'succeeded'
+        self.assertEqual(ret['user_name'], 'sth')
+        self.assertEqual(ret['email'], '123@111.com')
 
 class LevelSystemTestCase(TestCase):
     def test_get_level_info(self):

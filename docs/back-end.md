@@ -63,6 +63,18 @@
             status = 1014
             status = 1015
 
+### Get Current User Info
+        Post('/api/get_current_user_info')
+        返回目前登录的用户信息
+
+        return json dict:
+            status = 1000
+                user_name = user_name_str
+                email = email_str
+
+            status = 1001
+
+
 
 
 ### Get Level Info
