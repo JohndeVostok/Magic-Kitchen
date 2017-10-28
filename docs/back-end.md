@@ -84,13 +84,15 @@
             
 
 ### New Default Level
-        Post('/api/new_default_level'), attributes: default_level_id = idInt, level_info = jsonStr
+        Post('/api/new_default_level'), attributes: default_level_id = idInt, level_info = jsonStr, edit = 'True'(optional)
         创建预置关卡
+        若想修改已存在的预置关卡，则传入参数edit = 'True';  注意，传入这个参数时要求该关卡已经存在。
 
         TODO:目前只要POST就可以创建默认关卡，而不需要admin权限或其他手段
 
         return json dict:
             status = 1000
+            status = 1017
             status = 1018
             status = 1020
             status = 1021
