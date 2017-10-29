@@ -366,11 +366,29 @@ class LevelSystemTestCase(TestCase):
         response = c.post('/api/new_default_level', {'default_level_id': 1, 'level_info': 'jsonStr'})
         ret = json.loads(response.content)
         self.assertEqual(ret['status'], 1000) #'succeeded'
+        _filter = Level.objects.filter(default_level_id = 1)
+        self.assertEqual(len(_filter), 1)
+        self.assertEqual(_filter[0].info, 'jsonStr')
+        self.assertEqual(_filter[0].level_id, 1)
 
         #test level id already exists
         response = c.post('/api/new_default_level', {'default_level_id': 1, 'level_info': 'jsonStr2'})
         ret = json.loads(response.content)
         self.assertEqual(ret['status'], 1022) #'this default level id already exists'
+
+        #test edit default level
+        response = c.post('/api/new_default_level', {'default_level_id': 1, 'level_info': 'jsonStr2', 'edit': 'True'})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 1000) #'succeeded'
+        _filter = Level.objects.filter(default_level_id = 1)
+        self.assertEqual(len(_filter), 1)
+        self.assertEqual(_filter[0].info, 'jsonStr2')
+        self.assertEqual(_filter[0].level_id, 1)
+
+        #test edit non-existent default level
+        response = c.post('/api/new_default_level', {'default_level_id': 2, 'level_info': 'jsonStr2', 'edit': 'True'})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 1017) #'this level doesn't exist'
 
     def test_new_usermade_level(self):
         c = Client()
