@@ -456,10 +456,20 @@ function Logic()
 		state.init();
 	};
 
-	this.loadLevel = function()
+	this.loadLevel = function(levelId)
 	{
+		if (levelId == undefined)
+			levelId = config.defaultOnlineLevelId;
 		if (config.useFakeLevel)
 			initLevel(config.fakeLevelInfo);
+		else network.getLevelInfo(
+			levelId,
+			function(data){
+				if (data["status"] == 1000)
+					initLevel(eval("(" + data["level_info"] + ")"));
+				else alert("关卡加载失败：网络超时");
+			}
+		);
 	};
 
 	var renderLevel = function()
@@ -475,7 +485,7 @@ function Logic()
 
 	var initLevel = function(levelInfoIn)
 	{
-		levelInfo = $.extend(true, levelInfoIn);
+		levelInfo = $.extend(true, [], levelInfoIn);
 		code.setBlockTypes(levelInfo.blockTypes);
 		reset();
 	};
@@ -679,7 +689,7 @@ function Logic()
 			return callback("密码不能为空！", {status: "failed"});
 		}
 		network.login(username, password, function(res) {
-			if (res.status == "succeeded")
+			if (res.status == 1000)
 			{
 				// TODO: Store user info in logic for further use (e.g. fetching level).
 
@@ -690,23 +700,7 @@ function Logic()
 			}
 			else
 			{
-				var err = "未知错误";
-				const arr = [
-					["network timeout", "网络超时"],
-					["user name can't be empty", "用户名不能为空！"],
-					["password can't be empty", "密码不能为空！"],
-					["this name doesn't exist", "该用户不存在！"],
-					["wrong password", "密码错误！"],
-					["you have already logged in", "你已经登录了！"]
-				];
-				for (var i in arr)
-				{
-					if (res.error == arr[i][0])
-					{
-						err = arr[i][1];
-					}
-				}
-				callback(err, {status: "failed"});
+				callback(res.status, {status: "failed"});
 			}
 		});
 	};
@@ -715,7 +709,7 @@ function Logic()
 	this.doLogout = function(callback)
 	{
 		network.logout(function(res) {
-			if (res.status == "succeeded")
+			if (res.status == 1000)
 			{
 				callback(undefined, {
 					status: "succeeded"
@@ -723,12 +717,7 @@ function Logic()
 			}
 			else
 			{
-				var err = "未知错误";
-				if (res.error == "network timeout")
-				{
-					err = "网络超时";
-				}
-				callback(err, {status: "failed"});
+				callback(res.status, {status: "failed"});
 			}
 		});
 	}
@@ -753,7 +742,7 @@ function Logic()
 			return callback("两次输入密码不一致！", {status: "failed"});
 		}
 		network.register(username, password, email, function(res) {
-			if (res.status == "succeeded")
+			if (res.status == 1000)
 			{
 				callback(undefined, {
 					status: "succeeded"
@@ -761,27 +750,7 @@ function Logic()
 			}
 			else
 			{
-				var err = "未知错误";
-				const arr = [
-					["network timeout", "网络超时"],
-					["user name can't be empty", "用户名不能为空！"],
-					["password can't be empty", "密码不能为空！"],
-					["email can't be empty", "邮箱不能为空！"],
-					["this name is too long", "用户名太长！"],
-					["this password is too long", "密码太长！"],
-					["this email address is too long", "邮箱太长！"],
-					["this name already exists", "该用户已存在！"],
-					["this email address already exists", "该邮箱已存在！"],
-					["you have already logged in", "你已经登录了！"]
-				];
-				for (var i in arr)
-				{
-					if (res.error == arr[i][0])
-					{
-						err = arr[i][1];
-					}
-				}
-				callback(err, {status: "failed"});
+				callback(res.status, {status: "failed"});
 			}
 		});
 	}
@@ -798,7 +767,7 @@ function Logic()
 			return callback("两次输入密码不一致！", {status: "failed"});
 		}
 		network.changePasswordAfterLogin(newPassword, function(res) {
-			if (res.status == "succeeded")
+			if (res.status == 1000)
 			{
 				callback(undefined, {
 					status: "succeeded"
@@ -806,21 +775,7 @@ function Logic()
 			}
 			else
 			{
-				var err = "未知错误";
-				const arr = [
-					["network timeout", "网络超时"],
-					["please log in first", "请先登录！"],
-					["password can't be empty", "密码不能为空！"],
-					["this password is too long", "密码太长！"]
-				];
-				for (var i in arr)
-				{
-					if (res.error == arr[i][0])
-					{
-						err = arr[i][1];
-					}
-				}
-				callback(err, {status: "failed"});
+				callback(res.status, {status: "failed"});
 			}
 		});
 	}

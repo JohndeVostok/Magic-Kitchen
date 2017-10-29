@@ -25,6 +25,11 @@ $ python manage.py migrate  # run Django migration
 $ python manage.py runserver 0.0.0.0:8000  # run Django server, listening at 0.0.0.0, port 8000
 ```
 
+To setup levels, one can access /test.html to feed the default levels into SQL.
+If any corruption occurs, remove db.sqlite3, migrate, and access /test.html again.
+Then change config.useFakeLevel to false in order to use these level.
+(This may be fixed in near future)
+
 ### Run with Docker
 
 There are some scripts to run and debug CodeCheF with Docker.

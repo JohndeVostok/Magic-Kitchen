@@ -204,7 +204,22 @@ var ui = function() {
 			$("#buttonStop").attr("disabled", true);
 			code.stop();
 		});
+		$("#buttonChangeLevel").click(function() {
+			var targetLevelId = $("input#targetLevelId").val();
+			if (isNaN(targetLevelId)) alert("请输入正确的关卡编号");
+			else logic.loadLevel(parseInt(targetLevelId));
+			resetGameButtons();
+		});
+		resetGameButtons();
 	};
+
+	var resetGameButtons = function() {
+		$("#buttonUndo").attr("disabled", false);
+		$("#buttonRedo").attr("disabled", true);
+		$("#buttonCompile").attr("disabled", false);
+		$("#buttonStep").attr("disabled", true);
+		$("#buttonStop").attr("disabled", true);
+	}
 	
 	var initUIControls = function() {
 		// TODO: Use "get user info" API to resolve this issue. (#50)

@@ -28,7 +28,7 @@ var network = function() {
 
 	var postRequest = function(url, contents, callback, retry = nRetry) {
 		$.ajax({
-            method: "POST",
+			method: "POST",
 			url: url,
 			data: contents,
 			timeout: requestTimeout,
@@ -101,8 +101,20 @@ var network = function() {
 		postRequest(
 			"/api/new_default_level",
 			{
-				"level_id": level_id,
+				"default_level_id": level_id,
 				"level_info": level_info
+			},
+			callback
+		);
+	};
+
+	var editDefaultLevel = function(level_id, level_info, callback) {
+		postRequest(
+			"/api/new_default_level",
+			{
+				"default_level_id": level_id,
+				"level_info": level_info,
+				"edit": "True"
 			},
 			callback
 		);
@@ -112,7 +124,7 @@ var network = function() {
 		postRequest(
 			"/api/get_level_info",
 			{
-				"level_id": level_id
+				"default_level_id": level_id
 			},
 			callback
 		);
@@ -126,6 +138,7 @@ var network = function() {
 		changePasswordByEmail: changePasswordByEmail,
 		changePasswordAfterLogin: changePasswordAfterLogin,
 		newDefaultLevel: newDefaultLevel,
+		editDefaultLevel: editDefaultLevel,
 		getLevelInfo: getLevelInfo
 	};
 }();
