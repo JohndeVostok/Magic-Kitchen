@@ -3,6 +3,7 @@ import json
 from django.http import HttpResponse 
 from send_email import email_thread
 import datetime
+from django.utils import timezone
 
 def json_response(info):
     return HttpResponse(json.dumps(info), content_type="application/json")
@@ -68,7 +69,7 @@ def register(request):
         ret['status'] = 1006 #'this email address already exists'
         return json_response(ret)
 
-    User.objects.create(name = _name, password = _password, email = _email, solution_dict = json.dumps({}), authority = 1, vip_due_time = None)
+    User.objects.create(name = _name, password = _password, email = _email, solution_dict = json.dumps({}), authority = 1, vip_due_time = timezone.now())
     ret['status'] = 1000 #'succeeded'
     return json_response(ret)
 
@@ -252,16 +253,16 @@ def vip_charge(request):
         ret['status'] = 1029 #'the input days needs to be an Integer'
         return json_response(ret)
 
-    if not _days in range(0, 100000):
-            ret['status'] = 1030 #'the input days needs to be in range[0, 99999]'
+    if not _days in range(1, 100000):
+            ret['status'] = 1030 #'the input days needs to be in range[1, 99999]'
             return json_response(ret)
 
     user = User.objects.filter(name = session)[0]
     if user.authority < 2:
         user.authority = 2
-    dut_time = user.vip_due_time
-    if (due_time < datetime.datetime.now()) or (not due_time):
-        due_time = datetime.datetime.now()
+    due_time = user.vip_due_time
+    if due_time < timezone.now():
+        due_time = timezone.now()
     timedelta = datetime.timedelta(days = _days)
     user.vip_due_time = due_time + timedelta
     user.save()

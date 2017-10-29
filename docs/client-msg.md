@@ -36,7 +36,7 @@ msg is a map for message between blocks.
         1027 level id can't be empty    关卡ID不能为空
         1028 days can't be empty    输入天数不能为空
         1029 the input days needs to be an Integer    天数需要是整数类型
-        1030 the input days needs to be in range[0, 99999]    天数需要属于区间[0,99999]
+        1030 the input days needs to be in range[1, 99999]    天数需要属于区间[1,99999]
 
 	Functions for other blocks
 		class msg

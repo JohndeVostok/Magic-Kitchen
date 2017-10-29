@@ -7,6 +7,7 @@ import json
 from models import User
 from models import Level
 from models import Solution
+import datetime
 
 # Create your tests here.
 
@@ -324,6 +325,51 @@ class CustomSystemTestCase(TestCase):
         ret = json.loads(response.content)
         self.assertEqual(ret['status'], 1000) #'succeeded'
         self.assertEqual(json.loads(ret['solution_dict']), {'1' : 1, '2' : 2})
+
+    def test_vip_charge(self):
+        c = Client()
+
+        #test charge before login
+        response = c.post('/api/vip_charge')
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 1001) #'please log in first'
+
+        #register
+        response = c.post('/api/register', {'name': 'sth', 'password': 'abc', 'email': '123@111.com'})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 1000) #'succeeded'
+
+        #login
+        response = c.post('/api/login', {'name': 'sth', 'password': 'abc'})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 1000) #'succeeded'
+
+        #test empty days
+        response = c.post('/api/vip_charge')
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 1028) #'level info can't be empty'
+
+        #test days is not Integer
+        response = c.post('/api/vip_charge', {'days': 'a'})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 1029) #'the input days needs to be an Integer'
+
+        #test days is not in range[1,99999]
+        response = c.post('/api/vip_charge', {'days': '0'})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 1030) #'the input days needs to be in range[1, 99999]'
+
+        #test vip charge
+        response = c.post('/api/vip_charge', {'days': '30'})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 1000) #'succeeded'
+        user = User.objects.filter(name = 'sth')[0]
+        now = datetime.datetime.now()
+        delta = datetime.timedelta(days = 30)
+        self.assertEqual(user.authority, 2)
+        self.assertEqual(user.vip_due_time.day, (now + delta).day)
+        self.assertEqual(user.vip_due_time.month, (now + delta).month)
+        self.assertEqual(user.vip_due_time.year, (now + delta).year)
 
 class LevelSystemTestCase(TestCase):
     def test_get_level_info(self):

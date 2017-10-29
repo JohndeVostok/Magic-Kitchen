@@ -123,7 +123,7 @@
             status = 1021
     
 ### New Solution
-        c.post('/api/new_solution') , attributes: level_id: idInt, solution_info: jsonStr, score: scoreInt
+        Post('/api/new_solution') , attributes: level_id: idInt, solution_info: jsonStr, score: scoreInt
         其中，score应该是[0,4]的整数，0表示未通过，1～3表示评级，4表示通过（用户自定义关卡仅记是否通过，不评级）
         必须登录才能够post，会将session作为username存入该Solution
         一个用户对同一个关卡只保存一个解法，最新创建的解法将覆盖之前对该关卡的解法
@@ -138,3 +138,14 @@
             status = 1025
             status = 1026
             status = 1027
+
+### VIP Charge
+        Post('/api/vip_charge'), attributes: days = day_num_Int
+        要求days属于区间[1,99999]
+
+        return json dict:
+            status = 1000
+            status = 1001
+            status = 1028
+            status = 1029
+            status = 1030
