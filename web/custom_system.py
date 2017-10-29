@@ -211,3 +211,20 @@ def change_password_by_identifyingCode(request):
 
     ret['status'] = 1000 #'succeeded'
     return json_response(ret)
+
+def get_current_user_info(request):
+    content = request.POST
+
+    ret = {}
+
+    session = get_session(request)
+    if not session:
+        ret['status'] = 1001 #'please log in first'
+        return json_response(ret)
+
+    name_filter = User.objects.filter(name = session)
+    user = name_filter[0]
+    ret['user_name'] = session
+    ret['email'] = user.email
+    ret['status'] = 1000 #'succeeded'
+    return json_response(ret)
