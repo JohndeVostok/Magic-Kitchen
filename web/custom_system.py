@@ -269,3 +269,35 @@ def vip_charge(request):
 
     ret['status'] = 1000 #'succeeded'
     return json_response(ret)
+
+def set_admin(request):
+    content = request.POST
+
+    ret = {}
+    session = get_session(request)
+    if not session:
+        ret['status'] = 1001 #'please log in first'
+        return json_response(ret)
+    super_admin = User.objects.filter(name = session)[0]
+    if super_admin.authority != 4:
+        ret['status'] = 1031 #'you don't have operation authority'
+        return json_response(ret)
+
+    if not 'name' in content:
+        ret['status'] = 1002 #'user name can't be empty'
+        return json_response(ret)
+
+    _name = content['name']
+
+    name_filter = User.objects.filter(name = _name)
+
+    if len(name_filter) == 0:
+        ret['status'] = 1011 #'this name doesn't exist'
+        return json_response(ret)
+
+    user = name_filter[0]
+    user.authority = 3 #set admin
+    user.save()
+
+    ret['status'] = 1000 #'succeeded'
+    return json_response(ret)

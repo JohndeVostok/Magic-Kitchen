@@ -149,3 +149,14 @@
             status = 1028
             status = 1029
             status = 1030
+
+### Set Admin
+        Post('/api/set_admin'), attributes: name = user_name_str
+        要求已登录，且拥有超级管理员权限。参数name为待设置为管理员的用户名。
+
+        return json dict
+            status = 1000
+            status = 1001
+            status = 1002
+            status = 1011
+            status = 1031

@@ -8,6 +8,7 @@ from models import User
 from models import Level
 from models import Solution
 import datetime
+from django.utils import timezone
 
 # Create your tests here.
 
@@ -370,6 +371,50 @@ class CustomSystemTestCase(TestCase):
         self.assertEqual(user.vip_due_time.day, (now + delta).day)
         self.assertEqual(user.vip_due_time.month, (now + delta).month)
         self.assertEqual(user.vip_due_time.year, (now + delta).year)
+
+    def test_set_admin(self):
+        c = Client()
+
+        super_admin = User.objects.create(name = 'super_admin', password = 'pw', email = 'email', solution_dict = json.dumps({}), authority = 1, vip_due_time = timezone.now())
+
+        #test set admin before login
+        response = c.post('/api/set_admin')
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 1001) #'please log in first'
+
+        #register
+        response = c.post('/api/register', {'name': 'sth', 'password': 'abc', 'email': '123@111.com'})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 1000) #'succeeded'
+
+        #super admin login
+        response = c.post('/api/login', {'name': 'super_admin', 'password': 'pw'})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 1000) #'succeeded'
+
+        #test no authority
+        response = c.post('/api/set_admin')
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 1031) #'you don't have operation authority'
+
+        super_admin.authority = 4
+        super_admin.save()
+        #test empty user name
+        response = c.post('/api/set_admin')
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 1002) #'user name can't be empty'
+
+        #test user name doesn't exist
+        response = c.post('/api/set_admin', {'name': 'sth2'})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 1011) #'this name doesn't exist'
+
+        #test set admin
+        response = c.post('/api/set_admin', {'name': 'sth'})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 1000) #'this name doesn't exist'
+        admin = User.objects.filter(name = 'sth')[0]
+        self.assertEqual(admin.authority, 3)
 
 class LevelSystemTestCase(TestCase):
     def test_get_level_info(self):
