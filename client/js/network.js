@@ -28,7 +28,7 @@ var network = function() {
 
 	var postRequest = function(url, contents, callback, retry = nRetry) {
 		$.ajax({
-            method: "POST",
+			method: "POST",
 			url: url,
 			data: contents,
 			timeout: requestTimeout,
