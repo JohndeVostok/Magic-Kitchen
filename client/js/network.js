@@ -108,6 +108,18 @@ var network = function() {
 		);
 	};
 
+	var editDefaultLevel = function(level_id, level_info, callback) {
+		postRequest(
+			"/api/new_default_level",
+			{
+				"default_level_id": level_id,
+				"level_info": level_info,
+				"edit": "True"
+			},
+			callback
+		);
+	};
+
 	var getLevelInfo = function(level_id, callback) {
 		postRequest(
 			"/api/get_level_info",
@@ -126,6 +138,7 @@ var network = function() {
 		changePasswordByEmail: changePasswordByEmail,
 		changePasswordAfterLogin: changePasswordAfterLogin,
 		newDefaultLevel: newDefaultLevel,
+		editDefaultLevel: editDefaultLevel,
 		getLevelInfo: getLevelInfo
 	};
 }();
