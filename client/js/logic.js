@@ -189,6 +189,18 @@ function Logic()
 			}
 		};
 
+		this.checkAddress = function(address)
+		{
+			if (address >= opFloor.length || address < 0)
+				return 0;
+			if (address == opFloor.length - 1)
+				return 2;
+			if (address == opFloor.length - 2)
+				return 3;
+			if (address < opFloor.length - 2)
+				return 1;
+		};
+
 		this.checkLoad = function(pos)
 		{
 			if (player.haveItem)
@@ -310,7 +322,7 @@ function Logic()
 
 		this.getFloor = function(address)
 		{
-			if (address >= opFloor.length)
+			if (this.checkAddress(address) != 1)
 			{
 				validator.invalid(3003);
 				return undefined;
