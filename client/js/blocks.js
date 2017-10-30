@@ -233,7 +233,7 @@ var blocks = {
 				"extCall1(blockID[stacklvl-1], []);}stacklvl--;";
 		}
 	},
-	12: {
+	21: {
 		name: "loadPaper",
 		json: {
 			"message0": "Load from %1",
@@ -247,10 +247,10 @@ var blocks = {
 		},
 		initExtra: function(block){},
 		generateOps: function(block){
-			return [{typeId: 12, address: parseInt(block.getFieldValue("ADDRESS"))}];
+			return [{typeId: 21, address: parseInt(block.getFieldValue("ADDRESS"))}];
 		}
 	},
-	13: {
+	22: {
 		name: "storePaper",
 		json: {
 			"message0": "Store to %1",
@@ -264,7 +264,7 @@ var blocks = {
 		},
 		initExtra: function(block){},
 		generateOps: function(block){
-			return [{typeId: 13, address: parseInt(block.getFieldValue("ADDRESS"))}];
+			return [{typeId: 22, address: parseInt(block.getFieldValue("ADDRESS"))}];
 		}
 	}
 };
