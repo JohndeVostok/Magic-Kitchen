@@ -785,7 +785,7 @@ function Logic()
 		state.storePaper();
 	};
 
-	var inbox() = function()
+	var inbox = function()
 	{
 		validator.init();
 		var f = state.getInbox();
