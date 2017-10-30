@@ -700,7 +700,7 @@ function Logic()
 			}
 			else
 			{
-				callback(res.status, {status: "failed"});
+				callback(msg.getMessage(res.status), {status: "failed"});
 			}
 		});
 	};
@@ -750,7 +750,7 @@ function Logic()
 			}
 			else
 			{
-				callback(res.status, {status: "failed"});
+				callback(msg.getMessage(res.status), {status: "failed"});
 			}
 		});
 	}
@@ -775,7 +775,7 @@ function Logic()
 			}
 			else
 			{
-				callback(res.status, {status: "failed"});
+				callback(msg.getMessage(res.status), {status: "failed"});
 			}
 		});
 	}
