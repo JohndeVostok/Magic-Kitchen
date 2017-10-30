@@ -131,15 +131,14 @@
 * Map in logic is stored in an object often called `levelInfo`.
 * An example is as following:
 ```JavaScript
-fakeLevelInfo: {
-	blockTypes: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
-	playerInfo: {pos: 7, dir: 0},
-	opFloor: [1, 2, 3, 4, 5, 22, 23, 24, 25, 26, 36, 37, 38, 39, 40, 6, 0],
-	input: [[{type: 1}]],
-	output: [[{type: 2}]],
-	itemList: [{type: 2, pos: 1}]
-}
-
+	fakeLevelInfo: {
+		blockTypes: [9, 10, 21, 22, 31, 32],
+		playerInfo: {pos: 7, dir: 0},
+		opFloor: [1, 2, 3, 4, 5, 22, 23, 24, 25, 26, 36, 37, 38, 39, 40, 6, 0],
+		input: [[{type: 1, value: 1}, {type: 1, value: 2}]],
+		output: [[{type: 1, value: 2}, {type: 1, value: 1}]],
+		itemList: [{type: 1, value: 2, pos: 1}, {type: 1, value: 3, pos: 2}]
+	},
 ```
 * The `blockTypes` specifies what kinds of blocks can be used in Blockly.
   * The block-type-ids can be found in `code` module docs.
