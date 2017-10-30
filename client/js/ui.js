@@ -561,7 +561,17 @@ var ui = function() {
 	var runNewItem = function(args) {
 		var pos = args.pos;
 		if (pos == -1) {
-			throw "Not implemented";
+			if (itemOnHead != undefined) {
+				throw "There's already an item on head";
+			}
+			var s = new createjs.Sprite(objectSpriteSheets[args.type]);
+			itemOnHead = {
+				type: args.type,
+				args: args.args,
+				sprite: s
+			};
+			setItemPos(s, pos);
+			stage.addChild(s);
 		} else {
 			if (items[pos] != undefined) {
 				throw "Invalid newItem on " + pos;
