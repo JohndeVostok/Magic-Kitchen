@@ -309,6 +309,7 @@ function Logic()
 			if (itemList[map[pos].itemId].type != 1)
 			{
 				validator.invalid(3022);
+				return 0;
 			}
 			return 1;
 		};
@@ -330,6 +331,7 @@ function Logic()
 			if (map[pos].haveItem && itemList[map[pos].itemId].type != 1)
 			{
 				validator.invalid(3024);
+				return 0;
 			}
 			return 1;
 		};
@@ -351,7 +353,7 @@ function Logic()
 			if (!map[pos].haveItem || itemList[map[pos].itemId].type != 1)
 			{
 				validator.invalid(3025);
-				return 0;
+				return 0;`
 			}
 			return 1;
 		};
