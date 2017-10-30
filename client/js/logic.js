@@ -865,7 +865,7 @@ function Logic()
 		state.addPaper();
 	};
 
-	var addPaper = function(address)
+	var subPaper = function(address)
 	{
 		validator.init();
 		var f = state.getFloor(address);
