@@ -287,6 +287,27 @@ function Logic()
 			return 1;
 		};
 
+		this.checkStorePaper = function(pos)
+		{
+			if (!player.haveItem || itemList[player.itemId].type != 1)
+			{
+				validator.invalid(3023);
+				return 0;
+			}
+
+			if (!map[pos].isOpFloor)
+			{
+				validator.invalid(3011);
+				return 0;
+			}
+
+			if (map[pos].haveItem && itemList[map[pos].itemId].type != 1)
+			{
+				validator.invalid(3024);
+			}
+			return 1;
+		};
+
 		this.getFloor = function(address)
 		{
 			if (address >= opFloor.length)
