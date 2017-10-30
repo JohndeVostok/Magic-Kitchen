@@ -609,7 +609,7 @@ function Logic()
 		this.addPaper = function()
 		{
 			var p = getFront();
-			itemList[player.itemId].value = itemList[player.itemId].value + itemList[map[pos].itemId].value;
+			itemList[player.itemId].value = itemList[player.itemId].value + itemList[map[p].itemId].value;
 			ui.deleteItem(p, undefined);
 			ui.addAnimation(-1, p, undefined);
 			ui.addAnimation(p, -1, undefined);
