@@ -12,10 +12,10 @@ var config = {
 	// The fake level used in logic.
 	// Please update it when the level specifications change.
 	fakeLevelInfo: {
-		blockTypes: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
+		blockTypes: [12, 13],
 		playerInfo: {pos: 7, dir: 0},
 		opFloor: [1, 2, 3, 4, 5, 22, 23, 24, 25, 26, 36, 37, 38, 39, 40, 6, 0],
-		input: [[{type: 1}, {type: 2}]],
+		input: [[{type: 1, value: 1}, {type: 1, value: 2}]],
 		output: [[{type: 2}]],
 		itemList: [{type: 2, pos: 1}]
 	},
