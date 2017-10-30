@@ -45,7 +45,7 @@ function Msg()
 		3051: ["Username can't be empty.", "用户名不能为空。"],
 		3052: ["Password can't be empty.", "密码不能为空。"],
 		3053: ["Email can't be empty.", "邮箱不能为空。"],
-		3053: ["Invalid check password.", "两次输入密码不一致。"],
+		3054: ["Invalid check password.", "两次输入密码不一致。"],
 	}
 	var language = 0;
 

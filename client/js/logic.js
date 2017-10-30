@@ -760,11 +760,11 @@ function Logic()
 	{
 		if (newPassword == "")
 		{
-			return callback("密码不能为空！", {status: "failed"});
+			return callback(msg.getMessage(3052), {status: "failed"});
 		}
 		if (newPassword != newPassword2)
 		{
-			return callback("两次输入密码不一致！", {status: "failed"});
+			return callback(msg.getMessage(3054), {status: "failed"});
 		}
 		network.changePasswordAfterLogin(newPassword, function(res) {
 			if (res.status == 1000)
