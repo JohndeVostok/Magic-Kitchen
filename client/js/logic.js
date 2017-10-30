@@ -784,6 +784,25 @@ function Logic()
 		}
 		state.storePaper();
 	};
+
+	var inbox() = function()
+	{
+		validator.init();
+		var f = state.getInbox();
+		state.checkLoad(f.pos);
+		if (validator.validate())
+			return undefined;
+
+		var p = state.route(f.pos);
+		for (let i = 0; i < p.length; i++)
+		{
+			if (p[i].op == "s")
+				state.step();
+			if (p[i].op == "r")
+				state.rotate(p[i].dir);
+		}
+		state.loadItem();
+	}
 //functions for UI
 
 	this.start = function()
@@ -839,6 +858,12 @@ function Logic()
 			break;
 			case 22:
 				storePaper(op.address);
+			break;
+			case 31:
+				inbox();
+			break;
+			case 32:
+				outbox();
 			break;
 			default:
 			//nothing
