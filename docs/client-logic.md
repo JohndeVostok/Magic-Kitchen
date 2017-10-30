@@ -106,53 +106,62 @@
 			Call network to login and call callback when ready.
 			callback = function(err, res)
 			err = undefined if no error occurred else error message
-			res = {status: "failed|succeeded", username: theUsernameOfUser}
+			res = {status: "failed"|"succeeded", username: theUsernameOfUser}
 
 		logic.doLogout(callback):
 			Call network to logout and call callback when ready.
 			callback = function(err, res)
 			err = undefined if no error occurred else error message
-			res = {status: "failed|succeeded"}
+			res = {status: "failed"|"succeeded"}
 
 		logic.doRegister(username, email, password, password2, callback):
 			Call network to register and call callback when ready.
 			callback = function(err, res)
 			err = undefined if no error occurred else error message
-			res = {status: "failed|succeeded"}
+			res = {status: "failed"|"succeeded"}
 
 		logic.doChangePassword(newPassword, newPassword2, callback):
 			Call network to change password while logged in and call callback when ready.
 			callback = function(err ,res)
 			err = undefined if no error occurred else error message
-			res = {status: "failed|succeeded"}
+			res = {status: "failed"|"succeeded"}
 
 #### Logic Map Specifications
 
-* Map in logic is stored in an object often called `levelInfo`.
+* Map in logic is stored in an object often called "levelInfo".
 * An example is as following:
-```JavaScript
-fakeLevelInfo: {
-	blockTypes: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
-	playerInfo: {pos: 7, dir: 0},
-	opFloor: [1, 2, 3, 4, 5, 22, 23, 24, 25, 26, 36, 37, 38, 39, 40, 6, 0],
-	input: [[{type: 1}]],
-	output: [[{type: 2}]],
-	itemList: [{type: 2, pos: 1}]
-}
 
-```
-* The `blockTypes` specifies what kinds of blocks can be used in Blockly.
-  * The block-type-ids can be found in `code` module docs.
-* The `playerInfo` specifies the initial player state.
-  * `pos` means position.
-  * `dir` means direction.
-  * See `ui` docs for definitions.
-* The `map` specifies the objects (tables, walls, etc.) on the map.
-  * Currently only table is supported.
-  * Consider one `map`'s element, say `e`.
-  * `e.pos` means the position on the map. (See `ui` docs for position definitions)
-  * If `e` is a table, `e.address` means the table's address in the game.
-* The `itemList` specifies the items (apples, bananas, etc.) on the map.
-  * Consider an item `i`.
-  * `i.type` means the item's type, in an Integer. See `ui` docs for more.
-  * `i.pos` means the position on the map.
+JavaScript
+	fakeLevelInfo: {
+		blockTypes: [9, 10, 21, 22, 31, 32],
+		playerInfo: {pos: 7, dir: 0},
+		opFloor: [1, 2, 3, 4, 5, 22, 23, 24, 25, 26, 36, 37, 38, 39, 40, 6, 0],
+		input: [[{type: 1, value: 1}, {type: 1, value: 2}]],
+		output: [[{type: 1, value: 2}, {type: 1, value: 1}]],
+		itemList: [{type: 1, value: 2, pos: 1}, {type: 1, value: 3, pos: 2}]
+	},
+
+* The "blockTypes" specifies what kinds of blocks can be used in Blockly.
+	* The "block-type-id"s can be found in "code" module docs.
+* The "playerInfo" specifies the initial player state.
+	* "pos" means position.
+	* "dir" means direction.
+	* See "ui" docs for definitions.
+* The "opFloor" specifies the opFloor (tables, inbox, outbox) on the map.
+	* opFloor[opFloor.length - 1] is inbox.
+	* opFloor[opFloor.length - 2] is outbox.
+	* opFloor has it's address on it.
+	* Player can't access inbox and outbox by address.
+* The "itemList" specifies the items (magic paper, apples, bananas, etc.) on the map.
+	* Consider an item "i".
+	* "i.type" means the item's type, in an Integer.
+		* "i.type" == 1 means it's a magic paper.
+			* Now magic paper looks like an apple now. But it contains magic. (integer). "i.value" is an integer.
+			* Magic paper should be like a paper with a number on it.
+			* Magic paper support load store, add and sub.
+			* load(loc): When player hold a magic paper or have nothing in hand. Copy from loc.
+			* store(loc): When opFloor has a magic paper or nothing on it. Copy to loc.
+			* add(loc): Add magic paper on loc to magic paper on hand.
+			* sub(loc): Sub magic paper on loc to magic paper on hand.
+		* "i.type" != 1. It's just for kids.
+	* "i.pos" means the position on the map.
