@@ -682,11 +682,11 @@ function Logic()
 	{
 		if (username == "")
 		{
-			return callback(msg.getMessage(1002), {status: "failed"});
+			return callback(msg.getMessage(3051), {status: "failed"});
 		}
 		if (password == "")
 		{
-			return callback(msg.getMessage(1003), {status: "failed"});
+			return callback(msg.getMessage(3052), {status: "failed"});
 		}
 		network.login(username, password, function(res) {
 			if (res.status == 1000)
@@ -727,19 +727,19 @@ function Logic()
 	{
 		if (username == "")
 		{
-			return callback("用户名不能为空！", {status: "failed"});
+			return callback(msg.getMessage(3051), {status: "failed"});
 		}
 		if (email == "")
 		{
-			return callback("邮箱不能为空！", {status: "failed"});
+			return callback(msg.getMessage(3053), {status: "failed"});
 		}
 		if (password == "")
 		{
-			return callback("密码不能为空！", {status: "failed"});
+			return callback(msg.getMessage(3052), {status: "failed"});
 		}
 		if (password != password2)
 		{
-			return callback("两次输入密码不一致！", {status: "failed"});
+			return callback(msg.getMessage(3054), {status: "failed"});
 		}
 		network.register(username, password, email, function(res) {
 			if (res.status == 1000)

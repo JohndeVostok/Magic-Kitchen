@@ -41,7 +41,11 @@ function Msg()
 		3015: ["I have nothing in my hand.", "我手里没东西。"],
 		3016: ["There is something there.", "那已经有东西了。"],
 		3017: ["I can't store to there.", "我不能向进材口丢东西。"],
-		3018: ["It's not what we want.", "那个不是我们想要的。"]
+		3018: ["It's not what we want.", "那个不是我们想要的。"],
+		3051: ["Username can't be empty.", "用户名不能为空。"],
+		3052: ["Password can't be empty.", "密码不能为空。"],
+		3053: ["Email can't be empty.", "邮箱不能为空。"],
+		3053: ["Invalid check password.", "两次输入密码不一致。"],
 	}
 	var language = 0;
 
