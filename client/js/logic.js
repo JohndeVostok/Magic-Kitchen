@@ -334,6 +334,28 @@ function Logic()
 			return 1;
 		};
 
+		this.checkOperatePaper = function(pos)
+		{
+			if (!player.haveItem || itemList[player.itemId].type != 1)
+			{
+				validator.invalid(3023);
+				return 0;
+			}
+
+			if (!map[pos].isOpFloor)
+			{
+				validator.invalid(3011);
+				return 0;
+			}
+
+			if (!map[pos].haveItem || itemList[map[pos].itemId].type != 1)
+			{
+				validator.invalid(3025);
+				return 0;
+			}
+			return 1;
+		};
+
 		this.getFloor = function(address)
 		{
 			if (this.checkAddress(address) != 1)
@@ -799,6 +821,28 @@ function Logic()
 		state.storePaper();
 	};
 
+	var addPaper = function(address)
+	{
+		validator.init();
+		var f = state.getFloor(address);
+		if (validator.validate())
+			return undefined;
+
+		state.checkOperePaper(f.pos);
+		if (validator.validate())
+			return undefined;
+
+		var p = state.route(f.pos);
+		for (let i = 0; i < p.length; i++)
+		{
+			if (p[i].op == "s")
+				state.step();
+			if (p[i].op == "r")
+				state.rotate(p[i].dir);
+		}
+//		state.addPaper();
+	};
+
 	var inbox = function()
 	{
 		validator.init();
@@ -892,6 +936,12 @@ function Logic()
 			break;
 			case 22:
 				storePaper(op.address);
+			break;
+			case 23:
+				addPaper(op.address);
+			break;
+			case 24:
+				subPaper(op.address);
 			break;
 			case 31:
 				inbox();
