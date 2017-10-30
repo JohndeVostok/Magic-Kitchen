@@ -804,7 +804,7 @@ function Logic()
 		state.loadItem();
 	}
 
-	var store = function()
+	var outbox = function()
 	{
 		validator.init();
 		var f = state.getOutbox();
