@@ -151,7 +151,15 @@ JavaScript
 	* opFloor[opFloor.length - 1] is inbox.
 	* opFloor[opFloor.length - 2] is outbox.
 	* Player can't access inbox and outbox by address.
-* The `itemList` specifies the items (apples, bananas, etc.) on the map.
-  * Consider an item `i`.
-  * `i.type` means the item's type, in an Integer. See `ui` docs for more.
-  * `i.pos` means the position on the map.
+* The "itemList" specifies the items (magic paper, apples, bananas, etc.) on the map.
+	* Consider an item `i`.
+	* "i.type" means the item's type, in an Integer.
+		* "i.type" == 1 means it's a magic paper.
+			* Now magic paper looks like an apple. But it contains magic. (integer). "i.value" is a integer.
+			* Magic paper support load store add and sub.
+			* load(loc): When player hold a magic paper or have nothing in hand. Copy from loc.
+			* store(loc): When opFloor has a magic paper or nothing on it. Copy to loc.
+			* add(loc): Add magic paper on loc to magic paper on hand.
+			* sub(loc): Sub magic paper on loc to magic paper on hand.
+		* "i.type" != 1. It's just for kid.
+	* "i.pos" means the position on the map.
