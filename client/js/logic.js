@@ -248,6 +248,32 @@ function Logic()
 			return 1;
 		};
 
+		this.checkLoadPaper = function(pos)
+		{
+			if (player.haveItem && itemList[player.itemId].type != 1)
+			{
+				validator.invalid(3021);
+				return 0;
+			}
+
+			if (!map[pos].isOpFloor)
+			{
+				validator.invalid(3011);
+				return 0;
+			}
+
+			if (!map[pos].haveItem)
+			{
+				validator.invalid(3022);
+				return 0;
+			}
+			if (itemList[map[pos].itemId] != 1)
+			{
+				validator.invalid(3022);
+			}
+			return 1;
+		};
+
 		this.getFloor = function(address)
 		{
 			if (address >= opFloor.length)
@@ -444,6 +470,19 @@ function Logic()
 
 		this.loadPaper = function()
 		{
+			var p = getFront();
+
+			if (player.haveItem == 0)
+			{
+				player.haveItem = 1;
+			}
+
+			player.haveItem = 1;
+			map[p].haveItem = 0;
+			player.itemId = map[p].itemId;
+			map[p].itemId = 0;
+			itemList[player.itemId].pos = -1;
+			ui.addAnimation(p, -1, undefined);
 		}
 
 		this.storePaper = function()
@@ -636,7 +675,7 @@ function Logic()
 		var f = state.getFloor(address);
 		if (validator.validate())
 			return undefined;
-		state.checkLoad(f.pos);
+		state.checkLoadPaper(f.pos);
 		if (validator.validate())
 			return undefined;
 
