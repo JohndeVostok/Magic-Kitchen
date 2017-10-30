@@ -4,11 +4,6 @@ var config = {
 	mapWidth: 7,
 	mapHeight: 7,
 
-	msgCode: {
-		width: 1000,
-		logicBegin: 3000
-	},
-
 	// Set `useFakeLevel` to true when you need to load the fake level.
 	// If you set it to false to use online level, remember to init the level first.
 	// A temporary initialization method is to access test.html
