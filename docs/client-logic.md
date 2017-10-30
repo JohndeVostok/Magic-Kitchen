@@ -128,7 +128,7 @@
 
 #### Logic Map Specifications
 
-* Map in logic is stored in an object often called `levelInfo`.
+* Map in logic is stored in an object often called "levelInfo".
 * An example is as following:
 
 JavaScript
@@ -150,12 +150,14 @@ JavaScript
 * The "opFloor" specifies the opFloor (tables, inbox, outbox) on the map.
 	* opFloor[opFloor.length - 1] is inbox.
 	* opFloor[opFloor.length - 2] is outbox.
+	* opFloor has it's address on it.
 	* Player can't access inbox and outbox by address.
 * The "itemList" specifies the items (magic paper, apples, bananas, etc.) on the map.
-	* Consider an item `i`.
+	* Consider an item "i".
 	* "i.type" means the item's type, in an Integer.
 		* "i.type" == 1 means it's a magic paper.
-			* Now magic paper looks like an apple. But it contains magic. (integer). "i.value" is a integer.
+			* Now magic paper looks like an apple now. But it contains magic. (integer). "i.value" is a integer.
+			* Magic paper should be like a paper with a number on it.
 			* Magic paper support load store add and sub.
 			* load(loc): When player hold a magic paper or have nothing in hand. Copy from loc.
 			* store(loc): When opFloor has a magic paper or nothing on it. Copy to loc.
