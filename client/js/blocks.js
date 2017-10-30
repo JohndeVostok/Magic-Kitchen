@@ -266,5 +266,33 @@ var blocks = {
 		generateOps: function(block){
 			return [{typeId: 22, address: parseInt(block.getFieldValue("ADDRESS"))}];
 		}
+	},
+	31: {
+		name: "inbox",
+		json: {
+			"message0": "inbox",
+			"tooltip": "inbox",
+			"previousStatement": null,
+			"nextStatement": null,
+			"colour": 90
+		},
+		initExtra: function(block){},
+		generateOps: function(block){
+			return [{typeId: 31}];
+		}
+	},
+	32: {
+		name: "outbox",
+		json: {
+			"message0": "outbox",
+			"tooltip": "outbox",
+			"previousStatement": null,
+			"nextStatement": null,
+			"colour": 90
+		},
+		initExtra: function(block){},
+		generateOps: function(block){
+			return [{typeId: 32}];
+		}
 	}
 };

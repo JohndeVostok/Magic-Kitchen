@@ -108,7 +108,7 @@ function Logic()
 		//function for test
 		this.test = function()
 		{
-			var p = {map:[], player: -1};
+			var p = {map: [], player: -1, out: []};
 			if (player.haveItem && itemList[player.itemId].type == 1)
 				p.player = itemList[player.itemId].value;
 			for (let i = 0; i < opFloor.length; i++)
@@ -116,6 +116,12 @@ function Logic()
 				p.map[i] = -1;
 				if (map[opFloor[i]].haveItem && itemList[map[opFloor[i]].itemId].type == 1)
 					p.map[i] = itemList[map[opFloor[i]].itemId].value;
+			}
+			for (let i = 0; i < output[0].length; i++)
+			{
+				p.out[i] = -1;
+				if (output[0][i].type == 1)
+					p.out[i] = output[0][i].value;
 			}
 			return p;
 		};
@@ -166,7 +172,15 @@ function Logic()
 
 		var itemEqual = function(itemA, itemB)
 		{
-			return (itemA.type == itemB.type)
+			if (itemA.type == itemB.type)
+			{
+				if (itemA.type == 1)
+					return (itemA.value == itemB.value);
+				else
+					return 1;
+			}
+			else
+				return 0;
 		}
 
 		this.getPlayer = function()
@@ -187,6 +201,18 @@ function Logic()
 				validator.invalid(3002);
 				return undefined;
 			}
+		};
+
+		this.checkAddress = function(address)
+		{
+			if (address >= opFloor.length || address < 0)
+				return 0;
+			if (address == opFloor.length - 1)
+				return 2;
+			if (address == opFloor.length - 2)
+				return 3;
+			if (address < opFloor.length - 2)
+				return 1;
 		};
 
 		this.checkLoad = function(pos)
@@ -310,12 +336,22 @@ function Logic()
 
 		this.getFloor = function(address)
 		{
-			if (address >= opFloor.length)
+			if (this.checkAddress(address) != 1)
 			{
 				validator.invalid(3003);
 				return undefined;
 			}
 			return $.extend(true, {}, map[opFloor[address]], {pos: opFloor[address]});
+		}
+
+		this.getInbox = function()
+		{
+			return $.extend(true, {}, map[opFloor[opFloor.length - 1]], {pos: opFloor[opFloor.length - 1]});
+		}
+
+		this.getOutbox = function()
+		{
+			return $.extend(true, {}, map[opFloor[opFloor.length - 2]], {pos: opFloor[opFloor.length - 2]});
 		}
 
 		this.route = function(tp)
@@ -762,6 +798,45 @@ function Logic()
 		}
 		state.storePaper();
 	};
+
+	var inbox = function()
+	{
+		validator.init();
+		var f = state.getInbox();
+		state.checkLoad(f.pos);
+		if (validator.validate())
+			return undefined;
+
+		var p = state.route(f.pos);
+		for (let i = 0; i < p.length; i++)
+		{
+			if (p[i].op == "s")
+				state.step();
+			if (p[i].op == "r")
+				state.rotate(p[i].dir);
+		}
+		state.loadItem();
+	}
+
+	var outbox = function()
+	{
+		validator.init();
+		var f = state.getOutbox();
+		state.checkStore(f.pos);
+		if (validator.validate())
+			return undefined;
+
+		var p = state.route(f.pos);
+		for (let i = 0; i < p.length; i++)
+		{
+			if (p[i].op == "s")
+
+				state.step();
+			if (p[i].op == "r")
+				state.rotate(p[i].dir);
+		}
+		state.storeItem();
+	}
 //functions for UI
 
 	this.start = function()
@@ -818,11 +893,16 @@ function Logic()
 			case 22:
 				storePaper(op.address);
 			break;
+			case 31:
+				inbox();
+			break;
+			case 32:
+				outbox();
+			break;
 			default:
 			//nothing
 			break;
 		}
-		debug.log(state.test());
 	};
 
 	// Do login using network module
