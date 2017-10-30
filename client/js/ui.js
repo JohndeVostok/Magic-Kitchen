@@ -491,6 +491,8 @@ var ui = function() {
 			runSetInput(animation.args);
 		} else if (animation.type == "setOutput") {
 			runSetOutput(animation.args);
+		} else if (animation.type == "alert") {
+			runAlert(animation.args);
 		} else {
 			throw "Invalid animation " + animation.type;
 		}
@@ -758,6 +760,10 @@ var ui = function() {
 		setTimeout(setAnimationComplete, 0);
 	};
 	
+	var runAlert = function(args) {
+		alert(args.text);
+	};
+	
 	// Below are animation functions, i.e. functions that register animations for later rendering.
 	
 	var clearItems = function() {
@@ -865,7 +871,13 @@ var ui = function() {
 
 	var blockStep = function(s) {
 		$("#buttonStep").attr("disabled", true);
-		alert(s);
+		
+		animationQueue.push({
+			type: "alert",
+			args: {
+				text: s
+			}
+		});
 	};
 	
 	var debug = function() {
