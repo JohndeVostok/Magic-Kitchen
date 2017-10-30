@@ -259,12 +259,46 @@ var blocks = {
 			],
 			"previousStatement": null,
 			"nextStatement": null,
-			"tooltip": "load",
+			"tooltip": "store",
 			"colour": 0
 		},
 		initExtra: function(block){},
 		generateOps: function(block){
 			return [{typeId: 22, address: parseInt(block.getFieldValue("ADDRESS"))}];
+		}
+	},
+	23: {
+		name: "addPaper",
+		json: {
+			"message0": "Add %1",
+			"args0": [
+				{"type": "field_input", "name": "ADDRESS", "check": "Number", "text": "address"},
+			],
+			"previousStatement": null,
+			"nextStatement": null,
+			"tooltip": "add",
+			"colour": 0
+		},
+		initExtra: function(block){},
+		generateOps: function(block){
+			return [{typeId: 23, address: parseInt(block.getFieldValue("ADDRESS"))}];
+		}
+	},
+	24: {
+		name: "subPaper",
+		json: {
+			"message0": "Sub %1",
+			"args0": [
+				{"type": "field_input", "name": "ADDRESS", "check": "Number", "text": "address"},
+			],
+			"previousStatement": null,
+			"nextStatement": null,
+			"tooltip": "sub",
+			"colour": 0
+		},
+		initExtra: function(block){},
+		generateOps: function(block){
+			return [{typeId: 24, address: parseInt(block.getFieldValue("ADDRESS"))}];
 		}
 	},
 	31: {

@@ -309,6 +309,7 @@ function Logic()
 			if (itemList[map[pos].itemId].type != 1)
 			{
 				validator.invalid(3022);
+				return 0;
 			}
 			return 1;
 		};
@@ -330,6 +331,29 @@ function Logic()
 			if (map[pos].haveItem && itemList[map[pos].itemId].type != 1)
 			{
 				validator.invalid(3024);
+				return 0;
+			}
+			return 1;
+		};
+
+		this.checkOperatePaper = function(pos)
+		{
+			if (!player.haveItem || itemList[player.itemId].type != 1)
+			{
+				validator.invalid(3023);
+				return 0;
+			}
+
+			if (!map[pos].isOpFloor)
+			{
+				validator.invalid(3011);
+				return 0;
+			}
+
+			if (!map[pos].haveItem || itemList[map[pos].itemId].type != 1)
+			{
+				validator.invalid(3025);
+				return 0;
 			}
 			return 1;
 		};
@@ -581,6 +605,26 @@ function Logic()
 				ui.newItem(p, 1, undefined);
 			}
 		};
+		
+		this.addPaper = function()
+		{
+			var p = getFront();
+			itemList[player.itemId].value = itemList[player.itemId].value + itemList[map[p].itemId].value;
+			ui.deleteItem(p, undefined);
+			ui.addAnimation(-1, p, undefined);
+			ui.addAnimation(p, -1, undefined);
+			ui.newItem(p, 1, undefined);
+		};
+
+		this.subPaper = function()
+		{
+			var p = getFront();
+			itemList[player.itemId].value = itemList[player.itemId].value - itemList[map[p].itemId].value;
+			ui.deleteItem(p, undefined);
+			ui.addAnimation(-1, p, undefined);
+			ui.addAnimation(p, -1, undefined);
+			ui.newItem(p, 1, undefined);
+		};
 	}
 
 //prepare for playing
@@ -799,6 +843,50 @@ function Logic()
 		state.storePaper();
 	};
 
+	var addPaper = function(address)
+	{
+		validator.init();
+		var f = state.getFloor(address);
+		if (validator.validate())
+			return undefined;
+
+		state.checkOperatePaper(f.pos);
+		if (validator.validate())
+			return undefined;
+
+		var p = state.route(f.pos);
+		for (let i = 0; i < p.length; i++)
+		{
+			if (p[i].op == "s")
+				state.step();
+			if (p[i].op == "r")
+				state.rotate(p[i].dir);
+		}
+		state.addPaper();
+	};
+
+	var subPaper = function(address)
+	{
+		validator.init();
+		var f = state.getFloor(address);
+		if (validator.validate())
+			return undefined;
+
+		state.checkOperatePaper(f.pos);
+		if (validator.validate())
+			return undefined;
+
+		var p = state.route(f.pos);
+		for (let i = 0; i < p.length; i++)
+		{
+			if (p[i].op == "s")
+				state.step();
+			if (p[i].op == "r")
+				state.rotate(p[i].dir);
+		}
+		state.subPaper();
+	};
+
 	var inbox = function()
 	{
 		validator.init();
@@ -893,6 +981,12 @@ function Logic()
 			case 22:
 				storePaper(op.address);
 			break;
+			case 23:
+				addPaper(op.address);
+			break;
+			case 24:
+				subPaper(op.address);
+			break;
 			case 31:
 				inbox();
 			break;
@@ -903,6 +997,7 @@ function Logic()
 			//nothing
 			break;
 		}
+		debug.log(state.test());
 	};
 
 	// Do login using network module
