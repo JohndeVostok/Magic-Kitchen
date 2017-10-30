@@ -17,11 +17,10 @@ var network = function() {
 			},
 			error: function() {
 				if (retry > 0)
+				{
 					setTimeout(function(){getRequest(url, contents, callback, retry - 1);}, retryDelay);
-				else callback({
-					"status": "failed",
-					"error": "network timeout"
-				});
+				}
+				else callback({"status": 9000});
 			}
 		});
 	};
@@ -37,11 +36,10 @@ var network = function() {
 			},
 			error: function() {
 				if (retry > 0)
+				{
 					setTimeout(function(){postRequest(url, contents, callback, retry - 1);}, retryDelay);
-				else callback({
-					"status": "failed",
-					"error": "network timeout"
-				});
+				}
+				else callback({"status": 9000});
 			}
 		});
 	};

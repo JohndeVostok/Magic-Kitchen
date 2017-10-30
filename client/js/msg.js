@@ -46,6 +46,7 @@ function Msg()
 		3052: ["Password can't be empty.", "密码不能为空。"],
 		3053: ["Email can't be empty.", "邮箱不能为空。"],
 		3054: ["Invalid check password.", "两次输入密码不一致。"],
+		9000: ["Network timeout.", "网络请求超时。"]
 	}
 	var language = 0;
 
