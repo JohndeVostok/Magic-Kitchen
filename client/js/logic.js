@@ -441,6 +441,15 @@ function Logic()
 				ui.addAnimation(-1, p, undefined);
 			}
 		};
+
+		this.loadPaper = function()
+		{
+		}
+
+		this.storePaper = function()
+		{
+		}
+
 	}
 
 //prepare for playing
@@ -621,6 +630,27 @@ function Logic()
 		state.storeItem();
 	}
 
+	var loadPaper = function(address)
+	{
+		validator.init();
+		var f = state.getFloor(address);
+		if (validator.validate())
+			return undefined;
+		state.checkLoad(f.pos);
+		if (validator.validate())
+			return undefined;
+
+		var p = state.route(f.pos);
+		for (let i = 0; i < p.length; i++)
+		{
+			if (p[i].op == "s")
+				state.step();
+			if (p[i].op == "r")
+				state.rotate(p[i].dir);
+		}
+		state.loadPaper();
+	};
+
 //functions for UI
 
 	this.start = function()
@@ -670,6 +700,12 @@ function Logic()
 			break;
 			case 10:
 				store(op.address);
+			break;
+			case 21:
+				loadPaper(op.address);
+			break;
+			case 22:
+				storePaper(op.address);
 			break;
 			default:
 			//nothing
