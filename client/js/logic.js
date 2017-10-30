@@ -330,6 +330,16 @@ function Logic()
 			return $.extend(true, {}, map[opFloor[address]], {pos: opFloor[address]});
 		}
 
+		this.getInbox = function()
+		{
+			return $.extend(true, {}, map[opFloor[opFloor.length - 1]], {pos: opFloor[opFloor.length - 1]});
+		}
+
+		this.getOutbox = function()
+		{
+			return $.extend(true, {}, map[opFloor[opFloor.length - 2]], {pos: opFloor[opFloor.length - 2]});
+		}
+
 		this.route = function(tp)
 		{
 			var tx = tp % config.mapWidth, ty = Math.floor(tp / config.mapWidth);
