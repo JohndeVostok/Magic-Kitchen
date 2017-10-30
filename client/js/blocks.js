@@ -232,5 +232,39 @@ var blocks = {
 				Blockly.JavaScript.statementToCode(block, "DO") +
 				"extCall1(blockID[stacklvl-1], []);}stacklvl--;";
 		}
+	},
+	21: {
+		name: "loadPaper",
+		json: {
+			"message0": "Load from %1",
+			"args0": [
+				{"type": "field_input", "name": "ADDRESS", "check": "Number", "text": "address"},
+			],
+			"previousStatement": null,
+			"nextStatement": null,
+			"tooltip": "load",
+			"colour": 0
+		},
+		initExtra: function(block){},
+		generateOps: function(block){
+			return [{typeId: 21, address: parseInt(block.getFieldValue("ADDRESS"))}];
+		}
+	},
+	22: {
+		name: "storePaper",
+		json: {
+			"message0": "Store to %1",
+			"args0": [
+				{"type": "field_input", "name": "ADDRESS", "check": "Number", "text": "address"},
+			],
+			"previousStatement": null,
+			"nextStatement": null,
+			"tooltip": "load",
+			"colour": 0
+		},
+		initExtra: function(block){},
+		generateOps: function(block){
+			return [{typeId: 22, address: parseInt(block.getFieldValue("ADDRESS"))}];
+		}
 	}
 };

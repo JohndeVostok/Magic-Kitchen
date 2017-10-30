@@ -106,6 +106,19 @@ function Logic()
 		}
 
 		//function for test
+		this.test = function()
+		{
+			var p = {map:[], player: -1};
+			if (player.haveItem && itemList[player.itemId].type == 1)
+				p.player = itemList[player.itemId].value;
+			for (let i = 0; i < opFloor.length; i++)
+			{
+				p.map[i] = -1;
+				if (map[opFloor[i]].haveItem && itemList[map[opFloor[i]].itemId].type == 1)
+					p.map[i] = itemList[map[opFloor[i]].itemId].value;
+			}
+			return p;
+		};
 
 	//functions for play
 
@@ -248,6 +261,53 @@ function Logic()
 			return 1;
 		};
 
+		this.checkLoadPaper = function(pos)
+		{
+			if (player.haveItem && itemList[player.itemId].type != 1)
+			{
+				validator.invalid(3021);
+				return 0;
+			}
+
+			if (!map[pos].isOpFloor)
+			{
+				validator.invalid(3011);
+				return 0;
+			}
+
+			if (!map[pos].haveItem)
+			{
+				validator.invalid(3022);
+				return 0;
+			}
+			if (itemList[map[pos].itemId].type != 1)
+			{
+				validator.invalid(3022);
+			}
+			return 1;
+		};
+
+		this.checkStorePaper = function(pos)
+		{
+			if (!player.haveItem || itemList[player.itemId].type != 1)
+			{
+				validator.invalid(3023);
+				return 0;
+			}
+
+			if (!map[pos].isOpFloor)
+			{
+				validator.invalid(3011);
+				return 0;
+			}
+
+			if (map[pos].haveItem && itemList[map[pos].itemId].type != 1)
+			{
+				validator.invalid(3024);
+			}
+			return 1;
+		};
+
 		this.getFloor = function(address)
 		{
 			if (address >= opFloor.length)
@@ -255,7 +315,7 @@ function Logic()
 				validator.invalid(3003);
 				return undefined;
 			}
-			return $.extend(true, map[opFloor[address]], {pos: opFloor[address]});
+			return $.extend(true, {}, map[opFloor[address]], {pos: opFloor[address]});
 		}
 
 		this.route = function(tp)
@@ -441,6 +501,50 @@ function Logic()
 				ui.addAnimation(-1, p, undefined);
 			}
 		};
+
+		this.loadPaper = function()
+		{
+			var p = getFront();
+
+			if (player.haveItem == 0)
+			{
+				player.haveItem = 1;
+				player.itemId = itemList.length;
+				itemList.push($.extend(true, itemList[map[p].itemId], {pos: -1}));
+				ui.addAnimation(p, -1, undefined);
+				ui.newItem(p, 1, undefined);
+			}
+			else
+			{
+				itemList[player.itemId].value = itemList[map[p].itemId].value;
+				ui.deleteItem(-1, undefined);
+				ui.addAnimation(p, -1, undefined);
+				ui.newItem(p, 1, undefined);
+			}
+		};
+
+		this.storePaper = function()
+		{
+			var p = getFront();
+
+			if (map[p].haveItem == 0)
+			{
+				map[p].haveItem = 1;
+				map[p].itemId = itemList.length;
+				itemList.push($.extend(true, itemList[player.itemId], {pos: p}));
+				ui.addAnimation(-1, p, undefined);
+				ui.addAnimation(p, -1, undefined);
+				ui.newItem(p, 1, undefined);
+			}
+			else
+			{
+				itemList[map[p].itemId].value = itemList[player.itemId].value;
+				ui.deleteItem(p, undefined);
+				ui.addAnimation(-1, p, undefined);
+				ui.addAnimation(p, -1, undefined);
+				ui.newItem(p, 1, undefined);
+			}
+		};
 	}
 
 //prepare for playing
@@ -489,12 +593,6 @@ function Logic()
 		code.setBlockTypes(levelInfo.blockTypes);
 		reset();
 	};
-
-	//function for test
-	this.test = function()
-	{
-		return state.test();
-	}
 
 //function for playing
 	var stepForward = function()
@@ -621,6 +719,49 @@ function Logic()
 		state.storeItem();
 	}
 
+	var loadPaper = function(address)
+	{
+		validator.init();
+		var f = state.getFloor(address);
+		if (validator.validate())
+			return undefined;
+
+		state.checkLoadPaper(f.pos);
+		if (validator.validate())
+			return undefined;
+
+		var p = state.route(f.pos);
+		for (let i = 0; i < p.length; i++)
+		{
+			if (p[i].op == "s")
+				state.step();
+			if (p[i].op == "r")
+				state.rotate(p[i].dir);
+		}
+		state.loadPaper();
+	};
+
+	var storePaper = function(address)
+	{
+		validator.init();
+		var f = state.getFloor(address);
+		if (validator.validate())
+			return undefined;
+
+		state.checkStorePaper(f.pos);
+		if (validator.validate())
+			return undefined;
+
+		var p = state.route(f.pos);
+		for (let i = 0; i < p.length; i++)
+		{
+			if (p[i].op == "s")
+				state.step();
+			if (p[i].op == "r")
+				state.rotate(p[i].dir);
+		}
+		state.storePaper();
+	};
 //functions for UI
 
 	this.start = function()
@@ -671,10 +812,17 @@ function Logic()
 			case 10:
 				store(op.address);
 			break;
+			case 21:
+				loadPaper(op.address);
+			break;
+			case 22:
+				storePaper(op.address);
+			break;
 			default:
 			//nothing
 			break;
 		}
+		debug.log(state.test());
 	};
 
 	// Do login using network module
