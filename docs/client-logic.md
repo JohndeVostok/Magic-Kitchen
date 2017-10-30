@@ -106,25 +106,25 @@
 			Call network to login and call callback when ready.
 			callback = function(err, res)
 			err = undefined if no error occurred else error message
-			res = {status: "failed|succeeded", username: theUsernameOfUser}
+			res = {status: "failed"|"succeeded", username: theUsernameOfUser}
 
 		logic.doLogout(callback):
 			Call network to logout and call callback when ready.
 			callback = function(err, res)
 			err = undefined if no error occurred else error message
-			res = {status: "failed|succeeded"}
+			res = {status: "failed"|"succeeded"}
 
 		logic.doRegister(username, email, password, password2, callback):
 			Call network to register and call callback when ready.
 			callback = function(err, res)
 			err = undefined if no error occurred else error message
-			res = {status: "failed|succeeded"}
+			res = {status: "failed"|"succeeded"}
 
 		logic.doChangePassword(newPassword, newPassword2, callback):
 			Call network to change password while logged in and call callback when ready.
 			callback = function(err ,res)
 			err = undefined if no error occurred else error message
-			res = {status: "failed|succeeded"}
+			res = {status: "failed"|"succeeded"}
 
 #### Logic Map Specifications
 
@@ -142,7 +142,7 @@ JavaScript
 	},
 
 * The "blockTypes" specifies what kinds of blocks can be used in Blockly.
-	* The block-type-ids can be found in "code" module docs.
+	* The "block-type-id"s can be found in "code" module docs.
 * The "playerInfo" specifies the initial player state.
 	* "pos" means position.
 	* "dir" means direction.
@@ -156,12 +156,12 @@ JavaScript
 	* Consider an item "i".
 	* "i.type" means the item's type, in an Integer.
 		* "i.type" == 1 means it's a magic paper.
-			* Now magic paper looks like an apple now. But it contains magic. (integer). "i.value" is a integer.
+			* Now magic paper looks like an apple now. But it contains magic. (integer). "i.value" is an integer.
 			* Magic paper should be like a paper with a number on it.
-			* Magic paper support load store add and sub.
+			* Magic paper support load store, add and sub.
 			* load(loc): When player hold a magic paper or have nothing in hand. Copy from loc.
 			* store(loc): When opFloor has a magic paper or nothing on it. Copy to loc.
 			* add(loc): Add magic paper on loc to magic paper on hand.
 			* sub(loc): Sub magic paper on loc to magic paper on hand.
-		* "i.type" != 1. It's just for kid.
+		* "i.type" != 1. It's just for kids.
 	* "i.pos" means the position on the map.
