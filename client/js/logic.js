@@ -605,6 +605,16 @@ function Logic()
 				ui.newItem(p, 1, undefined);
 			}
 		};
+		
+		this.addPaper = function()
+		{
+			var p = getFront();
+			itemList[player.itemId].value = itemList[player.itemId].value + itemList[map[pos].itemId].value;
+			ui.deleteItem(p, undefined);
+			ui.addAnimation(-1, p, undefined);
+			ui.addAnimation(p, -1, undefined);
+			ui.newItem(p, 1, undefined);
+		};
 	}
 
 //prepare for playing
@@ -830,7 +840,7 @@ function Logic()
 		if (validator.validate())
 			return undefined;
 
-		state.checkOperePaper(f.pos);
+		state.checkOperatePaper(f.pos);
 		if (validator.validate())
 			return undefined;
 
