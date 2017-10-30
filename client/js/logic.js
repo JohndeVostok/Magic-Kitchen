@@ -108,7 +108,7 @@ function Logic()
 		//function for test
 		this.test = function()
 		{
-			var p = {map:[], player: -1};
+			var p = {map: [], player: -1, out: []};
 			if (player.haveItem && itemList[player.itemId].type == 1)
 				p.player = itemList[player.itemId].value;
 			for (let i = 0; i < opFloor.length; i++)
@@ -116,6 +116,12 @@ function Logic()
 				p.map[i] = -1;
 				if (map[opFloor[i]].haveItem && itemList[map[opFloor[i]].itemId].type == 1)
 					p.map[i] = itemList[map[opFloor[i]].itemId].value;
+			}
+			for (let i = 0; i < output[0].length; i++)
+			{
+				p.out[i] = -1;
+				if (output[0][i].type == 1)
+					p.out[i] = output[0][i].value;
 			}
 			return p;
 		};
@@ -166,7 +172,15 @@ function Logic()
 
 		var itemEqual = function(itemA, itemB)
 		{
-			return (itemA.type == itemB.type)
+			if (itemA.type == itemB.type)
+			{
+				if (itemA.type == 1)
+					return (itemA.value == itemB.value);
+				else
+					return 1;
+			}
+			else
+				return 0;
 		}
 
 		this.getPlayer = function()
