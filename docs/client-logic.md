@@ -130,7 +130,8 @@
 
 * Map in logic is stored in an object often called `levelInfo`.
 * An example is as following:
-```JavaScript
+
+JavaScript
 	fakeLevelInfo: {
 		blockTypes: [9, 10, 21, 22, 31, 32],
 		playerInfo: {pos: 7, dir: 0},
@@ -139,18 +140,17 @@
 		output: [[{type: 1, value: 2}, {type: 1, value: 1}]],
 		itemList: [{type: 1, value: 2, pos: 1}, {type: 1, value: 3, pos: 2}]
 	},
-```
-* The `blockTypes` specifies what kinds of blocks can be used in Blockly.
-  * The block-type-ids can be found in `code` module docs.
-* The `playerInfo` specifies the initial player state.
-  * `pos` means position.
-  * `dir` means direction.
-  * See `ui` docs for definitions.
-* The `map` specifies the objects (tables, walls, etc.) on the map.
-  * Currently only table is supported.
-  * Consider one `map`'s element, say `e`.
-  * `e.pos` means the position on the map. (See `ui` docs for position definitions)
-  * If `e` is a table, `e.address` means the table's address in the game.
+
+* The "blockTypes" specifies what kinds of blocks can be used in Blockly.
+	* The block-type-ids can be found in "code" module docs.
+* The "playerInfo" specifies the initial player state.
+	* "pos" means position.
+	* "dir" means direction.
+	* See "ui" docs for definitions.
+* The "opFloor" specifies the opFloor (tables, inbox, outbox) on the map.
+	* opFloor[opFloor.length - 1] is inbox.
+	* opFloor[opFloor.length - 2] is outbox.
+	* Player can't access inbox and outbox by address.
 * The `itemList` specifies the items (apples, bananas, etc.) on the map.
   * Consider an item `i`.
   * `i.type` means the item's type, in an Integer. See `ui` docs for more.
