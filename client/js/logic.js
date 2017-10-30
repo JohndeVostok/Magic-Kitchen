@@ -965,6 +965,7 @@ function Logic()
 			//nothing
 			break;
 		}
+		debug.log(state.test());
 	};
 
 	// Do login using network module

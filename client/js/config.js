@@ -1,5 +1,5 @@
 var config = {
-	debug: false,
+	debug: true,
 
 	mapWidth: 7,
 	mapHeight: 7,
