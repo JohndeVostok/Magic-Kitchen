@@ -852,7 +852,7 @@ function Logic()
 			if (p[i].op == "r")
 				state.rotate(p[i].dir);
 		}
-//		state.addPaper();
+		state.addPaper();
 	};
 
 	var inbox = function()
