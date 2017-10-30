@@ -521,12 +521,28 @@ function Logic()
 				ui.addAnimation(p, -1, undefined);
 				ui.newItem(p, 1, undefined);
 			}
-		}
+		};
 
 		this.storePaper = function()
 		{
-		}
+			var p = getFront();
 
+			if (map[p].haveItem == 0)
+			{
+				map[p].haveItem = 1;
+				map[p].itemId = itemList.length;
+				itemList.push($.extend(true, itemList[player.itemId], {pos: p}));
+				ui.addAnimation(-1, p, undefined);
+				ui.newItem(-1, 1, undefined);
+			}
+			else
+			{
+				itemList[map[p].itemId].value = itemList[player.itemId].value;
+				ui.deleteItem(p, undefined);
+				ui.addAnimation(-1, p, undefined);
+				ui.newItem(-1, 1, undefined);
+			}
+		};
 	}
 
 //prepare for playing
@@ -723,6 +739,27 @@ function Logic()
 		state.loadPaper();
 	};
 
+	var storePaper = function(address)
+	{
+		validator.init();
+		var f = state.getFloor(address);
+		if (validator.validate())
+			return undefined;
+
+		state.checkStorePaper(f.pos);
+		if (validator.validate())
+			return undefined;
+
+		var p = state.route(f.pos);
+		for (let i = 0; i < p.length; i++)
+		{
+			if (p[i].op == "s")
+				state.step();
+			if (p[i].op == "r")
+				state.rotate(p[i].dir);
+		}
+		state.storePaper();
+	};
 //functions for UI
 
 	this.start = function()
