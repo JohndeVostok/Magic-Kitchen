@@ -803,6 +803,26 @@ function Logic()
 		}
 		state.loadItem();
 	}
+
+	var store = function()
+	{
+		validator.init();
+		var f = state.getOutbox();
+		state.checkStore(f.pos);
+		if (validator.validate())
+			return undefined;
+
+		var p = state.route(f.pos);
+		for (let i = 0; i < p.length; i++)
+		{
+			if (p[i].op == "s")
+
+				state.step();
+			if (p[i].op == "r")
+				state.rotate(p[i].dir);
+		}
+		state.storeItem();
+	}
 //functions for UI
 
 	this.start = function()
