@@ -71,7 +71,7 @@ function Msg()
 		var msgStr = content[msgId];
 		var str = "";
 		if (msgStr == undefined)
-			str = "INVALID MSG CODE";
+			str = "INVALID MSG CODE: " + msgId;
 		else
 			str = msgStr[language];
 		return str;

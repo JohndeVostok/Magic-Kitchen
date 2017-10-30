@@ -106,6 +106,19 @@ function Logic()
 		}
 
 		//function for test
+		this.test = function()
+		{
+			var p = {map:[], player: -1};
+			if (player.haveItem && itemList[player.itemId].type == 1)
+				p.player = itemList[player.itemId].value;
+			for (let i = 0; i < opFloor.length; i++)
+			{
+				p.map[i] = -1;
+				if (map[opFloor[i]].haveItem && itemList[map[opFloor[i]].itemId].type == 1)
+					p.map[i] = itemList[map[opFloor[i]].itemId].value;
+			}
+			return p;
+		};
 
 	//functions for play
 
@@ -267,7 +280,7 @@ function Logic()
 				validator.invalid(3022);
 				return 0;
 			}
-			if (itemList[map[pos].itemId] != 1)
+			if (itemList[map[pos].itemId].type != 1)
 			{
 				validator.invalid(3022);
 			}
@@ -281,7 +294,7 @@ function Logic()
 				validator.invalid(3003);
 				return undefined;
 			}
-			return $.extend(true, map[opFloor[address]], {pos: opFloor[address]});
+			return $.extend(true, {}, map[opFloor[address]], {pos: opFloor[address]});
 		}
 
 		this.route = function(tp)
@@ -475,14 +488,18 @@ function Logic()
 			if (player.haveItem == 0)
 			{
 				player.haveItem = 1;
+				player.itemId = itemList.length;
+				itemList.push($.extend(true, itemList[map[p].itemId], {pos: -1}));
+				ui.addAnimation(p, -1, undefined);
+				ui.newItem(p, 1, undefined);
 			}
-
-			player.haveItem = 1;
-			map[p].haveItem = 0;
-			player.itemId = map[p].itemId;
-			map[p].itemId = 0;
-			itemList[player.itemId].pos = -1;
-			ui.addAnimation(p, -1, undefined);
+			else
+			{
+				itemList[player.itemId].value = itemList[map[p].itemId].value;
+				ui.deleteItem(-1, undefined);
+				ui.addAnimation(p, -1, undefined);
+				ui.newItem(p, 1, undefined);
+			}
 		}
 
 		this.storePaper = function()
@@ -537,12 +554,6 @@ function Logic()
 		code.setBlockTypes(levelInfo.blockTypes);
 		reset();
 	};
-
-	//function for test
-	this.test = function()
-	{
-		return state.test();
-	}
 
 //function for playing
 	var stepForward = function()
@@ -675,6 +686,7 @@ function Logic()
 		var f = state.getFloor(address);
 		if (validator.validate())
 			return undefined;
+
 		state.checkLoadPaper(f.pos);
 		if (validator.validate())
 			return undefined;
@@ -750,6 +762,7 @@ function Logic()
 			//nothing
 			break;
 		}
+		debug.log(state.test());
 	};
 
 	// Do login using network module
