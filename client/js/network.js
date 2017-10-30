@@ -118,11 +118,51 @@ var network = function() {
 		);
 	};
 
-	var getLevelInfo = function(level_id, callback) {
+	var getDefaultLevelInfo = function(default_level_id, callback) {
 		postRequest(
 			"/api/get_level_info",
 			{
-				"default_level_id": level_id
+				"default_level_id": default_level_id
+			},
+			callback
+		);
+	};
+
+	var getUsermadeLevelInfo = function(callback) {
+		postRequest(
+			"/api/get_level_info",
+			{
+				"default_level_id": -1
+			},
+			callback
+		);
+	};
+
+	var getCurrentUserInfo = function(callback) {
+		postRequest(
+			"/api/get_current_user_info",
+			{},
+			callback
+		);
+	};
+
+	var newUsermadeLevel = function(level_info, callback) {
+		postRequest(
+			"/api/new_usermade_level",
+			{
+				"level_info": level_info,
+			},
+			callback
+		);
+	};
+
+	var newSolution = function(level_id, solution_info, score, callback) {
+		postRequest(
+			"/api/new_solution",
+			{
+				"level_id": level_id,
+				"solution_info": solution_info,
+				"score": score
 			},
 			callback
 		);
@@ -137,6 +177,10 @@ var network = function() {
 		changePasswordAfterLogin: changePasswordAfterLogin,
 		newDefaultLevel: newDefaultLevel,
 		editDefaultLevel: editDefaultLevel,
-		getLevelInfo: getLevelInfo
+		getDefaultLevelInfo: getDefaultLevelInfo,
+		getUsermadeLevelInfo: getUsermadeLevelInfo,
+		getCurrentUserInfo: getCurrentUserInfo,
+		newUsermadeLevel: newUsermadeLevel,
+		newSolution: newSolution
 	};
 }();

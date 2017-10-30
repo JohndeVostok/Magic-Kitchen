@@ -112,7 +112,7 @@ QUnit.test( "network default level test", function( assert ) {
 			function(data) {
 				if (data["status"] == 1000) {
 					assert.ok( true, "new level ok" );
-					network.getLevelInfo(0,
+					network.getDefaultLevelInfo(0,
 						function(data) {
 							if (data["status"] == 1000)
 								assert.ok( data["level_info"] == jsonLevel, "load level ok" );
@@ -126,7 +126,7 @@ QUnit.test( "network default level test", function( assert ) {
 					network.editDefaultLevel(0, jsonLevel,
 						function(data) {
 							assert.ok( data["status"] == 1000, "edit level ok");
-							network.getLevelInfo(0,
+							network.getDefaultLevelInfo(0,
 								function(data) {
 									if (data["status"] == 1000)
 										assert.ok( data["level_info"] == jsonLevel, "load level ok" );
@@ -158,7 +158,7 @@ QUnit.test( "network default level test extra", function( assert ) {
 			function(data) {
 				if (data["status"] == 1000) {
 					assert.ok( true, "new level ok" );
-					network.getLevelInfo(1,
+					network.getDefaultLevelInfo(1,
 						function(data) {
 							if (data["status"] == 1000)
 								assert.ok( data["level_info"] == jsonLevel, "load level ok" );
@@ -172,7 +172,7 @@ QUnit.test( "network default level test extra", function( assert ) {
 					network.editDefaultLevel(1, jsonLevel,
 						function(data) {
 							assert.ok( data["status"] == 1000, "edit level ok");
-							network.getLevelInfo(1,
+							network.getDefaultLevelInfo(1,
 								function(data) {
 									if (data["status"] == 1000)
 										assert.ok( data["level_info"] == jsonLevel, "load level ok" );
@@ -184,6 +184,105 @@ QUnit.test( "network default level test extra", function( assert ) {
 					);
 				}
 				else assert.ok( false , data["status"]);
+			}
+		);
+	});
+});
+
+QUnit.test( "network userinfo test", function( assert ) {
+	var done = assert.async();
+	network.logout(function(data){
+		network.login("hq", "sb", 
+			function(data) {
+				if (data["status"] == 1000)
+					assert.ok( true, "login ok" );
+				else assert.ok( false, data["status"]);
+				network.getCurrentUserInfo(
+					function(data) {
+						if (data["status"] == 1000)
+							assert.ok( true, "got user info" )
+						else assert.ok(false, data["status"]);
+						if (data["user_name"] == "hq" && data["email"] == "sb@163.com")
+							assert.ok(true, "user info correct");
+						else assert.ok(false, JSON.stringify(data));
+						network.logout(function(data){});
+						done();
+					}
+				);
+			}
+		);
+	});
+});
+
+QUnit.test( "network usermade level test", function( assert ) {
+	var done = assert.async();
+	var jsonLevel = JSON.stringify({
+		blockTypes: [2, 5, 7, 8, 11],
+		playerInfo: {pos: 3, dir: 1},
+		opFloor: [10, 0, 6],
+		input: [[{type: 1}, {type: 2}]],
+		output: [[{type: 2}, {type: 2}]],
+		itemList: [{type: 2, pos: 10}]
+	});
+	network.logout(function(data){
+		network.login("hq", "sb", 
+			function(data) {
+				if (data["status"] == 1000)
+					assert.ok( true, "login ok" );
+				else assert.ok( false, data["status"]);
+				network.newUsermadeLevel(jsonLevel,
+					function(data) {
+						if (data["status"] == 1000)
+							assert.ok( true, "new usermade level success" )
+						else assert.ok(false, data["status"]);
+						network.getUsermadeLevelInfo(
+							function(data) {
+								if (data["status"] == 1000)
+									assert.ok( data["level_info"] == jsonLevel, "load: " + data["level_info"] );
+								else assert.ok( false , data["status"]);
+								network.logout(function(data){});
+								done();
+							}
+						);
+					}
+				);
+			}
+		);
+	});
+});
+
+QUnit.test( "network usermade level test extra", function( assert ) {
+	var done = assert.async();
+	var jsonLevel = JSON.stringify({
+		blockTypes: [2, 5, 7, 8, 11],
+		playerInfo: {pos: 3, dir: 1},
+		opFloor: [10, 0, 6],
+		input: [[{type: 1}, {type: 2}]],
+		output: [[{type: 2}, {type: 1}]],
+		itemList: [{type: 2, pos: 10}]
+	});
+	network.logout(function(data){
+		network.login("hq", "sb", 
+			function(data) {
+				if (data["status"] == 1000)
+					assert.ok( true, "login ok" );
+				else assert.ok( false, data["status"]);
+				network.newUsermadeLevel(jsonLevel,
+					function(data) {
+						if (data["status"] == 1000)
+							assert.ok( true, "new usermade level success" )
+						else assert.ok(false, data["status"]);
+						network.getUsermadeLevelInfo(
+							function(data) {
+								if (data["status"] == 1000)
+									assert.ok( data["level_info"] == jsonLevel, "load: " + data["level_info"] );
+								else assert.ok( false , data["status"]);
+								network.logout(function(data){});
+								done();
+							}
+						);
+					}
+				);
 			}
 		);
 	});
