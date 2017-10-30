@@ -682,11 +682,11 @@ function Logic()
 	{
 		if (username == "")
 		{
-			return callback("用户名不能为空！", {status: "failed"});
+			return callback(msg.getMessage(1002), {status: "failed"});
 		}
 		if (password == "")
 		{
-			return callback("密码不能为空！", {status: "failed"});
+			return callback(msg.getMessage(1003), {status: "failed"});
 		}
 		network.login(username, password, function(res) {
 			if (res.status == 1000)
@@ -717,7 +717,7 @@ function Logic()
 			}
 			else
 			{
-				callback(res.status, {status: "failed"});
+				callback(msg.getMessage(res.status), {status: "failed"});
 			}
 		});
 	}
