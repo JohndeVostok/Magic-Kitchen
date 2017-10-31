@@ -625,6 +625,15 @@ function Logic()
 			ui.addAnimation(p, -1, undefined);
 			ui.newItem(p, 1, undefined);
 		};
+
+		this.incPaper = function()
+		{
+			var p = getFront();
+			itemList[map[p].itemId].value++;
+			ui.deleteItem(-1, undefined);
+			ui.addAnimation(p, -1, undefined);
+			ui.newItem(p, 1, undefined);
+		};
 	}
 
 //prepare for playing
