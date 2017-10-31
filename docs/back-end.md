@@ -74,6 +74,7 @@
                 user_name = user_name_str
                 email = email_str
                 solution_dict = solution_dict_jsonStr 
+                created_level = created_level_list_jsonStr
 
             status = 1001
 

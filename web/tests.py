@@ -320,6 +320,7 @@ class CustomSystemTestCase(TestCase):
         self.assertEqual(ret['user_name'], 'sth')
         self.assertEqual(ret['email'], '123@111.com')
         self.assertEqual(json.loads(ret['solution_dict']), {'1' : 1})
+        self.assertEqual(json.loads(ret['created_level']), [1, 2])
 
         #test new solution
         response = c.post('/api/new_solution', {'level_id': 1, 'solution_info': 'solutionStr', 'score': 0})
@@ -329,11 +330,17 @@ class CustomSystemTestCase(TestCase):
         ret = json.loads(response.content)
         self.assertEqual(ret['status'], 1000) #'succeeded'
 
+        Level.objects.create(default_level_id = -1, user_name = 'xxx', info = 'info')
+        #new usermade level
+        response = c.post('/api/new_usermade_level', {'level_info': 'jsonStr2'})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 1000) #'succeeded'
         #test get current user info
         response = c.post('/api/get_current_user_info')
         ret = json.loads(response.content)
         self.assertEqual(ret['status'], 1000) #'succeeded'
         self.assertEqual(json.loads(ret['solution_dict']), {'1' : 1, '2' : 2})
+        self.assertEqual(json.loads(ret['created_level']), [1, 2, 4])
 
     def test_vip_charge(self):
         c = Client()

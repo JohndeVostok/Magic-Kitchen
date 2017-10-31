@@ -67,7 +67,7 @@ def new_default_level(request):
         return json_response(ret)
 
     _info = content['level_info']
-    Level.objects.create(default_level_id = _id, info = _info, user_name = 'admin')
+    Level.objects.create(default_level_id = _id, info = _info, user_name = session)
 
     ret['status'] = 1000 #'succeeded'
 
