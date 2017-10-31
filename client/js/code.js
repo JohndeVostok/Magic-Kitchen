@@ -54,9 +54,9 @@ var code = function() {
 				colour: "#ccc",
 				snap: true
 			},
-			trashcan: true,
+			trashcan: false,
 			zoom: {
-				controls: true,
+				controls: false,
 				wheel: true,
 				startScale: 1.0,
 				maxScale: 3,
