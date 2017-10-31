@@ -983,6 +983,15 @@ function Logic()
 		}
 		state.storeItem();
 	}
+
+	var finish = function()
+	{
+		if (state.checkFinished())
+			alert("Finish.");
+		else
+			alert("Unfinished.");
+	};
+
 //functions for UI
 
 	this.start = function()
@@ -1056,6 +1065,9 @@ function Logic()
 			break;
 			case 32:
 				outbox();
+			break;
+			case 50:
+				finish();
 			break;
 			default:
 			//nothing
