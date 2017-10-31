@@ -85,7 +85,10 @@ var code = function() {
 	var callLogicOps = function(blockID, ops) {
 		calledLogic = true;
 		highlight(blockID);
-		for (var id in ops.a) logic.step(ops.a[id].a);
+		ret = [];
+		for (var id in ops.a) ret[id] = logic.step(ops.a[id].a);
+		debug.log(ret);
+		return ret;
 	}
 
 	var start = function() {
