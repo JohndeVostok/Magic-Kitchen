@@ -93,10 +93,12 @@
             status = 1000
                 level_info = json_info_str
 
+            status = 1001
             status = 1016
             status = 1017
             status = 1018
             status = 1019
+            status = 1031
             
 
 ### New Default Level
@@ -108,11 +110,13 @@
 
         return json dict:
             status = 1000
+            status = 1001
             status = 1017
             status = 1018
             status = 1020
             status = 1021
             status = 1022
+            status = 1031
             
 ### New Usermade Level
         Post('/api/new_usermade_level'), attributes: level_info = jsonStr
