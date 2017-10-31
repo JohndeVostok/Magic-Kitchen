@@ -997,9 +997,9 @@ function Logic()
 	var finish = function()
 	{
 		if (state.checkFinished())
-			alert("Finish.");
+			ui.finishLevel();
 		else
-			alert("Unfinished.");
+			ui.unfinishLevel();
 	};
 
 //functions for UI

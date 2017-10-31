@@ -927,6 +927,8 @@ var ui = function() {
 		setInput: setInput,
 		setOutput: setOutput,
 		blockStep: blockStep,
+		finishLevel: finishLevel,
+		unfinishLevel: unfinishLevel,
 		debug: debug
 	};
 }();
