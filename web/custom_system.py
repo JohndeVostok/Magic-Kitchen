@@ -1,4 +1,5 @@
 from models import User
+from models import Level
 import json
 from django.http import HttpResponse 
 from send_email import email_thread
@@ -236,6 +237,11 @@ def get_current_user_info(request):
     ret['email'] = user.email
     ret['solution_dict'] = user.solution_dict
     ret['status'] = 1000 #'succeeded'
+    level_filter = Level.objects.filter(user_name = session)
+    created_level = []
+    for level in level_filter:
+        created_level.append(level.level_id)
+    ret['created_level'] = json.dumps(created_level)
     return json_response(ret)
 
 def vip_charge(request):

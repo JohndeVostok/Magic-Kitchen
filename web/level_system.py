@@ -58,6 +58,7 @@ def new_default_level(request):
             default_level_id_filter[0].info = content['level_info']
             default_level_id_filter[0].save()
             ret['status'] = 1000 #'succeeded'
+            ret['level_id'] = default_level_id_filter[0].level_id
             return json_response(ret)
         ret['status'] = 1022 #'this default level id already exists'
         return json_response(ret)
@@ -67,9 +68,10 @@ def new_default_level(request):
         return json_response(ret)
 
     _info = content['level_info']
-    Level.objects.create(default_level_id = _id, info = _info, user_name = 'admin')
+    level = Level.objects.create(default_level_id = _id, info = _info, user_name = session)
 
     ret['status'] = 1000 #'succeeded'
+    ret['level_id'] = level.level_id
 
     return json_response(ret)
 
@@ -165,9 +167,46 @@ def new_usermade_level(request):
         ret['status'] = 1021 #'level info can't be empty'
         return json_response(ret)
 
+    MAX_USER_CREATED_LEVEL_NUM = 10
+    MAX_VIP_CREATED_LEVEL_NUM = 30
+    user = User.objects.filter(name = session)[0]
+    if (user.authority < 3):
+        refresh_vip_authority(user)
+        level_filter = Level.objects.filter(user_name = session)
+        if (len(level_filter) >= MAX_USER_CREATED_LEVEL_NUM) and (user.authority == 1):
+            ret['status'] = 1032 #'you can't create more level'
+            return json_response(ret)
+        if (len(level_filter) >= MAX_VIP_CREATED_LEVEL_NUM) and (user.authority == 2):
+            ret['status'] = 1032 #'you can't create more level'
+            return json_response(ret)
+
     _info = content['level_info']
-    Level.objects.create(default_level_id = -1, info = _info, user_name = session)
+    level = Level.objects.create(default_level_id = -1, info = _info, user_name = session)
 
     ret['status'] = 1000 #'succeeded'
+    ret['level_id'] = level.level_id
 
+    return json_response(ret)
+
+def get_all_level(request):
+    content = request.POST
+    ret = {}
+
+    session = get_session(request)
+    if (session == None):
+        ret['status'] = 1001 #'please log in first'
+        return json_response(ret)
+
+    user = User.objects.filter(name = session)[0]
+    #only admin or super admin can get all level, normal user or vip can only get shared level
+    if user.authority < 3:
+        ret['status'] = 1031 #'you don't have operation authority'
+        return json_response(ret)
+
+    all_level = Level.objects.all()
+    all_level_id = []
+    for level in all_level:
+        all_level_id.append(level.level_id)
+    ret['all_level'] = json.dumps(all_level_id)
+    ret['status'] = 1000 #'succeeded'
     return json_response(ret)
