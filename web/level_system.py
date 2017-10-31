@@ -1,4 +1,5 @@
 from models import Level
+from models import User
 import json
 from django.http import HttpResponse
 
@@ -15,11 +16,17 @@ def get_session(request):
     return request.session.get('name', None)
 
 def new_default_level(request):
-    #TODO
-    #only admin can create new default level
-
     content = request.POST
     ret = {}
+
+    session = get_session(request)
+    if not session:
+        ret['status'] = 1001 #'please log in first'
+        return json_response(ret)
+    user = User.objects.filter(name = session)[0]
+    if user.authority < 3:
+        ret['status'] = 1031 #'you don't have operation authority'
+        return json_response(ret)
 
     if not 'default_level_id' in content:
         ret['status'] = 1020 #'default level id can't be empty'
