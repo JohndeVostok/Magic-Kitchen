@@ -111,6 +111,7 @@
 
         return json dict:
             status = 1000
+                level_id = new_level_id_Int
             status = 1001
             status = 1017
             status = 1018
@@ -125,6 +126,7 @@
 
         return json dict:
             status = 1000
+                level_id = new_level_id_Int
             status = 1001
             status = 1021
 

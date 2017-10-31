@@ -639,6 +639,7 @@ class LevelSystemTestCase(TestCase):
         response = c.post('/api/new_default_level', {'default_level_id': 1, 'level_info': 'jsonStr'})
         ret = json.loads(response.content)
         self.assertEqual(ret['status'], 1000) #'succeeded'
+        self.assertEqual(ret['level_id'], 1)
         _filter = Level.objects.filter(default_level_id = 1)
         self.assertEqual(len(_filter), 1)
         self.assertEqual(_filter[0].info, 'jsonStr')
@@ -657,6 +658,18 @@ class LevelSystemTestCase(TestCase):
         self.assertEqual(len(_filter), 1)
         self.assertEqual(_filter[0].info, 'jsonStr2')
         self.assertEqual(_filter[0].level_id, 1)
+
+        #new user-made level
+        response = c.post('/api/new_usermade_level', {'level_info': 'jsonStr'})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 1000) #'succeeded'
+        self.assertEqual(ret['level_id'], 2)
+
+        #test new default level
+        response = c.post('/api/new_default_level', {'default_level_id': 3, 'level_info': 'jsonStr'})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 1000) #'succeeded'
+        self.assertEqual(ret['level_id'], 3)
 
         #test edit non-existent default level
         response = c.post('/api/new_default_level', {'default_level_id': 2, 'level_info': 'jsonStr2', 'edit': 'True'})

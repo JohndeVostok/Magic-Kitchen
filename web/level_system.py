@@ -58,6 +58,7 @@ def new_default_level(request):
             default_level_id_filter[0].info = content['level_info']
             default_level_id_filter[0].save()
             ret['status'] = 1000 #'succeeded'
+            ret['level_id'] = default_level_id_filter[0].level_id
             return json_response(ret)
         ret['status'] = 1022 #'this default level id already exists'
         return json_response(ret)
@@ -67,9 +68,10 @@ def new_default_level(request):
         return json_response(ret)
 
     _info = content['level_info']
-    Level.objects.create(default_level_id = _id, info = _info, user_name = session)
+    level = Level.objects.create(default_level_id = _id, info = _info, user_name = session)
 
     ret['status'] = 1000 #'succeeded'
+    ret['level_id'] = level.level_id
 
     return json_response(ret)
 
@@ -166,9 +168,10 @@ def new_usermade_level(request):
         return json_response(ret)
 
     _info = content['level_info']
-    Level.objects.create(default_level_id = -1, info = _info, user_name = session)
+    level = Level.objects.create(default_level_id = -1, info = _info, user_name = session)
 
     ret['status'] = 1000 #'succeeded'
+    ret['level_id'] = level.level_id
 
     return json_response(ret)
 
