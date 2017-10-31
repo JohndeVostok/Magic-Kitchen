@@ -358,6 +358,11 @@ function Logic()
 			return 1;
 		};
 
+		this.checkFinished = function()
+		{
+			return (output[0].length == 0);
+		};
+
 		this.getFloor = function(address)
 		{
 			if (this.checkAddress(address) != 1)
