@@ -167,6 +167,19 @@ def new_usermade_level(request):
         ret['status'] = 1021 #'level info can't be empty'
         return json_response(ret)
 
+    MAX_USER_CREATED_LEVEL_NUM = 10
+    MAX_VIP_CREATED_LEVEL_NUM = 30
+    user = User.objects.filter(name = session)[0]
+    if (user.authority < 3):
+        refresh_vip_authority(user)
+        level_filter = Level.objects.filter(user_name = session)
+        if (len(level_filter) >= MAX_USER_CREATED_LEVEL_NUM) and (user.authority == 1):
+            ret['status'] = 1032 #'you can't create more level'
+            return json_response(ret)
+        if (len(level_filter) >= MAX_VIP_CREATED_LEVEL_NUM) and (user.authority == 2):
+            ret['status'] = 1032 #'you can't create more level'
+            return json_response(ret)
+
     _info = content['level_info']
     level = Level.objects.create(default_level_id = -1, info = _info, user_name = session)
 

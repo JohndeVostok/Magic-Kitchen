@@ -10,7 +10,7 @@ from models import Solution
 import datetime
 from django.utils import timezone
 
-def setVIP(user):
+def set_vip(user):
     user.authority = 2
     user.vip_due_time = timezone.now() + datetime.timedelta(days = 1)
     user.save()
@@ -448,7 +448,7 @@ class CustomSystemTestCase(TestCase):
         self.assertEqual(ret['status'], 1000) #'succeeded'
 
         user = User.objects.filter(name = 'sth')[0]
-        setVIP(user)
+        set_vip(user)
         #test get level info
         response = c.post('/api/get_level_info', {'default_level_id': 6})
         ret = json.loads(response.content)
@@ -524,7 +524,7 @@ class LevelSystemTestCase(TestCase):
         self.assertEqual(ret['status'], 1031) #'you don't have operation authority'
 
         user = User.objects.filter(name = 'sth')[0]
-        setVIP(user)
+        set_vip(user)
         #test get level info
         response = c.post('/api/get_level_info', {'default_level_id': 6})
         ret = json.loads(response.content)
@@ -581,7 +581,7 @@ class LevelSystemTestCase(TestCase):
         self.assertEqual(ret['status'], 1031) #'you don't have operation authority'
 
         user = User.objects.filter(name = 'sth')[0]
-        setVIP(user)
+        set_vip(user)
         #test get level info
         response = c.post('/api/get_level_info', {'level_id': vip_level.level_id})
         ret = json.loads(response.content)
@@ -699,10 +699,31 @@ class LevelSystemTestCase(TestCase):
         ret = json.loads(response.content)
         self.assertEqual(ret['status'], 1021) #'level info can't be empty'
 
-        #test new user-made level
+        for i in range(10):
+            #test new user-made level
+            response = c.post('/api/new_usermade_level', {'level_info': 'jsonStr'})
+            ret = json.loads(response.content)
+            self.assertEqual(ret['status'], 1000) #'succeeded'
+            self.assertEqual(ret['level_id'], i + 1)
+
+        #test MAX_USER_CREATED_LEVEL_NUM
         response = c.post('/api/new_usermade_level', {'level_info': 'jsonStr'})
         ret = json.loads(response.content)
-        self.assertEqual(ret['status'], 1000) #'succeeded'
+        self.assertEqual(ret['status'], 1032) #'you can't create more level'
+
+        user = User.objects.filter(name = 'sth')[0]
+        set_vip(user)
+        for i in range(20):
+            #test new user-made level
+            response = c.post('/api/new_usermade_level', {'level_info': 'jsonStr'})
+            ret = json.loads(response.content)
+            self.assertEqual(ret['status'], 1000) #'succeeded'
+            self.assertEqual(ret['level_id'], i + 11)
+
+        #test MAX_VIP_CREATED_LEVEL_NUM
+        response = c.post('/api/new_usermade_level', {'level_info': 'jsonStr'})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 1032) #'you can't create more level'
 
     def test_get_all_level(self):
         c = Client()

@@ -123,12 +123,14 @@
 ### New Usermade Level
         Post('/api/new_usermade_level'), attributes: level_info = jsonStr
         用户必须登录后才能创建关卡
+        普通用户最多创建10个关卡，VIP用户最多创建30个关卡
 
         return json dict:
             status = 1000
                 level_id = new_level_id_Int
             status = 1001
             status = 1021
+            status = 1032
 
 ### Get All Level
         Post('api/get_all_level')
