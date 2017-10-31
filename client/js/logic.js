@@ -1027,6 +1027,9 @@ function Logic()
 			case 24:
 				subPaper(op.address);
 			break;
+			case 25:
+				incPaper(op.address);
+			break;
 			case 31:
 				inbox();
 			break;
