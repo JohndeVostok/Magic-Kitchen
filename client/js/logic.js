@@ -650,8 +650,8 @@ function Logic()
 			levelId,
 			function(data){
 				if (data["status"] == 1000)
-					initLevel(eval("(" + data["level_info"] + ")"));
-				else alert("关卡加载失败：网络超时");
+					initLevel(JSON.parse(data["level_info"]));
+				else alert(msg.getMessage(data["status"]));
 			}
 		);
 	};
