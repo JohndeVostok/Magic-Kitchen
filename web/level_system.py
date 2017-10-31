@@ -171,3 +171,26 @@ def new_usermade_level(request):
     ret['status'] = 1000 #'succeeded'
 
     return json_response(ret)
+
+def get_all_level(request):
+    content = request.POST
+    ret = {}
+
+    session = get_session(request)
+    if (session == None):
+        ret['status'] = 1001 #'please log in first'
+        return json_response(ret)
+
+    user = User.objects.filter(name = session)[0]
+    #only admin or super admin can get all level, normal user or vip can only get shared level
+    if user.authority < 3:
+        ret['status'] = 1031 #'you don't have operation authority'
+        return json_response(ret)
+
+    all_level = Level.objects.all()
+    all_level_id = []
+    for level in all_level:
+        all_level_id.append(level.level_id)
+    ret['all_level'] = json.dumps(all_level_id)
+    ret['status'] = 1000 #'succeeded'
+    return json_response(ret)

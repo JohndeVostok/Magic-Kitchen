@@ -74,7 +74,7 @@
                 user_name = user_name_str
                 email = email_str
                 solution_dict = solution_dict_jsonStr 
-                created_level = created_level_list_jsonStr
+                created_level = created_level_id_list_jsonStr
 
             status = 1001
 
@@ -127,6 +127,17 @@
             status = 1000
             status = 1001
             status = 1021
+
+### Get All Level
+        Post('api/get_all_level')
+        用户必须登录，且具有管理员及以上权限才可以调用该API。
+        未登录用户、普通用户及VIP只能看到其他用户分享的关卡，未分享的关卡无法看到。之后会提供获得分享关卡的API。
+
+        return json dict:
+            status = 1000
+                all_level = all_level_id_list_jsonStr
+            status = 1001
+            status = 1031
     
 ### New Solution
         Post('/api/new_solution') , attributes: level_id: idInt, solution_info: jsonStr, score: scoreInt

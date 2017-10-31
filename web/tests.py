@@ -691,6 +691,53 @@ class LevelSystemTestCase(TestCase):
         ret = json.loads(response.content)
         self.assertEqual(ret['status'], 1000) #'succeeded'
 
+    def test_get_all_level(self):
+        c = Client()
+
+        #test get all level before login
+        response = c.post('/api/get_all_level')
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 1001) #'please log in first'
+
+        #register
+        response = c.post('/api/register', {'name': 'sth', 'password': 'abc', 'email': '765215342@qq.com'})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 1000) #'succeeded'
+
+        #login
+        response = c.post('/api/login', {'name': 'sth', 'password': 'abc'})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 1000) #'succeeded'
+
+        #test no authority
+        response = c.post('/api/get_all_level')
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 1031) #'you don't have operation authority'
+
+        #new user-made level
+        response = c.post('/api/new_usermade_level', {'level_info': 'jsonStr'})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 1000) #'succeeded'
+
+        user = User.objects.filter(name = 'sth')[0]
+        user.authority = 3
+        user.save()
+
+        response = c.post('/api/get_all_level')
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 1000) #'succeeded'
+        self.assertEqual(json.loads(ret['all_level']), [1])
+
+        #new default level
+        response = c.post('/api/new_default_level', {'default_level_id': 1, 'level_info': 'jsonStr'})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 1000) #'succeeded'
+
+        response = c.post('/api/get_all_level')
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 1000) #'succeeded'
+        self.assertEqual(json.loads(ret['all_level']), [1, 2])
+
 class SolutionSystemTestCase(TestCase):
     def test_new_solution(self):
         c = Client()
