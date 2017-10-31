@@ -175,7 +175,12 @@ function Logic()
 			if (itemA.type == itemB.type)
 			{
 				if (itemA.type == 1)
-					return (itemA.value == itemB.value);
+				{
+					if (itemA.value == itemB.value)
+						return 1;
+					else
+						return 0;
+				}
 				else
 					return 1;
 			}
