@@ -637,9 +637,7 @@ function Logic()
 		{
 			var p = getFront();
 			itemList[map[p].itemId].value--;
-			ui.deleteItem(-1, undefined);
-			ui.addAnimation(p, -1, undefined);
-			ui.newItem(p, 1, undefined);
+			this.loadPaper();
 		};
 	}
 
@@ -925,6 +923,28 @@ function Logic()
 		state.incPaper();
 	};
 
+	var decPaper = function(address)
+	{
+		validator.init();
+		var f = state.getFloor(address);
+		if (validator.validate())
+			return undefined;
+
+		state.checkLoadPaper(f.pos);
+		if (validator.validate())
+			return undefined;
+
+		var p = state.route(f.pos);
+		for (let i = 0; i < p.length; i++)
+		{
+			if (p[i].op == "s")
+				state.step();
+			if (p[i].op == "r")
+				state.rotate(p[i].dir);
+		}
+		state.decPaper();
+	};
+
 	var inbox = function()
 	{
 		validator.init();
@@ -1027,6 +1047,9 @@ function Logic()
 			break;
 			case 25:
 				incPaper(op.address);
+			break;
+			case 26:
+				decPaper(op.address);
 			break;
 			case 31:
 				inbox();
