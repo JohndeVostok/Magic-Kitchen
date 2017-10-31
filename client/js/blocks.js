@@ -301,6 +301,40 @@ var blocks = {
 			return [{typeId: 24, address: parseInt(block.getFieldValue("ADDRESS"))}];
 		}
 	},
+	25: {
+		name: "incPaper",
+		json: {
+			"message0": "Inc %1",
+			"args0": [
+				{"type": "field_input", "name": "ADDRESS", "check": "Number", "text": "address"},
+			],
+			"previousStatement": null,
+			"nextStatement": null,
+			"tooltip": "inc",
+			"colour": 0
+		},
+		initExtra: function(block){},
+		generateOps: function(block){
+			return [{typeId: 25, address: parseInt(block.getFieldValue("ADDRESS"))}];
+		}
+	},
+	26: {
+		name: "decPaper",
+		json: {
+			"message0": "Dec %1",
+			"args0": [
+				{"type": "field_input", "name": "ADDRESS", "check": "Number", "text": "address"},
+			],
+			"previousStatement": null,
+			"nextStatement": null,
+			"tooltip": "dec",
+			"colour": 0
+		},
+		initExtra: function(block){},
+		generateOps: function(block){
+			return [{typeId: 26, address: parseInt(block.getFieldValue("ADDRESS"))}];
+		}
+	},
 	31: {
 		name: "inbox",
 		json: {

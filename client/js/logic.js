@@ -108,18 +108,18 @@ function Logic()
 		//function for test
 		this.test = function()
 		{
-			var p = {map: [], player: -1, out: []};
+			var p = {map: [], player: "empty", out: []};
 			if (player.haveItem && itemList[player.itemId].type == 1)
 				p.player = itemList[player.itemId].value;
 			for (let i = 0; i < opFloor.length; i++)
 			{
-				p.map[i] = -1;
+				p.map[i] = "empty";
 				if (map[opFloor[i]].haveItem && itemList[map[opFloor[i]].itemId].type == 1)
 					p.map[i] = itemList[map[opFloor[i]].itemId].value;
 			}
 			for (let i = 0; i < output[0].length; i++)
 			{
-				p.out[i] = -1;
+				p.out[i] = "empty";
 				if (output[0][i].type == 1)
 					p.out[i] = output[0][i].value;
 			}
@@ -625,6 +625,20 @@ function Logic()
 			ui.addAnimation(p, -1, undefined);
 			ui.newItem(p, 1, undefined);
 		};
+
+		this.incPaper = function()
+		{
+			var p = getFront();
+			itemList[map[p].itemId].value++;
+			this.loadPaper();
+		};
+
+		this.decPaper = function()
+		{
+			var p = getFront();
+			itemList[map[p].itemId].value--;
+			this.loadPaper();
+		};
 	}
 
 //prepare for playing
@@ -887,6 +901,50 @@ function Logic()
 		state.subPaper();
 	};
 
+	var incPaper = function(address)
+	{
+		validator.init();
+		var f = state.getFloor(address);
+		if (validator.validate())
+			return undefined;
+
+		state.checkLoadPaper(f.pos);
+		if (validator.validate())
+			return undefined;
+
+		var p = state.route(f.pos);
+		for (let i = 0; i < p.length; i++)
+		{
+			if (p[i].op == "s")
+				state.step();
+			if (p[i].op == "r")
+				state.rotate(p[i].dir);
+		}
+		state.incPaper();
+	};
+
+	var decPaper = function(address)
+	{
+		validator.init();
+		var f = state.getFloor(address);
+		if (validator.validate())
+			return undefined;
+
+		state.checkLoadPaper(f.pos);
+		if (validator.validate())
+			return undefined;
+
+		var p = state.route(f.pos);
+		for (let i = 0; i < p.length; i++)
+		{
+			if (p[i].op == "s")
+				state.step();
+			if (p[i].op == "r")
+				state.rotate(p[i].dir);
+		}
+		state.decPaper();
+	};
+
 	var inbox = function()
 	{
 		validator.init();
@@ -986,6 +1044,12 @@ function Logic()
 			break;
 			case 24:
 				subPaper(op.address);
+			break;
+			case 25:
+				incPaper(op.address);
+			break;
+			case 26:
+				decPaper(op.address);
 			break;
 			case 31:
 				inbox();
