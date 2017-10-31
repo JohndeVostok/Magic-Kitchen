@@ -86,6 +86,7 @@
         default_level_id是指预置关卡的第id关，例如希望get预置关卡第2关的信息，就传参数default_level_id = 2
         level_id则用来get任意一关（可以是预置关卡，也可以是用户创建关卡，但是建议用来get用户创建关卡）
         关于这两个参数在数据库中的存储：level_id是AutoField，也就是每个level_id唯一对应一个关卡；default_level_id则不是，用户创建的关卡的default_level_id都为-1。
+        游戏的前5个关卡提供试玩,用户在登录或未登录状态下均可进行游戏（调用API），从第5关以后的关卡需要用户登录且具有VIP权限。这里的“第五关之后”是指default_level_id>5。
         
 
         return json dict:

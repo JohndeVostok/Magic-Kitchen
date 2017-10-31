@@ -99,6 +99,17 @@ def get_level_info(request):
             ret['status'] = 1017 #'this level doesn't exist'
             return json_response(ret)
 
+        #only vip can play the level which default_level_id > 5
+        if _default_level_id > 5:
+            session = get_session(request)
+            if not session:
+                ret['status'] = 1001 #'please log in first'
+                return json_response(ret)
+            user = User.objects.filter(name = session)[0]
+            if user.authority < 2:
+                ret['status'] = 1031 #'you don't have operation authority'
+                return json_response(ret)
+
         ret['status'] = 1000 #'succeeded'
         ret['level_info'] = default_level_id_filter[0].info #json
 
@@ -118,6 +129,18 @@ def get_level_info(request):
         if len(level_id_filter) == 0:
             ret['status'] = 1017 #'this level doesn't exist'
             return json_response(ret)
+
+        ##only vip can play the level which default_level_id > 5
+        _default_level_id = level_id_filter[0].default_level_id
+        if _default_level_id > 5:
+            session = get_session(request)
+            if not session:
+                ret['status'] = 1001 #'please log in first'
+                return json_response(ret)
+            user = User.objects.filter(name = session)[0]
+            if user.authority < 2:
+                ret['status'] = 1031 #'you don't have operation authority'
+                return json_response(ret)
 
         ret['status'] = 1000 #'succeeded'
         ret['level_info'] = level_id_filter[0].info #json

@@ -426,6 +426,7 @@ class LevelSystemTestCase(TestCase):
         #create level
         Level.objects.create(default_level_id = 1, info = json.dumps([1,3,5]), user_name = "sth")
         Level.objects.create(default_level_id = -1, info = "123", user_name = "sth2")
+        vip_level = Level.objects.create(default_level_id = 6, info = 'vip level', user_name = 'sth')
 
         #test level id and default level id empty in the same time
         response = c.post('/api/get_level_info')
@@ -458,6 +459,42 @@ class LevelSystemTestCase(TestCase):
         self.assertEqual(ret['status'], 1000) #'succeeded'
         self.assertEqual(json.loads(ret['level_info']), [1,3,5])
 
+        #test get vip level info before login
+        response = c.post('/api/get_level_info', {'default_level_id': 6})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 1001) #'please log in first'
+
+        #register
+        response = c.post('/api/register', {'name': 'sth', 'password': 'abc', 'email': '765215342@qq.com'})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 1000) #'succeeded'
+
+        #login
+        response = c.post('/api/login', {'name': 'sth', 'password': 'abc'})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 1000) #'succeeded'
+
+        #test get vip level info without vip authority
+        response = c.post('/api/get_level_info', {'default_level_id': 6})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 1031) #'you don't have operation authority'
+
+        user = User.objects.filter(name = 'sth')[0]
+        user.authority = 2
+        user.save()
+        #test get level info
+        response = c.post('/api/get_level_info', {'default_level_id': 6})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 1000) #'succeeded'
+        self.assertEqual(ret['level_info'], 'vip level')
+
+        user.authority = 1
+        user.save()
+        #logout
+        response = c.post('/api/logout')
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 1000) #'succeeded'
+
 
         #test level id not exists
         response = c.post('/api/get_level_info', {'level_id': 2147483647})
@@ -484,6 +521,30 @@ class LevelSystemTestCase(TestCase):
         ret = json.loads(response.content)
         self.assertEqual(ret['status'], 1000) #'succeeded'
         self.assertEqual(ret['level_info'], "123")
+
+        #test get vip level info before login
+        response = c.post('/api/get_level_info', {'level_id': vip_level.level_id})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 1001) #'please log in first'
+
+        #login
+        response = c.post('/api/login', {'name': 'sth', 'password': 'abc'})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 1000) #'succeeded'
+
+        #test get vip level info without vip authority
+        response = c.post('/api/get_level_info', {'level_id': vip_level.level_id})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 1031) #'you don't have operation authority'
+
+        user = User.objects.filter(name = 'sth')[0]
+        user.authority = 2
+        user.save()
+        #test get level info
+        response = c.post('/api/get_level_info', {'level_id': vip_level.level_id})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 1000) #'succeeded'
+        self.assertEqual(ret['level_info'], 'vip level')
 
     def test_new_default_level(self):
         c = Client()
