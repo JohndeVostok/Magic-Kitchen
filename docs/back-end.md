@@ -86,16 +86,19 @@
         default_level_id是指预置关卡的第id关，例如希望get预置关卡第2关的信息，就传参数default_level_id = 2
         level_id则用来get任意一关（可以是预置关卡，也可以是用户创建关卡，但是建议用来get用户创建关卡）
         关于这两个参数在数据库中的存储：level_id是AutoField，也就是每个level_id唯一对应一个关卡；default_level_id则不是，用户创建的关卡的default_level_id都为-1。
+        游戏的前5个关卡提供试玩,用户在登录或未登录状态下均可进行游戏（调用API），从第5关以后的关卡需要用户登录且具有VIP权限。这里的“第五关之后”是指default_level_id>5。
         
 
         return json dict:
             status = 1000
                 level_info = json_info_str
 
+            status = 1001
             status = 1016
             status = 1017
             status = 1018
             status = 1019
+            status = 1031
             
 
 ### New Default Level
@@ -107,11 +110,13 @@
 
         return json dict:
             status = 1000
+            status = 1001
             status = 1017
             status = 1018
             status = 1020
             status = 1021
             status = 1022
+            status = 1031
             
 ### New Usermade Level
         Post('/api/new_usermade_level'), attributes: level_info = jsonStr
@@ -123,7 +128,7 @@
             status = 1021
     
 ### New Solution
-        c.post('/api/new_solution') , attributes: level_id: idInt, solution_info: jsonStr, score: scoreInt
+        Post('/api/new_solution') , attributes: level_id: idInt, solution_info: jsonStr, score: scoreInt
         其中，score应该是[0,4]的整数，0表示未通过，1～3表示评级，4表示通过（用户自定义关卡仅记是否通过，不评级）
         必须登录才能够post，会将session作为username存入该Solution
         一个用户对同一个关卡只保存一个解法，最新创建的解法将覆盖之前对该关卡的解法
@@ -138,3 +143,25 @@
             status = 1025
             status = 1026
             status = 1027
+
+### VIP Charge
+        Post('/api/vip_charge'), attributes: days = day_num_Int
+        要求days属于区间[1,99999]
+
+        return json dict:
+            status = 1000
+            status = 1001
+            status = 1028
+            status = 1029
+            status = 1030
+
+### Set Admin
+        Post('/api/set_admin'), attributes: name = user_name_str
+        要求已登录，且拥有超级管理员权限。参数name为待设置为管理员的用户名。
+
+        return json dict
+            status = 1000
+            status = 1001
+            status = 1002
+            status = 1011
+            status = 1031

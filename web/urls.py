@@ -19,6 +19,8 @@ urlpatterns = [
     url(r'^api/new_solution$', solution_system.new_solution),
     url(r'^api/new_usermade_level$', level_system.new_usermade_level),
     url(r'^api/get_current_user_info$', custom_system.get_current_user_info),
+    url(r'^api/vip_charge$', custom_system.vip_charge),
+    url(r'^api/set_admin$', custom_system.set_admin),
     # Force to serve static files, which is not recommended by Django
     url(r'^(?P<path>.*)$', views.static_file),
 ]

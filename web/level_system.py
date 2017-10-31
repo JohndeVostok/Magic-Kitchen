@@ -1,6 +1,8 @@
 from models import Level
+from models import User
 import json
 from django.http import HttpResponse
+from custom_system import refresh_vip_authority
 
 def json_response(info):
     return HttpResponse(json.dumps(info), content_type="application/json")
@@ -15,11 +17,17 @@ def get_session(request):
     return request.session.get('name', None)
 
 def new_default_level(request):
-    #TODO
-    #only admin can create new default level
-
     content = request.POST
     ret = {}
+
+    session = get_session(request)
+    if not session:
+        ret['status'] = 1001 #'please log in first'
+        return json_response(ret)
+    user = User.objects.filter(name = session)[0]
+    if user.authority < 3:
+        ret['status'] = 1031 #'you don't have operation authority'
+        return json_response(ret)
 
     if not 'default_level_id' in content:
         ret['status'] = 1020 #'default level id can't be empty'
@@ -92,6 +100,18 @@ def get_level_info(request):
             ret['status'] = 1017 #'this level doesn't exist'
             return json_response(ret)
 
+        #only vip can play the level which default_level_id > 5
+        if _default_level_id > 5:
+            session = get_session(request)
+            if not session:
+                ret['status'] = 1001 #'please log in first'
+                return json_response(ret)
+            user = User.objects.filter(name = session)[0]
+            refresh_vip_authority(user)
+            if user.authority < 2:
+                ret['status'] = 1031 #'you don't have operation authority'
+                return json_response(ret)
+
         ret['status'] = 1000 #'succeeded'
         ret['level_info'] = default_level_id_filter[0].info #json
 
@@ -111,6 +131,19 @@ def get_level_info(request):
         if len(level_id_filter) == 0:
             ret['status'] = 1017 #'this level doesn't exist'
             return json_response(ret)
+
+        ##only vip can play the level which default_level_id > 5
+        _default_level_id = level_id_filter[0].default_level_id
+        if _default_level_id > 5:
+            session = get_session(request)
+            if not session:
+                ret['status'] = 1001 #'please log in first'
+                return json_response(ret)
+            user = User.objects.filter(name = session)[0]
+            refresh_vip_authority(user)
+            if user.authority < 2:
+                ret['status'] = 1031 #'you don't have operation authority'
+                return json_response(ret)
 
         ret['status'] = 1000 #'succeeded'
         ret['level_info'] = level_id_filter[0].info #json

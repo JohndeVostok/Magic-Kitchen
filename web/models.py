@@ -11,6 +11,8 @@ class User(models.Model):
     email = models.CharField(max_length = 50)
     identifyingCode = models.CharField(max_length = 20, default = "")
     solution_dict = models.TextField() #jsonStr(stored dict{level_id : solution_id})
+    authority = models.IntegerField(default = 1) #user = 1, VIP = 2, admin = 3 super_admin = 4
+    vip_due_time = models.DateTimeField()
 
 class Level(models.Model):
     default_level_id = models.IntegerField()

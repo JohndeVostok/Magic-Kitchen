@@ -2,6 +2,8 @@ from models import User
 import json
 from django.http import HttpResponse 
 from send_email import email_thread
+import datetime
+from django.utils import timezone
 
 def json_response(info):
     return HttpResponse(json.dumps(info), content_type="application/json")
@@ -14,6 +16,11 @@ def change_password_to(_name, _password):
     user = name_filter[0]
     user.password = _password
     user.save()
+
+def refresh_vip_authority(user):
+    if (user.authority == 2) and (user.vip_due_time < timezone.now()):
+        user.authority = 1
+        user.save()
 
 
 #this request need to be POST
@@ -67,7 +74,7 @@ def register(request):
         ret['status'] = 1006 #'this email address already exists'
         return json_response(ret)
 
-    User.objects.create(name = _name, password = _password, email = _email, solution_dict = json.dumps({}))
+    User.objects.create(name = _name, password = _password, email = _email, solution_dict = json.dumps({}), authority = 1, vip_due_time = timezone.now())
     ret['status'] = 1000 #'succeeded'
     return json_response(ret)
 
@@ -228,5 +235,74 @@ def get_current_user_info(request):
     ret['user_name'] = session
     ret['email'] = user.email
     ret['solution_dict'] = user.solution_dict
+    ret['status'] = 1000 #'succeeded'
+    return json_response(ret)
+
+def vip_charge(request):
+    content = request.POST
+
+    ret = {}
+    session = get_session(request)
+    if not session:
+        ret['status'] = 1001 #'please log in first'
+        return json_response(ret)
+
+    if not 'days' in content:
+        ret['status'] = 1028 #'days can't be empty'
+        return json_response(ret)
+
+    try:
+        _days = int(content['days'])
+    except ValueError,e :
+        print e
+        ret['status'] = 1029 #'the input days needs to be an Integer'
+        return json_response(ret)
+
+    if not _days in range(1, 100000):
+            ret['status'] = 1030 #'the input days needs to be in range[1, 99999]'
+            return json_response(ret)
+
+    user = User.objects.filter(name = session)[0]
+    if user.authority < 2:
+        user.authority = 2
+    due_time = user.vip_due_time
+    if due_time < timezone.now():
+        due_time = timezone.now()
+    timedelta = datetime.timedelta(days = _days)
+    user.vip_due_time = due_time + timedelta
+    user.save()
+
+    ret['status'] = 1000 #'succeeded'
+    return json_response(ret)
+
+def set_admin(request):
+    content = request.POST
+
+    ret = {}
+    session = get_session(request)
+    if not session:
+        ret['status'] = 1001 #'please log in first'
+        return json_response(ret)
+    super_admin = User.objects.filter(name = session)[0]
+    if super_admin.authority != 4:
+        ret['status'] = 1031 #'you don't have operation authority'
+        return json_response(ret)
+
+    if not 'name' in content:
+        ret['status'] = 1002 #'user name can't be empty'
+        return json_response(ret)
+
+    _name = content['name']
+
+    name_filter = User.objects.filter(name = _name)
+
+    if len(name_filter) == 0:
+        ret['status'] = 1011 #'this name doesn't exist'
+        return json_response(ret)
+
+    user = name_filter[0]
+    user.authority = 3 #set admin
+    user.save()
+
     ret['status'] = 1000 #'succeeded'
     return json_response(ret)
