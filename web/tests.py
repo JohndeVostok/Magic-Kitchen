@@ -323,7 +323,7 @@ class CustomSystemTestCase(TestCase):
         response = c.post('/api/get_current_user_info')
         ret = json.loads(response.content)
         self.assertEqual(ret['status'], 1000) #'succeeded'
-        self.assertEqual(json.loads(ret['solution_dict']), {'1' : 2, '2' : 3})
+        self.assertEqual(json.loads(ret['solution_dict']), {'1' : 1, '2' : 2})
 
 class LevelSystemTestCase(TestCase):
     def test_get_level_info(self):
@@ -543,3 +543,15 @@ class SolutionSystemTestCase(TestCase):
         self.assertEqual(len(name_filter), 1)
         self.assertEqual(name_filter[0].solution_id, 1)
         self.assertEqual(name_filter[0].info, 'jsonStr')
+        self.assertEqual(name_filter[0].score, 0)
+
+        #test new solution with same level
+        response = c.post('/api/new_solution', {'level_id': 1, 'solution_info': 'jsonStr2', 'score': 1})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 1000) #'succeeded'
+
+        name_filter = Solution.objects.all()
+        self.assertEqual(len(name_filter), 1)
+        self.assertEqual(name_filter[0].solution_id, 1)
+        self.assertEqual(name_filter[0].info, 'jsonStr2')
+        self.assertEqual(name_filter[0].score, 1)
