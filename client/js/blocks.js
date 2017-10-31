@@ -362,5 +362,19 @@ var blocks = {
 		generateOps: function(block){
 			return [{typeId: 32}];
 		}
+	},
+	50: {
+		name: "fin",
+		json: {
+			"message0": "fin",
+			"tooltip": "fin",
+			"previousStatement": null,
+			"nextStatement": null,
+			"colour": 180
+		},
+		initExtra: function(block){},
+		generateOps: function(block){
+			return [{typeId: 50}];
+		}
 	}
 };
