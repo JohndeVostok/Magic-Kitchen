@@ -10,6 +10,11 @@ from models import Solution
 import datetime
 from django.utils import timezone
 
+def setVIP(user):
+    user.authority = 2
+    user.vip_due_time = timezone.now() + datetime.timedelta(days = 1)
+    user.save()
+
 # Create your tests here.
 
 class IndexTestCase(TestCase):
@@ -419,6 +424,38 @@ class CustomSystemTestCase(TestCase):
         admin = User.objects.filter(name = 'sth')[0]
         self.assertEqual(admin.authority, 3)
 
+    def test_refresh_vip_authority(self):
+        c = Client()
+
+        #create level
+        vip_level = Level.objects.create(default_level_id = 6, info = 'vip level', user_name = 'sth')
+
+        #register
+        response = c.post('/api/register', {'name': 'sth', 'password': 'abc', 'email': '765215342@qq.com'})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 1000) #'succeeded'
+
+        #login
+        response = c.post('/api/login', {'name': 'sth', 'password': 'abc'})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 1000) #'succeeded'
+
+        user = User.objects.filter(name = 'sth')[0]
+        setVIP(user)
+        #test get level info
+        response = c.post('/api/get_level_info', {'default_level_id': 6})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 1000) #'succeeded'
+        self.assertEqual(ret['level_info'], 'vip level')
+
+        user.vip_due_time = timezone.now()
+        user.save()
+        #test get level info
+        response = c.post('/api/get_level_info', {'default_level_id': 6})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 1031) #'you don't have operation authority'
+
+
 class LevelSystemTestCase(TestCase):
     def test_get_level_info(self):
         c = Client()
@@ -480,8 +517,7 @@ class LevelSystemTestCase(TestCase):
         self.assertEqual(ret['status'], 1031) #'you don't have operation authority'
 
         user = User.objects.filter(name = 'sth')[0]
-        user.authority = 2
-        user.save()
+        setVIP(user)
         #test get level info
         response = c.post('/api/get_level_info', {'default_level_id': 6})
         ret = json.loads(response.content)
@@ -538,8 +574,7 @@ class LevelSystemTestCase(TestCase):
         self.assertEqual(ret['status'], 1031) #'you don't have operation authority'
 
         user = User.objects.filter(name = 'sth')[0]
-        user.authority = 2
-        user.save()
+        setVIP(user)
         #test get level info
         response = c.post('/api/get_level_info', {'level_id': vip_level.level_id})
         ret = json.loads(response.content)

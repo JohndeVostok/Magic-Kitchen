@@ -17,6 +17,11 @@ def change_password_to(_name, _password):
     user.password = _password
     user.save()
 
+def refresh_vip_authority(user):
+    if (user.authority == 2) and (user.vip_due_time < timezone.now()):
+        user.authority = 1
+        user.save()
+
 
 #this request need to be POST
 def register(request): 

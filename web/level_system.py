@@ -2,6 +2,7 @@ from models import Level
 from models import User
 import json
 from django.http import HttpResponse
+from custom_system import refresh_vip_authority
 
 def json_response(info):
     return HttpResponse(json.dumps(info), content_type="application/json")
@@ -106,6 +107,7 @@ def get_level_info(request):
                 ret['status'] = 1001 #'please log in first'
                 return json_response(ret)
             user = User.objects.filter(name = session)[0]
+            refresh_vip_authority(user)
             if user.authority < 2:
                 ret['status'] = 1031 #'you don't have operation authority'
                 return json_response(ret)
@@ -138,6 +140,7 @@ def get_level_info(request):
                 ret['status'] = 1001 #'please log in first'
                 return json_response(ret)
             user = User.objects.filter(name = session)[0]
+            refresh_vip_authority(user)
             if user.authority < 2:
                 ret['status'] = 1031 #'you don't have operation authority'
                 return json_response(ret)
