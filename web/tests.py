@@ -290,12 +290,40 @@ class CustomSystemTestCase(TestCase):
         ret = json.loads(response.content)
         self.assertEqual(ret['status'], 1000) #'succeeded'
 
+        #new default level
+        response = c.post('/api/new_default_level', {'default_level_id': 233, 'level_info': 'jsonStr'})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 1000) #'succeeded'
+        response = c.post('/api/new_default_level', {'default_level_id': 123, 'level_info': 'jsonStr'})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 1000) #'succeeded'
+        
+        #test new solution
+        response = c.post('/api/new_solution', {'level_id': 1, 'solution_info': 'solutionStr', 'score': 0})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 1000) #'succeeded'
+
         #test get current user info
         response = c.post('/api/get_current_user_info')
         ret = json.loads(response.content)
         self.assertEqual(ret['status'], 1000) #'succeeded'
         self.assertEqual(ret['user_name'], 'sth')
         self.assertEqual(ret['email'], '123@111.com')
+        self.assertEqual(json.loads(ret['solution_dict']), {'1' : 1})
+
+        #test new solution
+        response = c.post('/api/new_solution', {'level_id': 1, 'solution_info': 'solutionStr', 'score': 0})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 1000) #'succeeded'
+        response = c.post('/api/new_solution', {'level_id': 2, 'solution_info': 'solutionStr', 'score': 0})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 1000) #'succeeded'
+
+        #test get current user info
+        response = c.post('/api/get_current_user_info')
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 1000) #'succeeded'
+        self.assertEqual(json.loads(ret['solution_dict']), {'1' : 1, '2' : 2})
 
 class LevelSystemTestCase(TestCase):
     def test_get_level_info(self):
@@ -505,7 +533,7 @@ class SolutionSystemTestCase(TestCase):
         response = c.post('/api/new_solution', {'level_id': 1, 'solution_info': 'jsonStr', 'score': 5})
         ret = json.loads(response.content)
         self.assertEqual(ret['status'], 1026) #'the input score needs to be in range[0,4]'
-
+        
         #test new solution
         response = c.post('/api/new_solution', {'level_id': 1, 'solution_info': 'jsonStr', 'score': 0})
         ret = json.loads(response.content)
@@ -515,3 +543,15 @@ class SolutionSystemTestCase(TestCase):
         self.assertEqual(len(name_filter), 1)
         self.assertEqual(name_filter[0].solution_id, 1)
         self.assertEqual(name_filter[0].info, 'jsonStr')
+        self.assertEqual(name_filter[0].score, 0)
+
+        #test new solution with same level
+        response = c.post('/api/new_solution', {'level_id': 1, 'solution_info': 'jsonStr2', 'score': 1})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 1000) #'succeeded'
+
+        name_filter = Solution.objects.all()
+        self.assertEqual(len(name_filter), 1)
+        self.assertEqual(name_filter[0].solution_id, 1)
+        self.assertEqual(name_filter[0].info, 'jsonStr2')
+        self.assertEqual(name_filter[0].score, 1)

@@ -15,6 +15,7 @@ def change_password_to(_name, _password):
     user.password = _password
     user.save()
 
+
 #this request need to be POST
 def register(request): 
     #TODO email verification
@@ -66,7 +67,7 @@ def register(request):
         ret['status'] = 1006 #'this email address already exists'
         return json_response(ret)
 
-    User.objects.create(name = _name, password = _password, email = _email)
+    User.objects.create(name = _name, password = _password, email = _email, solution_dict = json.dumps({}))
     ret['status'] = 1000 #'succeeded'
     return json_response(ret)
 
@@ -226,5 +227,6 @@ def get_current_user_info(request):
     user = name_filter[0]
     ret['user_name'] = session
     ret['email'] = user.email
+    ret['solution_dict'] = user.solution_dict
     ret['status'] = 1000 #'succeeded'
     return json_response(ret)

@@ -66,11 +66,14 @@
 ### Get Current User Info
         Post('/api/get_current_user_info')
         返回目前登录的用户信息
+        注意，solution_dict是一个dict的json字符串，dict格式为{ level_id : solution_id},level_id本应是int，但由于json的key只能是str，所以解析json后，dict的key会是str，如{'2' : 3}
+        solution_dict中不保存该用户没有通过的关卡
 
         return json dict:
             status = 1000
                 user_name = user_name_str
                 email = email_str
+                solution_dict = solution_dict_jsonStr 
 
             status = 1001
 
@@ -123,6 +126,7 @@
         c.post('/api/new_solution') , attributes: level_id: idInt, solution_info: jsonStr, score: scoreInt
         其中，score应该是[0,4]的整数，0表示未通过，1～3表示评级，4表示通过（用户自定义关卡仅记是否通过，不评级）
         必须登录才能够post，会将session作为username存入该Solution
+        一个用户对同一个关卡只保存一个解法，最新创建的解法将覆盖之前对该关卡的解法
 
         return json dict:
             status = 1000
