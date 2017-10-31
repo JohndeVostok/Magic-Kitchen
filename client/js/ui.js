@@ -772,6 +772,7 @@ var ui = function() {
 	
 	var runAlert = function(args) {
 		alert(args.text);
+		setTimeout(setAnimationComplete, 0);
 	};
 	
 	// Below are animation functions, i.e. functions that register animations for later rendering.
