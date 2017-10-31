@@ -108,18 +108,18 @@ function Logic()
 		//function for test
 		this.test = function()
 		{
-			var p = {map: [], player: -1, out: []};
+			var p = {map: [], player: "empty", out: []};
 			if (player.haveItem && itemList[player.itemId].type == 1)
 				p.player = itemList[player.itemId].value;
 			for (let i = 0; i < opFloor.length; i++)
 			{
-				p.map[i] = -1;
+				p.map[i] = "empty";
 				if (map[opFloor[i]].haveItem && itemList[map[opFloor[i]].itemId].type == 1)
 					p.map[i] = itemList[map[opFloor[i]].itemId].value;
 			}
 			for (let i = 0; i < output[0].length; i++)
 			{
-				p.out[i] = -1;
+				p.out[i] = "empty";
 				if (output[0][i].type == 1)
 					p.out[i] = output[0][i].value;
 			}
