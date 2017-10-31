@@ -889,7 +889,25 @@ var ui = function() {
 			}
 		});
 	};
+
+	var finishLevel = function() {
+		animationQueue.push({
+			type: "alert",
+			args: {
+				text: "Finished."
+			}
+		});
+	};
 	
+	var unfinishLevel = function() {
+		animationQueue.push({
+			type: "alert",
+			args: {
+				text: "Unfinished."
+			}
+		});
+	};
+
 	var debug = function() {
 		console.log(animationRunning);
 		console.log(animationQueue);
