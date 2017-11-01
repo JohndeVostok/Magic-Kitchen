@@ -175,7 +175,12 @@ function Logic()
 			if (itemA.type == itemB.type)
 			{
 				if (itemA.type == 1)
-					return (itemA.value == itemB.value);
+				{
+					if (itemA.value == itemB.value)
+						return 1;
+					else
+						return 0;
+				}
 				else
 					return 1;
 			}
@@ -356,6 +361,11 @@ function Logic()
 				return 0;
 			}
 			return 1;
+		};
+
+		this.checkFinished = function()
+		{
+			return (output[0].length == 0);
 		};
 
 		this.getFloor = function(address)
@@ -983,6 +993,15 @@ function Logic()
 		}
 		state.storeItem();
 	}
+
+	var finish = function()
+	{
+		if (state.checkFinished())
+			ui.finishLevel();
+		else
+			ui.unfinishLevel();
+	};
+
 //functions for UI
 
 	this.start = function()
@@ -1056,6 +1075,9 @@ function Logic()
 			break;
 			case 32:
 				outbox();
+			break;
+			case 50:
+				finish();
 			break;
 			default:
 			//nothing

@@ -772,6 +772,7 @@ var ui = function() {
 	
 	var runAlert = function(args) {
 		alert(args.text);
+		setTimeout(setAnimationComplete, 0);
 	};
 	
 	// Below are animation functions, i.e. functions that register animations for later rendering.
@@ -889,7 +890,25 @@ var ui = function() {
 			}
 		});
 	};
+
+	var finishLevel = function() {
+		animationQueue.push({
+			type: "alert",
+			args: {
+				text: "Finished."
+			}
+		});
+	};
 	
+	var unfinishLevel = function() {
+		animationQueue.push({
+			type: "alert",
+			args: {
+				text: "Unfinished."
+			}
+		});
+	};
+
 	var debug = function() {
 		console.log(animationRunning);
 		console.log(animationQueue);
@@ -909,6 +928,8 @@ var ui = function() {
 		setInput: setInput,
 		setOutput: setOutput,
 		blockStep: blockStep,
+		finishLevel: finishLevel,
+		unfinishLevel: unfinishLevel,
 		debug: debug
 	};
 }();
