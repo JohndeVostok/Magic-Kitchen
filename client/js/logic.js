@@ -108,18 +108,18 @@ function Logic()
 		//function for test
 		this.test = function()
 		{
-			var p = {map: [], player: "empty", out: []};
+			var p = {map: [], player: "E", out: []};
 			if (player.haveItem && itemList[player.itemId].type == 1)
 				p.player = itemList[player.itemId].value;
 			for (let i = 0; i < opFloor.length; i++)
 			{
-				p.map[i] = "empty";
+				p.map[i] = "E";
 				if (map[opFloor[i]].haveItem && itemList[map[opFloor[i]].itemId].type == 1)
 					p.map[i] = itemList[map[opFloor[i]].itemId].value;
 			}
 			for (let i = 0; i < output[0].length; i++)
 			{
-				p.out[i] = "empty";
+				p.out[i] = "E";
 				if (output[0][i].type == 1)
 					p.out[i] = output[0][i].value;
 			}
@@ -522,7 +522,7 @@ function Logic()
 			if (map[p].address == opFloor.length - 1)
 			{
 				player.haveItem = 1;
-				itemList.push($.extend(true, input[0].shift(), {pos: -1}));
+				itemList.push($.extend(true, {}, input[0].shift(), {pos: -1}));
 				player.itemId = itemList.length - 1;
 				ui.setInput(input[0]);
 				ui.newItem(p, itemList[itemList.length - 1].type, undefined);
@@ -580,7 +580,7 @@ function Logic()
 			{
 				player.haveItem = 1;
 				player.itemId = itemList.length;
-				itemList.push($.extend(true, itemList[map[p].itemId], {pos: -1}));
+				itemList.push($.extend(true, {}, itemList[map[p].itemId], {pos: -1}));
 				ui.addAnimation(p, -1, undefined);
 				ui.newItem(p, 1, undefined);
 			}
@@ -601,7 +601,7 @@ function Logic()
 			{
 				map[p].haveItem = 1;
 				map[p].itemId = itemList.length;
-				itemList.push($.extend(true, itemList[player.itemId], {pos: p}));
+				itemList.push($.extend(true, {}, itemList[player.itemId], {pos: p}));
 				ui.addAnimation(-1, p, undefined);
 				ui.addAnimation(p, -1, undefined);
 				ui.newItem(p, 1, undefined);
