@@ -91,7 +91,9 @@ var code = function() {
 	var start = function() {
 		setLock(true);
 		highlight();
-		var code = config.blocklyConstants.overallInitialization + Blockly.JavaScript.workspaceToCode(workspace);
+		var code = config.blocklyConstants.overallInitialization + 
+				Blockly.JavaScript.workspaceToCode(workspace) +
+				config.blocklyConstants.overallFinalization;
 		debug.log(code);
 		interpreter = new Interpreter(code, function(interpreter, scope){
 			interpreter.setProperty(scope, 'extCall1', interpreter.createNativeFunction(callLogicOps));
