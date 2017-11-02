@@ -42,6 +42,13 @@ function Msg()
 		3016: ["There is something there.", "那已经有东西了。"],
 		3017: ["I can't store it there.", "我不能向进材口丢东西。"],
 		3018: ["It's not what we want.", "那个不是我们想要的。"],
+
+		3021: ["I can't load with this in my hand.", "我不能拿着这个读。"],
+		3022: ["I can't load from here.", "我不能从这读。"],
+		3023: ["I can't store here.", "我不能写。"],
+		3024: ["I can't store an item.", "我不能写别的东西。"],
+		3025: ["I can't calc an item.", "我不能算别的东西。"],
+		
 		3051: ["Username can't be empty.", "用户名不能为空。"],
 		3052: ["Password can't be empty.", "密码不能为空。"],
 		3053: ["Email can't be empty.", "邮箱不能为空。"],
