@@ -128,11 +128,11 @@ var network = function() {
 		);
 	};
 
-	var getUsermadeLevelInfo = function(callback) {
+	var getLevelInfo = function(level_id, callback) {
 		postRequest(
 			"/api/get_level_info",
 			{
-				"default_level_id": -1
+				"level_id": level_id
 			},
 			callback
 		);
@@ -167,6 +167,35 @@ var network = function() {
 			callback
 		);
 	};
+
+	var getAllLevel = function(callback) {
+		postRequest(
+			"/api/get_all_level",
+			{
+			},
+			callback
+		);
+	};
+
+	var vipCharge = function(days, callback) {
+		postRequest(
+			"/api/vip_charge",
+			{
+				"days": days
+			},
+			callback
+		);
+	};
+
+	var setAdmin = function(name, callback) {
+		postRequest(
+			"api/set_admin",
+			{
+				"name": name
+			},
+			callback
+		);
+	};
 	
 	return {
 		doLoad: doLoad,
@@ -178,9 +207,12 @@ var network = function() {
 		newDefaultLevel: newDefaultLevel,
 		editDefaultLevel: editDefaultLevel,
 		getDefaultLevelInfo: getDefaultLevelInfo,
-		getUsermadeLevelInfo: getUsermadeLevelInfo,
+		getLevelInfo: getLevelInfo,
 		getCurrentUserInfo: getCurrentUserInfo,
 		newUsermadeLevel: newUsermadeLevel,
-		newSolution: newSolution
+		newSolution: newSolution,
+		getAllLevel: getAllLevel,
+		vipCharge: vipCharge,
+		setAdmin: setAdmin
 	};
 }();
