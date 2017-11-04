@@ -649,6 +649,11 @@ function Logic()
 			itemList[map[p].itemId].value--;
 			this.loadPaper();
 		};
+
+		this.getPlayerItemValue = function()
+		{
+			return itemList[player.itemId].value;
+		};
 	}
 
 //prepare for playing
@@ -1002,6 +1007,16 @@ function Logic()
 			ui.unfinishLevel();
 	};
 
+	var branch = function(op)
+	{
+		switch (op)
+		{
+			case 0: return (state.getPlayerItemValue() < 0); break;
+			case 1: return (state.getPlayerItemValue() == 0); break;
+			case 2: return (state.getPlayerItemValue() > 0); break;
+		}
+	}
+
 //functions for UI
 
 	this.start = function()
@@ -1078,6 +1093,9 @@ function Logic()
 			break;
 			case 50:
 				finish();
+			break;
+			case 41:
+				return branch(op.op);
 			break;
 			default:
 			//nothing

@@ -376,5 +376,40 @@ var blocks = {
 		generateOps: function(block){
 			return [{typeId: 50}];
 		}
+	},
+	41: {
+		name: "simple_branch",
+		json: {
+			"message0": "如果手上的数%1零",
+			"args0": [
+				{
+					"type": "field_dropdown",
+					"name": "OP",
+					"options": [
+						[ "小于", "0" ],
+						[ "等于", "1" ],
+						[ "大于", "2" ]
+					]
+				}
+			],
+			"message1": "进行下列操作:",
+			"args1": [],
+			"message2": "%1",
+			"args2": [
+				{"type": "input_statement", "name": "DO"}
+			],
+			"previousStatement": null,
+			"nextStatement": null,
+			"tooltip": "最基本的判断，满足条件时执行",
+			"colour": 130
+		},
+		initExtra: function(block){},
+		generateJS: function(block) {
+			return "ifBranchOp=[{typeId: 41, op: " +  
+				block.getFieldValue("OP") +
+				"}];ifBranchRet=extCall1(blockID[stacklvl++], ifBranchOp); if (ifBranchRet[0]) {" + 
+				Blockly.JavaScript.statementToCode(block, "DO") +
+				"extCall1(blockID[stacklvl-1], []);}stacklvl--;";
+		}
 	}
 };

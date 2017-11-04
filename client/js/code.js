@@ -85,8 +85,10 @@ var code = function() {
 	var callLogicOps = function(blockID, ops) {
 		calledLogic = true;
 		highlight(blockID);
-		for (var id in ops.a) logic.step(ops.a[id].a);
-	}
+		var ret = [];
+		for (var id in ops) ret[id] = logic.step(ops[id]);
+		return ret;
+	};
 
 	var start = function() {
 		setLock(true);
@@ -96,7 +98,14 @@ var code = function() {
 				config.blocklyConstants.overallFinalization;
 		debug.log(code);
 		interpreter = new Interpreter(code, function(interpreter, scope){
-			interpreter.setProperty(scope, 'extCall1', interpreter.createNativeFunction(callLogicOps));
+			interpreter.setProperty(scope, 'extCall1', interpreter.createNativeFunction(
+				function(blockID, ops) {
+					return interpreter.nativeToPseudo(callLogicOps(
+						interpreter.pseudoToNative(blockID),
+						interpreter.pseudoToNative(ops)
+					));
+				}
+			));
 		});
 	};
 
