@@ -405,9 +405,9 @@ var blocks = {
 		},
 		initExtra: function(block){},
 		generateJS: function(block) {
-			return "ret=extCall1(blockID[stacklvl++], [{typeId: 41, op: " +  
+			return "ifBranchOp=[{typeId: 41, op: " +  
 				block.getFieldValue("OP") +
-				"}])[0]; if (ret) {" + 
+				"}];ifBranchRet=extCall1(blockID[stacklvl++], ifBranchOp); if (ifBranchRet[0]) {" + 
 				Blockly.JavaScript.statementToCode(block, "DO") +
 				"extCall1(blockID[stacklvl-1], []);}stacklvl--;";
 		}
