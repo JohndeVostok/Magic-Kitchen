@@ -96,7 +96,34 @@
 				10: store to address
 					op["address"]: type == int
 					store to address
-			return: undefined
+
+				21: load from address for paper
+					op["address"]: type == int
+					load from address.
+				22: store to address for paper
+					op["address"]: type == int
+					store to address
+				23: add operator for paper
+					op["address"]: type == int
+					add paper in hand to paper in address.
+				24: sub operator for paper
+					op["address"]: type == int
+					sub paper in hand to paper in address.
+				25: inc paper
+					op["address"]: type == int
+					inc paper in address and copy
+				26: dec paper
+					op["address"]: type == int
+					dec paper in address and copy
+					
+				31: inbox
+					input
+				32: outbox
+					output
+				41: if
+					return result of expr
+				50: finish;
+					end of code.
 
 #### Logic operations called by UI
 
