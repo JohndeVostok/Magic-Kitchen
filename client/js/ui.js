@@ -505,6 +505,8 @@ var ui = function() {
 			runAddPlayerAnimation(animation.args);
 		} else if (animation.type == "deleteItem") {
 			runDeleteItem(animation.args);
+		} else if (animation.type == "setItemValue") {
+			runSetItemValue(animation.args);
 		} else if (animation.type == "setInput") {
 			runSetInput(animation.args);
 		} else if (animation.type == "setOutput") {
@@ -613,11 +615,12 @@ var ui = function() {
 	
 	var genNewItem = function(args) {
 		var s = new createjs.Sprite(objectSpriteSheets[args.type]);
-		var ts = new createjs.Text("", "15px Arial", "#ff7700");
-		stage.addChild(ts);
+		var ts = new createjs.Text(args.value == undefined ? "" : args.value + "", "15px Arial", "#ff7700");
 		stage.addChild(s);
+		stage.addChild(ts);
 		return {
 			type: args.type,
+			value: args.value,
 			args: args.args,
 			sprite: s,
 			textSprite: ts
@@ -776,6 +779,23 @@ var ui = function() {
 		setTimeout(setAnimationComplete, 0);
 	};
 	
+	var runSetItemValue = function(args) {
+		var pos = args.pos;
+		if (pos == -1) {
+			if (itemOnHead == undefined) {
+				throw "No item on head";
+			}
+			itemOnHead.textSprite.text = args.value;
+		} else {
+			if (items[pos] == undefined) {
+				throw "No such item on " + pos;
+			}
+			items[pos].textSprite.text = args.value;
+		}
+		
+		setTimeout(setAnimationComplete, 0);
+	};
+	
 	var getIOItemPosTransform = function(pos, isOutput = false) {
 		return {
 			x: IOItemsLeftPos + pos * (IOItemsWidth + IOItemsHorizontalGap),
@@ -856,7 +876,7 @@ var ui = function() {
 		});
 	};
 	
-	var newItem = function(pos, type, args) {
+	var newItem = function(pos, type, value = "", args) {
 		pos = checkValidItemPos(pos);
 		
 		if (isNaN(type)) {
@@ -869,6 +889,7 @@ var ui = function() {
 			args: {
 				pos: pos,
 				type: type,
+				value: value,
 				args: args
 			}
 		});
@@ -881,6 +902,19 @@ var ui = function() {
 			type: "deleteItem",
 			args: {
 				pos: pos
+			}
+		});
+	};
+	
+	var setItemValue = function(pos, value) {
+		pos = checkValidItemPos(pos);
+		value = value == undefined ? "" : value + "";
+		
+		animationQueue.push({
+			type: "setItemValue",
+			args: {
+				pos: pos,
+				value: value
 			}
 		});
 	};
@@ -921,7 +955,8 @@ var ui = function() {
 		for (var i in itemList) {
 			var item = itemList[i];
 			ret[i] = {
-				type: item.type
+				type: item.type,
+				value: item.value
 			};
 		}
 		return ret;
@@ -996,6 +1031,7 @@ var ui = function() {
 		clearItems: clearItems,
 		newItem: newItem,
 		deleteItem: deleteItem,
+		setItemValue: setItemValue,
 		addAnimation: addAnimation,
 		addPlayerAnimation: addPlayerAnimation,
 		setInput: setInput,
