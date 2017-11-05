@@ -411,5 +411,55 @@ var blocks = {
 				Blockly.JavaScript.statementToCode(block, "DO") +
 				"extCall1(blockID[stacklvl-1], []);}stacklvl--;";
 		}
+	},
+	42: {
+		name: "simple_procedure",
+		json: {
+			"message0": "定义函数%1",
+			"args0": [
+				{"type": "field_input", "name": "NAME", "text": "function_name"},
+			],
+			"message1": "%1",
+			"args1": [
+				{"type": "input_statement", "name": "DO"}
+			],
+			"previousStatement": null,
+			"nextStatement": null,
+			"tooltip": "最基本的函数，调用时执行函数内的语句",
+			"colour": 250
+		},
+		initExtra: function(block){},
+		generateJS: function(block) {
+			return "extCall2(blockID[stacklvl], {typeId: 42, op: \"" +
+				block.getFieldValue("NAME") +
+				"\"});" +
+				block.getFieldValue("NAME") +
+				" = function(blockId){return function(){" + 
+				"extCall1(blockId, []);" + 
+				Blockly.JavaScript.statementToCode(block, "DO") + 
+				"extCall1(blockId, []);" + 
+				"};}(blockID[stacklvl]);";
+		}
+	},
+	43: {
+		name: "call_simple_procedure",
+		json: {
+			"message0": "调用函数%1",
+			"args0": [
+				{"type": "field_input", "name": "NAME", "text": "function_name"},
+			],
+			"previousStatement": null,
+			"nextStatement": null,
+			"tooltip": "调用你所定义的函数",
+			"colour": 270
+		},
+		initExtra: function(block){},
+		generateJS: function(block) {
+			return "extCall2(blockID[stacklvl++], {typeId: 43, op: \"" + 
+				block.getFieldValue("NAME") +
+				"\"});" + 
+				block.getFieldValue("NAME") +
+				"();extCall1(blockID[--stacklvl], []);";
+		}
 	}
 };

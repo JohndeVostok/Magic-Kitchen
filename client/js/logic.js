@@ -1017,6 +1017,12 @@ function Logic()
 		}
 	}
 
+	var raiseErr = function(op)
+	{
+		validator.invalid(op);
+		validator.validate();
+	}
+
 //functions for UI
 
 	this.start = function()
@@ -1097,6 +1103,8 @@ function Logic()
 			case 41:
 				return branch(op.op);
 			break;
+			case 43:
+				return raiseErr(op.op);
 			default:
 			//nothing
 			break;
