@@ -170,3 +170,15 @@ def share_solution(request):
     solution.save()
     ret['status'] = 1000 #'succeeded'
     return json_response(ret)
+
+def get_all_shared_solution(request):
+    content = request.POST
+    ret = {}
+
+    shared_solution = Solution.objects.filter(shared = True)
+    shared_solution_id = []
+    for solution in shared_solution:
+        shared_solution_id.append(solution.solution_id)
+    ret['all_shared_solution'] = json.dumps(shared_solution_id)
+    ret['status'] = 1000 #'succeeded'
+    return json_response(ret)

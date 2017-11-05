@@ -211,6 +211,14 @@
             status = 1036
             status = 1037
 
+### Get All Shared Solution
+        Post('api/get_all_shared_solution')
+        不需要登录即可调用此API。
+
+        return json dict:
+            status = 1000
+                all_shared_solution = all_shared_solution_id_list_jsonStr
+
 ### VIP Charge
         Post('/api/vip_charge'), attributes: days = day_num_Int
         要求days属于区间[1,99999]
