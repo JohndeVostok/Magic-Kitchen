@@ -863,6 +863,74 @@ class LevelSystemTestCase(TestCase):
         self.assertEqual(ret['status'], 1000) #'succeeded'
         self.assertEqual(json.loads(ret['all_level']), [1, 2])
 
+    def test_get_shared_all_level(self):
+        c = Client()
+
+        #register
+        response = c.post('/api/register', {'name': 'sth', 'password': 'abc', 'email': '765215342@qq.com'})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 1000) #'succeeded'
+
+        #login
+        response = c.post('/api/login', {'name': 'sth', 'password': 'abc'})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 1000) #'succeeded'
+
+        #new user-made level
+        response = c.post('/api/new_usermade_level', {'level_info': 'jsonStr'})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 1000) #'succeeded'
+
+        #test get all shared level
+        response = c.post('/api/get_all_shared_level')
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 1000) #'succeeded'
+        self.assertEqual(json.loads(ret['all_shared_level']), [])
+
+        level1 = Level.objects.filter(level_id = 1)[0]
+        level1.shared = True
+        level1.save()
+
+        #test get all shared level
+        response = c.post('/api/get_all_shared_level')
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 1000) #'succeeded'
+        self.assertEqual(json.loads(ret['all_shared_level']), [1])
+
+        user = User.objects.filter(name = 'sth')[0]
+        user.authority = 3
+        user.save()
+        #new default level
+        response = c.post('/api/new_default_level', {'default_level_id': 1, 'level_info': 'jsonStr'})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 1000) #'succeeded'
+
+        #test get all shared level
+        response = c.post('/api/get_all_shared_level')
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 1000) #'succeeded'
+        self.assertEqual(json.loads(ret['all_shared_level']), [1])
+
+        level2 = Level.objects.filter(default_level_id = 1)[0]
+        level2.shared = True
+        level2.save()
+
+        #test get all shared level
+        response = c.post('/api/get_all_shared_level')
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 1000) #'succeeded'
+        self.assertEqual(json.loads(ret['all_shared_level']), [1, 2])
+
+        level2 = Level.objects.filter(level_id = 2)[0]
+        level2.shared = False
+        level2.save()
+        
+        #test get all shared level
+        response = c.post('/api/get_all_shared_level')
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 1000) #'succeeded'
+        self.assertEqual(json.loads(ret['all_shared_level']), [1])
+
 class SolutionSystemTestCase(TestCase):
     def test_new_solution(self):
         c = Client()

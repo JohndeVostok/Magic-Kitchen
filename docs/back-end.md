@@ -157,6 +157,14 @@
                 all_level = all_level_id_list_jsonStr
             status = 1001
             status = 1031
+
+### Get All Shared Level
+        Post('api/get_all_shared_level')
+        不需要登录即可调用此API。
+
+        return json dict:
+            status = 1000
+                all_shared_level = all_shared_level_id_list_jsonStr
     
 ### New Solution
         Post('/api/new_solution') , attributes: level_id: idInt, solution_info: jsonStr, score: scoreInt

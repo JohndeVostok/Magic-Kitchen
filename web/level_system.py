@@ -266,3 +266,15 @@ def get_all_level(request):
     ret['all_level'] = json.dumps(all_level_id)
     ret['status'] = 1000 #'succeeded'
     return json_response(ret)
+
+def get_all_shared_level(request):
+    content = request.POST
+    ret = {}
+
+    shared_level = Level.objects.filter(shared = True)
+    shared_level_id = []
+    for level in shared_level:
+        shared_level_id.append(level.level_id)
+    ret['all_shared_level'] = json.dumps(shared_level_id)
+    ret['status'] = 1000 #'succeeded'
+    return json_response(ret)
