@@ -57,6 +57,15 @@ var config = {
 	blocklyConstants: {
 		overallInitialization: "stacklvl=0;blockID=[];simpleRepeatVars=[];",
 		eachInitialization: "blockID[stacklvl] = %1;",
-		overallFinalization: "extCall1(\"\", [{\"typeId\": 50}]);"
+		overallFinalization: "extCall1(\"\", [{\"typeId\": 50}]);",
+		userDefinedNamePacker: function(userDefinedName) {
+			var name_chars = userDefinedName.split("");
+			var safe_strs = [];
+			for (let i in name_chars)
+			{
+				safe_strs[i] = name_chars[i].charCodeAt(0) + "Sep";
+			}
+			return "userDefinedName" + safe_strs.join("");
+		}
 	}
 };

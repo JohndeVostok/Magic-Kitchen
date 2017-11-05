@@ -430,10 +430,12 @@ var blocks = {
 		},
 		initExtra: function(block){},
 		generateJS: function(block) {
+			var fun_name = "userDefinedSimpleProcedureWithName" + 
+				config.blocklyConstants.userDefinedNamePacker(block.getFieldValue("NAME"));
 			return "extCall2(blockID[stacklvl], {typeId: 42, op: \"" +
-				block.getFieldValue("NAME") +
+				fun_name +
 				"\"});" +
-				block.getFieldValue("NAME") +
+				fun_name +
 				" = function(blockId){return function(){" + 
 				"extCall1(blockId, []);" + 
 				Blockly.JavaScript.statementToCode(block, "DO") + 
@@ -455,10 +457,12 @@ var blocks = {
 		},
 		initExtra: function(block){},
 		generateJS: function(block) {
+			var fun_name = "userDefinedSimpleProcedureWithName" + 
+				config.blocklyConstants.userDefinedNamePacker(block.getFieldValue("NAME"));
 			return "extCall2(blockID[stacklvl++], {typeId: 43, op: \"" + 
-				block.getFieldValue("NAME") +
+				fun_name +
 				"\"});" + 
-				block.getFieldValue("NAME") +
+				fun_name +
 				"();extCall1(blockID[--stacklvl], []);";
 		}
 	}
