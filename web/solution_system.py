@@ -114,4 +114,59 @@ def get_solution_info(request):
     ret['score'] = solution.score #score range is [0,4], 0 means not pass, 4 means not need to score
     ret['level_id'] = solution.level_id
     ret['author'] = solution.user_name
+    ret['shared'] = solution.shared
+    return json_response(ret)
+
+def share_solution(request):
+    content = request.POST
+    ret = {}
+
+    session = get_session(request)
+    if (session == None):
+        ret['status'] = 1001 #'please log in first'
+        return json_response(ret)
+
+    if not 'solution_id' in content:
+        ret['status'] = 1035 #'solution id can't be empty'
+        return json_response(ret)
+
+    if not 'share' in content:
+        ret['status'] = 1033 #'share can't be empty'
+        return json_response(ret)
+    try:
+        _shared = int(content['share'])
+    except ValueError,e :
+        print e
+        ret['status'] = 1034 #'the input share needs to be 0 or 1'
+        return json_response(ret)
+    if (_shared != 0) and (_shared != 1):
+        ret['status'] = 1034 #'the input share needs to be 0 or 1'
+        return json_response(ret)
+
+    try:
+        _solution_id = int(content['solution_id'])
+    except ValueError,e :
+        print e
+        ret['status'] = 1036 #'the input solution id needs to be an Integer'
+        return json_response(ret)
+
+    if not int_range(_solution_id):
+        ret['status'] = 1036 #'the input solution id needs to be an Integer'
+        return json_response(ret)
+
+    solution_id_filter = Solution.objects.filter(solution_id = _solution_id)
+    if len(solution_id_filter) == 0:
+        ret['status'] = 1037 #'this solution doesn't exist'
+        return json_response(ret)
+
+    user = User.objects.filter(name = session)[0]
+    solution = solution_id_filter[0]
+
+    #only the author or admin can share this solution
+    if not ((session == solution.user_name) or (user.authority >= 3)):
+        ret['status'] = 1031 #'you don't have operation authority'
+        return json_response(ret)
+    solution.shared = (_shared == 1)
+    solution.save()
+    ret['status'] = 1000 #'succeeded'
     return json_response(ret)

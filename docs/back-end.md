@@ -192,6 +192,21 @@
                 score = score_Int([0,4])
                 level_id = level_id_Int (this solution belongs to)
                 author = author_name_Str
+                shared = shared_Bool
+            status = 1035
+            status = 1036
+            status = 1037
+
+### Share Solution
+        Post('api/share_solution'), attributes: solution_id = solution_id_Int, share = Int(0 or 1, 0 means not share, 1 means share)
+        用户必须登录才能分享/取消分享解法。只有该解法的创建者或管理员才有操作权限。
+
+        return json dict:
+            status = 1000
+            status = 1001
+            status = 1031
+            status = 1033
+            status = 1034
             status = 1035
             status = 1036
             status = 1037
