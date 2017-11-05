@@ -116,6 +116,7 @@ def get_level_info(request):
 
         ret['status'] = 1000 #'succeeded'
         ret['level_info'] = default_level_id_filter[0].info #json
+        ret['shared'] = default_level_id_filter[0].shared #bool
 
     else:
         try:
@@ -149,6 +150,7 @@ def get_level_info(request):
 
         ret['status'] = 1000 #'succeeded'
         ret['level_info'] = level_id_filter[0].info #json
+        ret['shared'] = level_id_filter[0].shared #bool
 
     return json_response(ret)
 
@@ -188,6 +190,60 @@ def new_usermade_level(request):
 
     return json_response(ret)
 
+def share_level(request):
+    content = request.POST
+    ret = {}
+
+    session = get_session(request)
+    if (session == None):
+        ret['status'] = 1001 #'please log in first'
+        return json_response(ret)
+
+    if not 'level_id' in content:
+        ret['status'] = 1027 #'level id can't be empty'
+        return json_response(ret)
+
+    if not 'share' in content:
+        ret['status'] = 1033 #'share can't be empty'
+        return json_response(ret)
+    try:
+        _shared = int(content['share'])
+    except ValueError,e :
+        print e
+        ret['status'] = 1034 #'the input share needs to be 0 or 1'
+        return json_response(ret)
+    if (_shared != 0) and (_shared != 1):
+        ret['status'] = 1034 #'the input share needs to be 0 or 1'
+        return json_response(ret)
+
+    try:
+        _level_id = int(content['level_id'])
+    except ValueError,e :
+        print e
+        ret['status'] = 1019 #'the input level id needs to be an Integer'
+        return json_response(ret)
+
+    if not int_range(_level_id):
+        ret['status'] = 1019 #'the input level id needs to be an Integer'
+        return json_response(ret)
+
+    level_id_filter = Level.objects.filter(level_id = _level_id)
+    if len(level_id_filter) == 0:
+        ret['status'] = 1017 #'this level doesn't exist'
+        return json_response(ret)
+
+    user = User.objects.filter(name = session)[0]
+    level = level_id_filter[0]
+
+    #only the author or admin can share this level
+    if not ((session == level.user_name) or (user.authority >= 3)):
+        ret['status'] = 1031 #'you don't have operation authority'
+        return json_response(ret)
+    level.shared = (_shared == 1)
+    level.save()
+    ret['status'] = 1000 #'succeeded'
+    return json_response(ret)
+
 def get_all_level(request):
     content = request.POST
     ret = {}
@@ -208,5 +264,17 @@ def get_all_level(request):
     for level in all_level:
         all_level_id.append(level.level_id)
     ret['all_level'] = json.dumps(all_level_id)
+    ret['status'] = 1000 #'succeeded'
+    return json_response(ret)
+
+def get_all_shared_level(request):
+    content = request.POST
+    ret = {}
+
+    shared_level = Level.objects.filter(shared = True)
+    shared_level_id = []
+    for level in shared_level:
+        shared_level_id.append(level.level_id)
+    ret['all_shared_level'] = json.dumps(shared_level_id)
     ret['status'] = 1000 #'succeeded'
     return json_response(ret)

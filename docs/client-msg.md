@@ -39,6 +39,8 @@ msg is a map for message between blocks.
         1030 the input days needs to be in range[1, 99999]    天数需要属于区间[1,99999]
         1031 you don't have operation authority    你没有操作权限
         1032 you can't create more level    你无法创建更多关卡
+        1033 share can't be empty    是否分享不能为空
+        1034 the input share needs to be 0 or 1 输入的"是否分享"需要是0或1
 
 	Functions for other blocks
 		class msg

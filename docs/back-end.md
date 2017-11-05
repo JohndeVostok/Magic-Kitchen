@@ -93,6 +93,7 @@
         return json dict:
             status = 1000
                 level_info = json_info_str
+                shared = shared_bool
 
             status = 1001
             status = 1016
@@ -132,6 +133,20 @@
             status = 1021
             status = 1032
 
+### Share Level
+        Post('/api/share_level'), attributes: level_id = idInt, share = Int(0 or 1, 0 means not share, 1 means share)
+        用户必须登录才能分享/取消分享关卡。只有该关卡的创建者或管理员才有操作权限。
+
+        return json dict:
+            status = 1000
+            status = 1001
+            status = 1017
+            status = 1019
+            status = 1027
+            status = 1031
+            status = 1033
+            status = 1034
+
 ### Get All Level
         Post('api/get_all_level')
         用户必须登录，且具有管理员及以上权限才可以调用该API。
@@ -142,6 +157,14 @@
                 all_level = all_level_id_list_jsonStr
             status = 1001
             status = 1031
+
+### Get All Shared Level
+        Post('api/get_all_shared_level')
+        不需要登录即可调用此API。
+
+        return json dict:
+            status = 1000
+                all_shared_level = all_shared_level_id_list_jsonStr
     
 ### New Solution
         Post('/api/new_solution') , attributes: level_id: idInt, solution_info: jsonStr, score: scoreInt
