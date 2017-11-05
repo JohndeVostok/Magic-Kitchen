@@ -30,46 +30,28 @@ def new_std_solution(request):
         ret['status'] = 1031 #'you don't have operation authority'
         return json_response(ret)
 
-    if not (('level_id' in content) or ('default_level_id' in content)):
-        ret['status'] = 1016 #'level id and default level id can't be empty in the same time'
+    if not 'default_level_id' in content:
+        ret['status'] = 1020 #'default level id can't be empty'
         return json_response(ret)
 
-    if 'default_level_id' in content:
-        try:
-            _default_level_id = int(content['default_level_id'])
-        except ValueError,e :
-            print e
-            ret['status'] = 1018 #'the input default level id needs to be an Integer'
-            return json_response(ret)
+    try:
+        _default_level_id = int(content['default_level_id'])
+    except ValueError,e :
+        print e
+        ret['status'] = 1018 #'the input default level id needs to be an Integer'
+        return json_response(ret)
 
-        if not int_range(_default_level_id):
-            ret['status'] = 1018 #'the input default level id needs to be an Integer'
-            return json_response(ret)
+    if not int_range(_default_level_id):
+        ret['status'] = 1018 #'the input default level id needs to be an Integer'
+        return json_response(ret)
 
-        default_level_id_filter = Level.objects.filter(default_level_id = _default_level_id)
-        if len(default_level_id_filter) == 0:
-            ret['status'] = 1017 #'this level doesn't exist'
-            return json_response(ret)
+    default_level_id_filter = Level.objects.filter(default_level_id = _default_level_id)
+    if len(default_level_id_filter) == 0:
+        ret['status'] = 1017 #'this level doesn't exist'
+        return json_response(ret)
 
-        level = default_level_id_filter[0]
-        _level_id = default_level_id_filter[0].level_id
-    else:
-        try:
-            _level_id = int(content['level_id'])
-        except ValueError,e :
-            print e
-            ret['status'] = 1019 #'the input level id needs to be an Integer'
-            return json_response(ret)
-
-        if not int_range(_level_id):
-            ret['status'] = 1019 #'the input level id needs to be an Integer'
-            return json_response(ret)
-
-        level_id_filter = Level.objects.filter(level_id = _level_id)
-        if len(level_id_filter) == 0:
-            ret['status'] = 1017 #'this level doesn't exist'
-            return json_response(ret)
-        level = level_id_filter[0]
+    level = default_level_id_filter[0]
+    _level_id = default_level_id_filter[0].level_id
 
     change = False
     if 'edit' in content:
@@ -102,13 +84,15 @@ def new_std_solution(request):
         solution.save()
         level.std_solution_id = _solution_id
         level.save()
+        ret['solution_id'] = _solution_id
     else:
         solution = Solution.objects.create(user_name = session, level_id = _level_id, info = _solution_info, score = 3)    
         solution_dict[str(_level_id)] = solution.solution_id
-        user.solution_dict = json.dumps(solution_dict)
-        user.save()
+        admin.solution_dict = json.dumps(solution_dict)
+        admin.save()
         level.std_solution_id = solution.solution_id
         level.save()
+        ret['solution_id'] = solution.solution_id
 
     ret['status'] = 1000 #'succeeded'
     return json_response(ret)
