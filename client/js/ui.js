@@ -84,6 +84,7 @@ var ui = function() {
 	var mapTopPos;
 	var mapSpriteSheets = {};
 	var mapSprites = [];
+	var mapTextSprites = [];
 	var objectSpriteSheets = {};
 	var playerSpriteSheet;
 	var playerSprite = undefined;
@@ -403,6 +404,7 @@ var ui = function() {
 			stage.removeChild(mapSprites[i]);
 		}
 		mapSprites = [];
+		mapTextSprites = [];
 		
 		for (var i = 0; i < N; i++) {
 			for (var j = 0; j < M; j++) {
@@ -426,6 +428,15 @@ var ui = function() {
 				);
 				mapSprites.push(s);
 				stage.addChild(s);
+				
+				var ts = new createjs.Text("", "15px Arial", "#00e077");
+				ts.setTransform(
+					mapLeftPos + mapGridWidth * (j + 0.03),
+					mapTopPos + mapGridHeight * (i + 0.8)
+				);
+				mapSprites.push(ts);
+				mapTextSprites.push(ts);
+				stage.addChild(ts);
 			}
 		}
 		
@@ -507,6 +518,8 @@ var ui = function() {
 			runDeleteItem(animation.args);
 		} else if (animation.type == "setItemValue") {
 			runSetItemValue(animation.args);
+		} else if (animation.type == "setMapGridValue") {
+			runSetMapGridValue(animation.args);
 		} else if (animation.type == "setInput") {
 			runSetInput(animation.args);
 		} else if (animation.type == "setOutput") {
@@ -796,6 +809,12 @@ var ui = function() {
 		setTimeout(setAnimationComplete, 0);
 	};
 	
+	var runSetMapGridValue = function(args) {
+		mapTextSprites[args.pos].text = args.value;
+		
+		setTimeout(setAnimationComplete, 0);
+	};
+	
 	var getIOItemPosTransform = function(pos, isOutput = false) {
 		return {
 			x: IOItemsLeftPos + pos * (IOItemsWidth + IOItemsHorizontalGap),
@@ -950,6 +969,19 @@ var ui = function() {
 		});
 	};
 	
+	var setMapGridValue = function(pos, value) {
+		pos = checkValidMapPos(pos);
+		value = value == undefined ? "" : value + "";
+		
+		animationQueue.push({
+			type: "setMapGridValue",
+			args: {
+				pos: pos,
+				value: value
+			}
+		});
+	};
+	
 	var deepCopyItemList = function(itemList) {
 		var ret = [];
 		for (var i in itemList) {
@@ -1034,6 +1066,7 @@ var ui = function() {
 		setItemValue: setItemValue,
 		addAnimation: addAnimation,
 		addPlayerAnimation: addPlayerAnimation,
+		setMapGridValue: setMapGridValue,
 		setInput: setInput,
 		setOutput: setOutput,
 		blockStep: blockStep,

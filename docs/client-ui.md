@@ -95,6 +95,12 @@
 			The specifications of pos and dir are discussed in the following section.
 			return: undefined
 
+		ui.setMapGridValue(pos, value)
+			Set the value (text) of the map grid at pos to value.
+			pos: Integer
+			value: String
+			return: undefined
+
 		ui.setInput(itemList)
 			Set the input queue to itemList.
 			(Currently we don't have the detailed animations of input/output queue)
