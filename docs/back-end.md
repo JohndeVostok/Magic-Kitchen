@@ -175,6 +175,16 @@
         Post('/api/set_admin'), attributes: name = user_name_str
         要求已登录，且拥有超级管理员权限。参数name为待设置为管理员的用户名。
 
+        关于创建超级管理员的方法：我在网上找到的创建django自带超级管理员的方法好像不能使用我们自己的model，所以现在并没有找到太好的办法，暂时可以先直接操作数据库来创建，方法如下：
+        在命令行中输入：
+            python manage.py shell
+            from web.models import User
+            import json
+            import django.utils import timezone
+            super_admin = User.objects.create(name = 'super_admin', password = 'pw', email = 'email@xxx.com', solution_dict = json.dumps({}), authority = 4, vip_due_time = timezone.now())
+        其中用户名、密码、邮箱等可以修改，只需要让authority = 4即可。
+        等忙完手里的活，我再看一下有没有更好的（例如通过配置文件）创建自己model的超级管理员的方法。
+
         return json dict
             status = 1000
             status = 1001
