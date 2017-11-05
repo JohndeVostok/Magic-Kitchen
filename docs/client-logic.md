@@ -122,7 +122,7 @@
 					output
 				41: if
 					return result of expr
-				50: finish;
+				50: finish
 					end of code.
 
 #### Logic operations called by UI
