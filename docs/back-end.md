@@ -166,6 +166,9 @@
             status = 1000
                 all_shared_level = all_shared_level_id_list_jsonStr
     
+### New Std Solution
+        由于暂时没有需要显示标准解法的需求，所以为了安全考虑，不会在get_level_info中返回默认关卡的std_solution_id，std solution目前仅用于和用户解法作对比进行打分。
+
 ### New Solution
         Post('/api/new_solution') , attributes: level_id: idInt, solution_info: jsonStr, score: scoreInt
         其中，score应该是[0,4]的整数，0表示未通过，1～3表示评级，4表示通过（用户自定义关卡仅记是否通过，不评级）
