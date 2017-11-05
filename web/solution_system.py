@@ -82,3 +82,36 @@ def new_solution(request):
 
     ret['status'] = 1000 #'succeeded'
     return json_response(ret)
+
+
+def get_solution_info(request):
+    content = request.POST
+    ret = {}
+
+    if not 'solution_id' in content:
+        ret['status'] = 1035 #'solution id can't be empty'
+        return json_response(ret)
+
+    try:
+        _solution_id = int(content['solution_id'])
+    except ValueError,e :
+        print e
+        ret['status'] = 1036 #'the input solution id needs to be an Integer'
+        return json_response(ret)
+
+    if not int_range(_solution_id):
+        ret['status'] = 1036 #'the input solution id needs to be an Integer'
+        return json_response(ret)
+
+    solution_id_filter = Solution.objects.filter(solution_id = _solution_id)
+    if len(solution_id_filter) == 0:
+        ret['status'] = 1037 #'this solution doesn't exist'
+        return json_response(ret)
+
+    solution = solution_id_filter[0]
+    ret['status'] = 1000 #'succeeded'
+    ret['solution_info'] = solution.info
+    ret['score'] = solution.score #score range is [0,4], 0 means not pass, 4 means not need to score
+    ret['level_id'] = solution.level_id
+    ret['author'] = solution.user_name
+    return json_response(ret)
