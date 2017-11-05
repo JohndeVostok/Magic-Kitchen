@@ -19,6 +19,7 @@ class Level(models.Model):
     level_id = models.AutoField(primary_key = True)
     info = models.TextField()
     user_name = models.CharField(max_length = 20, default = "")
+    shared = models.BooleanField(default = False)
 
 class Solution(models.Model):
     user_name = models.CharField(max_length = 20)

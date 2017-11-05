@@ -454,6 +454,7 @@ class CustomSystemTestCase(TestCase):
         ret = json.loads(response.content)
         self.assertEqual(ret['status'], 1000) #'succeeded'
         self.assertEqual(ret['level_info'], 'vip level')
+        self.assertEqual(ret['shared'], False)
 
         user.vip_due_time = timezone.now()
         user.save()
@@ -530,6 +531,7 @@ class LevelSystemTestCase(TestCase):
         ret = json.loads(response.content)
         self.assertEqual(ret['status'], 1000) #'succeeded'
         self.assertEqual(ret['level_info'], 'vip level')
+        self.assertEqual(ret['shared'], False)
 
         user.authority = 1
         user.save()
@@ -587,6 +589,8 @@ class LevelSystemTestCase(TestCase):
         ret = json.loads(response.content)
         self.assertEqual(ret['status'], 1000) #'succeeded'
         self.assertEqual(ret['level_info'], 'vip level')
+        self.assertEqual(ret['shared'], False)
+
 
     def test_new_default_level(self):
         c = Client()
@@ -724,6 +728,93 @@ class LevelSystemTestCase(TestCase):
         response = c.post('/api/new_usermade_level', {'level_info': 'jsonStr'})
         ret = json.loads(response.content)
         self.assertEqual(ret['status'], 1032) #'you can't create more level'
+
+    def test_share_level(self):
+        c = Client()
+
+        #test share level before login
+        response = c.post('/api/share_level')
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 1001) #'please log in first'
+
+        #register
+        response = c.post('/api/register', {'name': 'sth', 'password': 'abc', 'email': '765215342@qq.com'})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 1000) #'succeeded'
+
+        #login
+        response = c.post('/api/login', {'name': 'sth', 'password': 'abc'})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 1000) #'succeeded'
+
+        #test empty level id
+        response = c.post('/api/share_level')
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 1027) #'level id can't be empty'
+
+        #test empty share or not
+        response = c.post('/api/share_level', {'level_id': 1})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 1033) #'share can't be empty'
+
+        #test share isn't 0 or 1
+        response = c.post('/api/share_level', {'level_id': 1, 'share': 'a'})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 1034) #'the input share needs to be 0 or 1'
+
+        #test share isn't 0 or 1
+        response = c.post('/api/share_level', {'level_id': 1, 'share': 2})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 1034) #'the input share needs to be 0 or 1'
+
+        #test level id is not Integer
+        response = c.post('/api/share_level', {'level_id': 'a', 'share': 1})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 1019) #'the input level id needs to be an Integer'
+
+        #test level id is not Integer
+        response = c.post('/api/share_level', {'level_id': 2147483648, 'share': 1})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 1019) #'the input level id needs to be an Integer'
+
+        #test level doesn't exist
+        response = c.post('/api/share_level', {'level_id': 1, 'share': 1})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 1017) #'this level doesn't exist'
+
+        level1 = Level.objects.create(info = 'level1', user_name = 'sth2', default_level_id = -1)
+
+        #test session isn't author or admin
+        response = c.post('/api/share_level', {'level_id': level1.level_id, 'share': 1})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 1031) #'you don't have operation authority'
+
+        level2 = Level.objects.create(info = 'level2', user_name = 'sth', default_level_id = -1)
+
+        #test share level
+        response = c.post('/api/share_level', {'level_id': level2.level_id, 'share': 1})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 1000) #'succeeded'
+        level2 = Level.objects.filter(level_id = 2)[0]
+        self.assertEqual(level2.shared, True)
+
+        user = User.objects.filter(name = 'sth')[0]
+        user.authority = 3
+        user.save()
+
+        #test admin share level
+        response = c.post('/api/share_level', {'level_id': level1.level_id, 'share': 1})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 1000) #'succeeded'
+        level1 = Level.objects.filter(level_id = 1)[0]
+        self.assertEqual(level1.shared, True)
+
+        #test not share level
+        response = c.post('/api/share_level', {'level_id': level1.level_id, 'share': 0})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 1000) #'succeeded'
+        level1 = Level.objects.filter(level_id = 1)[0]
+        self.assertEqual(level1.shared, False)
 
     def test_get_all_level(self):
         c = Client()
