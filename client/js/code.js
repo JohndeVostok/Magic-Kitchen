@@ -102,8 +102,8 @@ var code = function() {
 				if (funcList[op.op] == undefined)
 				{
 					logic.step({typeId: 43, op: 7000});
-					calledLogic = true;
 				}
+				calledLogic = true;
 			break;
 		};
 	};
