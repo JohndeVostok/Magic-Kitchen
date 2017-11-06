@@ -1275,6 +1275,7 @@ function Logic()
 
 	this.doNewLevel = function(content, callback)
 	{
+		user.setLevelId(0);
 		user.editContent(content);
 		callback(undefined, {status: "succeeded"});
 	};
@@ -1298,6 +1299,7 @@ function Logic()
 		network.newUsermadeLevel(content, function(res) {
 			if (res.status == 1000)
 			{
+				user.setLevelId(res.level_id);
 				alert(res.level_id);
 				callback(undefined, {
 					status: "succeeded"
