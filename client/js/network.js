@@ -197,16 +197,6 @@ var network = function() {
 		);
 	};
 
-	var newUsermadeLevel = function(levelInfo, callback) {
-		postRequest(
-			"api/new_usermade_level",
-			{
-				"level_info": levelInfo
-			},
-			callback
-		);
-	}
-
 	var shareLevel = function(levelId, callback) {
 		postRequest(
 			"api/share_level",
