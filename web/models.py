@@ -20,6 +20,7 @@ class Level(models.Model):
     info = models.TextField()
     user_name = models.CharField(max_length = 20, default = "")
     shared = models.BooleanField(default = False)
+    std_solution_id = models.IntegerField(default = -1) #-1 means this level is not default level, or admin haven't created std solution for this default level yet
 
 class Solution(models.Model):
     user_name = models.CharField(max_length = 20)

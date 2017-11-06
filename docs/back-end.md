@@ -104,9 +104,9 @@
             
 
 ### New Default Level
-        Post('/api/new_default_level'), attributes: default_level_id = idInt, level_info = jsonStr, edit = boolStr(optional, default = 'False')
+        Post('/api/new_default_level'), attributes: default_level_id = idInt, level_info = jsonStr, edit = Int(0 or 1, 0 means create, 1 means edit) 
         创建预置关卡
-        若想修改已存在的预置关卡，则传入参数edit = 'True';  注意，传入这个参数时要求该关卡已经存在。
+        若想修改已存在的预置关卡，则传入参数edit = 1;  注意，传入这个参数时要求该关卡已经存在。
 
         TODO:目前只要POST就可以创建默认关卡，而不需要admin权限或其他手段
 
@@ -166,14 +166,34 @@
             status = 1000
                 all_shared_level = all_shared_level_id_list_jsonStr
     
+### New Std Solution
+        Post('/api/new_std_solution') attributes: default_level_id= idInt, solution_info= jsonStr, edit= Int(0 or 1, 0 means create, 1 means edit) 
+        只有管理员可以调用此API。
+        因为只有默认关卡才有标准解法，所以传的参数需要是default_level_id而不是level_id。
+        若原本该关卡没有标准解法，则无论edit是0还是1，都会创建一个标准解法；但如果原本有标准解法，edit又为0，则会报错。
+        由于暂时没有需要显示标准解法的需求，所以为了安全考虑，不会在get_level_info中返回默认关卡的std_solution_id，std solution目前仅用于和用户解法作对比进行打分。
+
+        return json dict:
+            status = 1000
+                solution_id = solution_id_Int
+            status = 1001
+            status = 1017
+            status = 1018
+            status = 1020
+            status = 1023
+            status = 1031
+            status = 1038
+            status = 1039
+
 ### New Solution
-        Post('/api/new_solution') , attributes: level_id: idInt, solution_info: jsonStr, score: scoreInt
+        Post('/api/new_solution') , attributes: level_id: idInt, solution_info= jsonStr, score= scoreInt
         其中，score应该是[0,4]的整数，0表示未通过，1～3表示评级，4表示通过（用户自定义关卡仅记是否通过，不评级）
         必须登录才能够post，会将session作为username存入该Solution
         一个用户对同一个关卡只保存一个解法，最新创建的解法将覆盖之前对该关卡的解法
 
         return json dict:
             status = 1000
+                solution_id = solution_id_Int
             status = 1001
             status = 1017
             status = 1019

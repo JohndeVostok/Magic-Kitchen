@@ -46,6 +46,8 @@ msg is a map for message between blocks.
         1035 solution id can't be empty    解法ID不能为空
         1036 the input solution id needs to be an Integer    解法ID需要是Int类型
         1037 this solution doesn't exist    这个解法不存在
+        1038 the input edit needs to be 0 or 1    输入的"是否编辑修改"需要是0或1
+        1039 this default level has already had one std solution    这个默认关卡已经有标准解法
 
 	Functions for other blocks
 		class msg

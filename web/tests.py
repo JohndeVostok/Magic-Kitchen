@@ -639,6 +639,16 @@ class LevelSystemTestCase(TestCase):
         ret = json.loads(response.content)
         self.assertEqual(ret['status'], 1018) #'the input default level id needs to be an Integer'
 
+        #test edit is not 0 or 1
+        response = c.post('/api/new_default_level', {'default_level_id': 1, 'level_info': 'jsonStr', 'edit': 'a'})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 1038) #'the input edit needs to be 0 or 1'
+
+        #test edit is not 0 or 1
+        response = c.post('/api/new_default_level', {'default_level_id': 1, 'level_info': 'jsonStr', 'edit': 2})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 1038) #'the input edit needs to be 0 or 1'
+
         #test new default level
         response = c.post('/api/new_default_level', {'default_level_id': 1, 'level_info': 'jsonStr'})
         ret = json.loads(response.content)
@@ -655,7 +665,7 @@ class LevelSystemTestCase(TestCase):
         self.assertEqual(ret['status'], 1022) #'this default level id already exists'
 
         #test edit default level
-        response = c.post('/api/new_default_level', {'default_level_id': 1, 'level_info': 'jsonStr2', 'edit': 'True'})
+        response = c.post('/api/new_default_level', {'default_level_id': 1, 'level_info': 'jsonStr2', 'edit': 1})
         ret = json.loads(response.content)
         self.assertEqual(ret['status'], 1000) #'succeeded'
         _filter = Level.objects.filter(default_level_id = 1)
@@ -676,7 +686,7 @@ class LevelSystemTestCase(TestCase):
         self.assertEqual(ret['level_id'], 3)
 
         #test edit non-existent default level
-        response = c.post('/api/new_default_level', {'default_level_id': 2, 'level_info': 'jsonStr2', 'edit': 'True'})
+        response = c.post('/api/new_default_level', {'default_level_id': 2, 'level_info': 'jsonStr2', 'edit': 1})
         ret = json.loads(response.content)
         self.assertEqual(ret['status'], 1017) #'this level doesn't exist'
 
@@ -932,6 +942,109 @@ class LevelSystemTestCase(TestCase):
         self.assertEqual(json.loads(ret['all_shared_level']), [1])
 
 class SolutionSystemTestCase(TestCase):
+    def test_new_std_solution(self):
+        c = Client()
+
+        #test not login
+        response = c.post('/api/new_std_solution', {'solution_info': 'jsonStr'})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 1001) #'please log in first'
+
+        #register
+        response = c.post('/api/register', {'name': 'sth', 'password': 'abc', 'email': '123@111.com'})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 1000) #'succeeded'
+
+        #login
+        response = c.post('/api/login', {'name': 'sth', 'password': 'abc'})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 1000) #'succeeded'
+
+        #test doesn't have authority
+        response = c.post('/api/new_std_solution', {'solution_info': 'jsonStr'})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 1031) #'you don't have operation authority'
+
+        user = User.objects.filter(name = 'sth')[0]
+        user.authority = 3
+        user.save()
+
+        #test empty default level id
+        response = c.post('/api/new_std_solution', {'solution_info': 'jsonStr'})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 1020) #'default level id can't be empty'
+
+        #test default level id is not Integer
+        response = c.post('/api/new_std_solution', {'solution_info': 'jsonStr', 'default_level_id': 'a'})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 1018) #'the input default level id needs to be an Integer'
+
+        #test default level id is not Integer
+        response = c.post('/api/new_std_solution', {'solution_info': 'jsonStr', 'default_level_id': 2147483648})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 1018) #'the input default level id needs to be an Integer'
+
+        #test default level doesn't exist
+        response = c.post('/api/new_std_solution', {'solution_info': 'jsonStr', 'default_level_id': 1})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 1017) #'this level doesn't exist'
+
+        #test new default level
+        response = c.post('/api/new_default_level', {'default_level_id': 1, 'level_info': 'jsonStr'})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 1000) #'succeeded'
+
+        #test edit is not 0 or 1
+        response = c.post('/api/new_std_solution', {'solution_info': 'jsonStr', 'default_level_id': 1, 'edit': 'a'})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 1038) #'the input edit needs to be 0 or 1'
+
+        #test edit is not 0 or 1
+        response = c.post('/api/new_std_solution', {'solution_info': 'jsonStr', 'default_level_id': 1, 'edit': 2})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 1038) #'the input edit needs to be 0 or 1'
+
+        #test empty solution info
+        response = c.post('/api/new_std_solution', {'default_level_id': 1, 'edit': 1})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 1023) #'solution info can't be empty'
+
+        #test new std solution
+        response = c.post('/api/new_std_solution', {'solution_info': 'jsonStr', 'default_level_id': 1, 'edit': 1})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 1000) #'succeeded'
+        self.assertEqual(ret['solution_id'], 1)
+        level1 = Level.objects.filter(default_level_id = 1)[0]
+        self.assertEqual(level1.std_solution_id, 1)
+        user = User.objects.filter(name = 'sth')[0]
+        self.assertEqual(json.loads(user.solution_dict), {'1' : 1})
+
+        #test default level has one std solution
+        response = c.post('/api/new_std_solution', {'solution_info': 'jsonStr', 'default_level_id': 1, 'edit': 0})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 1039) #'this default level has already had one std solution'
+
+        Level.objects.create(default_level_id = 2, info = 'level2', user_name = 'abc')
+        #test new solution
+        response = c.post('/api/new_solution', {'level_id': 2, 'solution_info': 'jsonStr', 'score': 0})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 1000) #'succeeded'
+        user = User.objects.filter(name = 'sth')[0]
+        self.assertEqual(json.loads(user.solution_dict), {'1' : 1, '2' : 2})
+
+        #test edit std solution
+        response = c.post('/api/new_std_solution', {'solution_info': 'jsonStr2', 'default_level_id': 2, 'edit': 1})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 1000) #'succeeded'
+        self.assertEqual(ret['solution_id'], 2)
+        level2 = Level.objects.filter(default_level_id = 2)[0]
+        self.assertEqual(level2.std_solution_id, 2)
+        self.assertEqual(len(Solution.objects.all()), 2)
+        solution2 = Solution.objects.filter(solution_id = 2)[0]
+        self.assertEqual(solution2.info, 'jsonStr2')
+        user = User.objects.filter(name = 'sth')[0]
+        self.assertEqual(json.loads(user.solution_dict), {'1' : 1, '2' : 2})
+
     def test_new_solution(self):
         c = Client()
 
@@ -1002,6 +1115,7 @@ class SolutionSystemTestCase(TestCase):
         response = c.post('/api/new_solution', {'level_id': 1, 'solution_info': 'jsonStr', 'score': 0})
         ret = json.loads(response.content)
         self.assertEqual(ret['status'], 1000) #'succeeded'
+        self.assertEqual(ret['solution_id'], 1)
 
         name_filter = Solution.objects.all()
         self.assertEqual(len(name_filter), 1)
@@ -1013,6 +1127,7 @@ class SolutionSystemTestCase(TestCase):
         response = c.post('/api/new_solution', {'level_id': 1, 'solution_info': 'jsonStr2', 'score': 1})
         ret = json.loads(response.content)
         self.assertEqual(ret['status'], 1000) #'succeeded'
+        self.assertEqual(ret['solution_id'], 1)
 
         name_filter = Solution.objects.all()
         self.assertEqual(len(name_filter), 1)
