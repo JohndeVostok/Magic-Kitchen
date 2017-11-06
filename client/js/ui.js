@@ -389,6 +389,15 @@ var ui = function() {
 				}
 			});
 		});
+		$("#shareLevelButton").click(function() {
+			// Init login modal.
+			logic.doShareLevel(function(err, res) {
+				if (err != undefined) {
+					alert("分享失败： " + err);
+					return;
+				}
+			});
+		});
 	};
 	
 	var start = function() {
