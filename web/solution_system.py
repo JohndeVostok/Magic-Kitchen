@@ -155,11 +155,13 @@ def new_solution(request):
         solution.info = _solution_info
         solution.score = _score
         solution.save()
+        ret['solution_id'] = _solution_id
     else:
         solution = Solution.objects.create(user_name = session, level_id = _level_id, info = _solution_info, score = _score)    
         solution_dict[str(_level_id)] = solution.solution_id
         user.solution_dict = json.dumps(solution_dict)
         user.save()
+        ret['solution_id'] = solution.solution_id
 
     ret['status'] = 1000 #'succeeded'
     return json_response(ret)

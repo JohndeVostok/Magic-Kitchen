@@ -1105,6 +1105,7 @@ class SolutionSystemTestCase(TestCase):
         response = c.post('/api/new_solution', {'level_id': 1, 'solution_info': 'jsonStr', 'score': 0})
         ret = json.loads(response.content)
         self.assertEqual(ret['status'], 1000) #'succeeded'
+        self.assertEqual(ret['solution_id'], 1)
 
         name_filter = Solution.objects.all()
         self.assertEqual(len(name_filter), 1)
@@ -1116,6 +1117,7 @@ class SolutionSystemTestCase(TestCase):
         response = c.post('/api/new_solution', {'level_id': 1, 'solution_info': 'jsonStr2', 'score': 1})
         ret = json.loads(response.content)
         self.assertEqual(ret['status'], 1000) #'succeeded'
+        self.assertEqual(ret['solution_id'], 1)
 
         name_filter = Solution.objects.all()
         self.assertEqual(len(name_filter), 1)
