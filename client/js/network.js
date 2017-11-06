@@ -229,6 +229,13 @@ var network = function() {
 		);
 	}
 
+	var getSharedLevel = function(callback) {
+		postRequest(
+			"api/get_all_shared_level",
+			callback
+		);
+	}
+
 	return {
 		doLoad: doLoad,
 		register: register,

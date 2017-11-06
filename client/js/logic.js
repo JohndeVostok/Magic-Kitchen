@@ -1316,6 +1316,23 @@ function Logic()
 			}
 		});
 	}
+
+	this.doGetSharedLevel = function(callback)
+	{
+		network.getSharedLevel(function(res) {
+			if (res.status == 1000)
+			{
+				alert(res.all_shared_level);
+				callback(undefined, {
+					status: "succeeded"
+				});
+			}
+			else
+			{
+				callback(msg.getMessage(res.status), {status: "failed"});
+			}
+		});
+	}
 }
 
 var logic = new Logic();
