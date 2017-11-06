@@ -382,7 +382,12 @@ var ui = function() {
 		});
 		$("#saveLevelButton").click(function() {
 			// Init login modal.
-			logic.doSaveLevel();
+			logic.doSaveLevel(function(err, res) {
+				if (err != undefined) {
+					alert("保存失败： " + err);
+					return;
+				}
+			});
 		});
 	};
 	
