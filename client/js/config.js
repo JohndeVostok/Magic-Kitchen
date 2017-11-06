@@ -19,6 +19,14 @@ var config = {
 		output: [[{type: 1, value: 2}, {type: 1, value: 1}]],
 		itemList: [{type: 1, value: 2, pos: 1}, {type: 1, value: 3, pos: 2}]
 	},
+	emptyLevelInfo: {
+		blockTypes: [21, 22, 23, 24, 25, 26, 31, 32, 41, 42, 43, 11],
+		playerInfo: {pos: 7, dir: 0},
+		opFloor: [1, 3, 5, 0, 6],
+		input: [[{type: 1, value: 3}, {type: 1, value: 3}]],
+		output: [[{type: 1, value: 2}, {type: 1, value: 2}]],
+		itemList: []
+	},
 	offset: [{x: 0, y: 1}, {x: 1, y: 0}, {x: 0, y: -1}, {x: -1, y: 0}],
 	
 	// Config for UI

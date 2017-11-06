@@ -1212,12 +1212,12 @@ function Logic()
 	{
 		alert(content);
 		callback(undefined, {status: "succeeded"});
-	}
+	};
 
-	this.runNewLevel(content)
+	this.runNewLevel = function(content)
 	{
 		initLevel(JSON.parse(content));
-	}
+	};
 
 }
 

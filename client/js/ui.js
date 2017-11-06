@@ -362,7 +362,7 @@ var ui = function() {
 
 		$("#newLevelButton").click(function() {
 			// Init login modal.
-			$("#newLevelContent").val("");
+			$("#newLevelContent").val(JSON.stringify(config.emptyLevelInfo));
 			$("#newLevelModal").modal();
 		});
 		$("#newLevelSubmitButton").click(function() {
@@ -371,14 +371,13 @@ var ui = function() {
 			// Call logic login interface.
 			logic.doNewLevel($("#newLevelContent").val(), function(err, res) {
 				$("#newLevelSubmitButton").removeAttr("disabled");
-				
 				if (err != undefined) {
 					alert("创建失败： " + err);
 					return;
 				}
-				
 				// Login ok
 				$("#newLevelModal").modal("hide");
+				logic.runNewLevel($("#newLevelContent").val());
 			});
 		});
 	};
