@@ -39,8 +39,6 @@
 </head>
 
 <body onload="setTimeout(main.doLoad, 100);">
-<script> document.body.style.zoom = 0.95 * Math.max(window.screen.width, 1440) / 1440; </script>
-
 <div id="mainDiv" class="container">
 	<div class="row">
 		<div class="col-xs-6">
@@ -82,7 +80,12 @@
 				</td>
 				<td class="col-xs-6">
 					<div style="height: 150px; width: 550px">
-						<div id="gameObjective" style="height: 100px; width: 550px">
+						<div id="gameObjective" style="height: 50px; width: 550px">
+							<h4>
+								<button class="btn btn-primary" id="buttonUndo">
+									<span class="glyphicon glyphicon-chevron-left"> 分享 </span>
+								</button>
+							</h4>
 						</div>
 						<div id="gameControls" style="height: 150px; width: 550px">
 							<h4>
