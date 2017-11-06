@@ -64,6 +64,8 @@ function Msg()
 		3053: ["Email can't be empty.", "邮箱不能为空。"],
 		3054: ["Invalid check password.", "两次输入密码不一致。"],
 
+		3101: ["You should save before share.", "你应该先保存再分享。"],
+
 		7000: ["No such function.", "没有这个函数。"],
 
 		9000: ["Network timeout.", "网络请求超时。"]

@@ -358,6 +358,56 @@ var ui = function() {
 				$("#changePasswordModal").modal("hide");
 			});
 		});
+
+
+		$("#newLevelButton").click(function() {
+			// Init login modal.
+			$("#newLevelContent").val(logic.getUserContent);
+			$("#newLevelModal").modal();
+		});
+		$("#newLevelSubmitButton").click(function() {
+			$("#newLevelSubmitButton").attr("disabled", "disabled");
+			
+			// Call logic login interface.
+			logic.doNewLevel($("#newLevelContent").val(), function(err, res) {
+				$("#newLevelSubmitButton").removeAttr("disabled");
+				if (err != undefined) {
+					alert("创建失败： " + err);
+					return;
+				}
+				// Login ok
+				$("#newLevelModal").modal("hide");
+				logic.runNewLevel($("#newLevelContent").val());
+			});
+		});
+		$("#saveLevelButton").click(function() {
+			// Init login modal.
+			logic.doSaveLevel(function(err, res) {
+				if (err != undefined) {
+					alert("保存失败： " + err);
+					return;
+				}
+			});
+		});
+		$("#shareLevelButton").click(function() {
+			// Init login modal.
+			logic.doShareLevel(function(err, res) {
+				if (err != undefined) {
+					alert("分享失败： " + err);
+					return;
+				}
+				alert("shared");
+			});
+		});
+		$("#getSharedLevelButton").click(function() {
+			// Init login modal.
+			logic.doGetSharedLevel(function(err, res) {
+				if (err != undefined) {
+					alert("查询失败： " + err);
+					return;
+				}
+			});
+		});
 	};
 	
 	var start = function() {

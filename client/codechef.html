@@ -39,8 +39,6 @@
 </head>
 
 <body onload="setTimeout(main.doLoad, 100);">
-<script> document.body.style.zoom = 0.95 * Math.max(window.screen.width, 1440) / 1440; </script>
-
 <div id="mainDiv" class="container">
 	<div class="row">
 		<div class="col-xs-6">
@@ -82,7 +80,21 @@
 				</td>
 				<td class="col-xs-6">
 					<div style="height: 150px; width: 550px">
-						<div id="gameObjective" style="height: 100px; width: 550px">
+						<div id="gameObjective" style="height: 50px; width: 550px">
+							<h4>
+								<button class="btn btn-primary" id="newLevelButton">
+									<span class="glyphicon glyphicon-pencil"> 创建 </span>
+								</button>
+								<button class="btn btn-primary" id="saveLevelButton">
+									<span class="glyphicon glyphicon-star"> 保存 </span>
+								</button>
+								<button class="btn btn-primary" id="shareLevelButton">
+									<span class="glyphicon glyphicon-star"> 分享 </span>
+								</button>
+								<button class="btn btn-primary" id="getSharedLevelButton">
+									<span class="glyphicon glyphicon-star"> 查找 </span>
+								</button>
+							</h4>
 						</div>
 						<div id="gameControls" style="height: 150px; width: 550px">
 							<h4>
@@ -271,6 +283,44 @@
 		</div>
 	</div>
 </div>
+
+<div class="modal fade" id="newLevelModal" tabindex="-1" role="dialog">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal">
+					<span aria-hidden="true"> &times; </span>
+				</button>
+				<h4 class="modal-title">
+					创建你自己的关卡
+				</h4>
+			</div>
+			<div class="modal-body">
+				<form action="javascript:void(0);">
+					<div class="form-group">
+						<label for="newLevelContent" class="control-label">
+							<span class="glyphicon glyphicon-pencil" />
+							<span> 关卡： </span>
+						</label>
+						<textarea class="form-control" id="newLevelContent" style="height: 300px">
+						</textarea>
+					</div>
+				</form>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-primary" id="newLevelSubmitButton">
+					<span class="glyphicon glyphicon-ok" />
+					<span> 确定 </span>
+				</button>
+				<button type="button" class="btn btn-default" data-dismiss="modal">
+					<span class="glyphicon glyphicon-remove" />
+					<span> 取消 </span>
+				</button>
+			</div>
+		</div>
+	</div>
+</div>
+
 
 </body>
 

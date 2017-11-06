@@ -29,6 +29,54 @@ function Logic()
 
 	var validator = new Validator();
 
+	function User()
+	{
+		var status = false;
+		var username = "";
+		var content = "";
+		var levelId = 0;
+
+		this.status = function()
+		{
+			return status;
+		}
+
+		this.login = function(usernameIn)
+		{
+			status = true;
+			username = usernameIn;
+			editLevel = "";
+		};
+
+		this.logout = function()
+		{
+			status = false;
+			username = "";
+		}
+
+		this.editContent = function(str)
+		{
+			content = str;
+		}
+
+		this.getContent = function()
+		{
+			return content;
+		};
+
+		this.setLevelId = function(id)
+		{
+			levelId = id;
+		};
+
+		this.getLevelId = function()
+		{
+			return levelId;
+		};
+	}
+
+	var user = new User();
+
 	function State()
 	{
 		var player = {pos: 0, dir: 0, haveItem: 0, itemId: 0}
@@ -666,14 +714,31 @@ function Logic()
 	this.loadLevel = function(levelId)
 	{
 		if (levelId == undefined)
-			levelId = config.defaultOnlineLevelId;
-		if (config.useFakeLevel)
-			initLevel(config.fakeLevelInfo);
-		else network.getDefaultLevelInfo(
+		{
+			if (config.useFakeLevel)
+				initLevel(config.fakeLevelInfo);
+			else
+			{
+				levelId = config.defaultOnlineLevelId;
+				network.getDefaultLevelInfo(levelId, function(data){
+					if (data["status"] == 1000)
+					{
+						alert("!!!");
+						user.setLevelId(levelId);
+						initLevel(JSON.parse(data["level_info"]));
+					}
+					else alert(msg.getMessage(data["status"]));
+				});
+			}
+		}
+		else network.getLevelInfo(
 			levelId,
 			function(data){
 				if (data["status"] == 1000)
+				{
+					user.setLevelId(levelId);
 					initLevel(JSON.parse(data["level_info"]));
+				}
 				else alert(msg.getMessage(data["status"]));
 			}
 		);
@@ -1119,8 +1184,7 @@ function Logic()
 		network.login(username, password, function(res) {
 			if (res.status == 1000)
 			{
-				// TODO: Store user info in logic for further use (e.g. fetching level).
-
+				user.login(username);
 				callback(undefined, {
 					status: "succeeded",
 					username: username
@@ -1136,6 +1200,7 @@ function Logic()
 	// Do logout with network module
 	this.doLogout = function(callback)
 	{
+		user.logout();
 		network.logout(function(res) {
 			if (res.status == 1000)
 			{
@@ -1197,6 +1262,83 @@ function Logic()
 		network.changePasswordAfterLogin(newPassword, function(res) {
 			if (res.status == 1000)
 			{
+				callback(undefined, {
+					status: "succeeded"
+				});
+			}
+			else
+			{
+				callback(msg.getMessage(res.status), {status: "failed"});
+			}
+		});
+	}
+
+	this.doNewLevel = function(content, callback)
+	{
+		user.setLevelId(0);
+		user.editContent(content);
+		callback(undefined, {status: "succeeded"});
+	};
+
+	this.runNewLevel = function(content)
+	{
+		initLevel(JSON.parse(content));
+	};
+
+	this.getUserContent = function()
+	{
+		if (user.status() == false || user.getContent() == "")
+			return JSON.stringify(config.emptyLevelInfo);
+		else
+			return user.getContent();
+	}
+
+	this.doSaveLevel = function(callback)
+	{
+		var content = user.getContent();
+		network.newUsermadeLevel(content, function(res) {
+			if (res.status == 1000)
+			{
+				user.setLevelId(res.level_id);
+				alert(res.level_id);
+				callback(undefined, {
+					status: "succeeded"
+				});
+			}
+			else
+			{
+				callback(msg.getMessage(res.status), {status: "failed"});
+			}
+		});
+	}
+
+	this.doShareLevel = function(callback)
+	{
+		var id = user.getLevelId();
+		if (id == 0)
+		{
+			return callback(msg.getMessage(3101), {status: "failed"});
+		}
+		network.shareLevel(id, function(res) {
+			if (res.status == 1000)
+			{
+				callback(undefined, {
+					status: "succeeded"
+				});
+			}
+			else
+			{
+				callback(msg.getMessage(res.status), {status: "failed"});
+			}
+		});
+	}
+
+	this.doGetSharedLevel = function(callback)
+	{
+		network.getSharedLevel(function(res) {
+			if (res.status == 1000)
+			{
+				alert(res.all_shared_level);
 				callback(undefined, {
 					status: "succeeded"
 				});
