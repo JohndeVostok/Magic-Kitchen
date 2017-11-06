@@ -396,6 +396,7 @@ var ui = function() {
 					alert("分享失败： " + err);
 					return;
 				}
+				alert("shared");
 			});
 		});
 	};

@@ -717,7 +717,7 @@ function Logic()
 			levelId = config.defaultOnlineLevelId;
 		if (config.useFakeLevel)
 			initLevel(config.fakeLevelInfo);
-		else network.getDefaultLevelInfo(
+		else network.getLevelInfo(
 			levelId,
 			function(data){
 				if (data["status"] == 1000)
