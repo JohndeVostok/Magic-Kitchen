@@ -196,6 +196,16 @@ var network = function() {
 			callback
 		);
 	};
+
+	var newUsermadeLevel = function(levelInfo, callback) {
+		postRequest(
+			"api/new_usermade_level",
+			{
+				"level_info": levelInfo
+			},
+			callback
+		);
+	}
 	
 	return {
 		doLoad: doLoad,

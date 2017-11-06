@@ -1264,6 +1264,25 @@ function Logic()
 			return user.getContent();
 	}
 
+	this.doSaveLevel = function(callback)
+	{
+		var content = user.getContent();
+		network.newUsermadeLevel(content, function(res) {
+			if (res.status == 1000)
+			{
+				alert(res.level_id);
+				callback(undefined, {
+					status: "succeeded"
+				});
+			}
+			else
+			{
+				callback(msg.getMessage(res.status), {status: "failed"});
+			}
+		});
+	}
+
+
 }
 
 var logic = new Logic();
