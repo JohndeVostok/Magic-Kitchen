@@ -48,6 +48,9 @@ msg is a map for message between blocks.
         1037 this solution doesn't exist    这个解法不存在
         1038 the input edit needs to be 0 or 1    输入的"是否编辑修改"需要是0或1
         1039 this default level has already had one std solution    这个默认关卡已经有标准解法
+        1040 calculate score error, this default level doesn't have one std solution    计算得分错误，这个默认关卡还没有标准解法
+        1041 solution info dict needs to contain key 'block_num'    solution_info 字典中需要包含关键字'block_num'
+        1042 'block_num' in solution_info dict needs to be an Integer    solution_info 字典中'block_num'关键字对应值需要是Int类型
 
 	Functions for other blocks
 		class msg
