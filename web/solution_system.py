@@ -81,6 +81,21 @@ def new_std_solution(request):
         ret['status'] = 1023 #'solution info can't be empty'
         return json_response(ret)
     _solution_info = content['solution_info']
+    _info = json.loads(_solution_info)
+    if not 'block_num' in _info:
+        ret['status'] = 1041 #'solution info dict needs to contain key 'block_num''
+        return json_response(ret)
+
+    try:
+        std_block_num = int(_info['block_num'])
+    except ValueError,e :
+        print e
+        ret['status'] = 1042 #''block_num' in solution_info dict needs to be an Integer'
+        return json_response(ret)
+
+    if not int_range(std_block_num):
+        ret['status'] = 1042 #''block_num' in solution_info dict needs to be an Integer'
+        return json_response(ret)
 
     solution_dict = json.loads(admin.solution_dict)
     if str(_level_id) in solution_dict:

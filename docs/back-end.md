@@ -172,6 +172,7 @@
         因为只有默认关卡才有标准解法，所以传的参数需要是default_level_id而不是level_id。
         若原本该关卡没有标准解法，则无论edit是0还是1，都会创建一个标准解法；但如果原本有标准解法，edit又为0，则会报错。
         由于暂时没有需要显示标准解法的需求，所以为了安全考虑，不会在get_level_info中返回默认关卡的std_solution_id，std solution目前仅用于和用户解法作对比进行打分。
+        参数solution_info需要是一个字典的json字符串，字典中必须包含关键字'block_num'，其值即为该解法用的块数(Int)，用于计算得分
 
         return json dict:
             status = 1000
@@ -184,6 +185,8 @@
             status = 1031
             status = 1038
             status = 1039
+            status = 1041
+            status = 1042
 
 ### New Solution
         Post('/api/new_solution') , attributes: level_id: idInt, solution_info= jsonStr

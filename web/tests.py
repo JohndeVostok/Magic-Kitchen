@@ -1018,6 +1018,21 @@ class SolutionSystemTestCase(TestCase):
         ret = json.loads(response.content)
         self.assertEqual(ret['status'], 1023) #'solution info can't be empty'
 
+        #test solution info doesn't contain 'block_num'
+        response = c.post('/api/new_std_solution', {'solution_info': json.dumps({}), 'default_level_id': 1, 'edit': 1})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 1041) #'solution info dict needs to contain key 'block_num''
+
+        #test 'block_num' isn't Integer
+        response = c.post('/api/new_std_solution', {'solution_info': json.dumps({'block_num':'a'}), 'default_level_id': 1, 'edit': 1})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 1042) #''block_num' in solution_info dict needs to be an Integer'
+
+        #test 'block_num' isn't Integer
+        response = c.post('/api/new_std_solution', {'solution_info': json.dumps({'block_num':2147483648}), 'default_level_id': 1, 'edit': 1})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 1042) #''block_num' in solution_info dict needs to be an Integer'
+
         #test new std solution
         response = c.post('/api/new_std_solution', {'solution_info': json.dumps({'block_num': 6}), 'default_level_id': 1, 'edit': 1})
         ret = json.loads(response.content)
