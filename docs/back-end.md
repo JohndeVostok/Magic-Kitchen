@@ -189,6 +189,8 @@
         Post('/api/new_solution') , attributes: level_id: idInt, solution_info= jsonStr
         必须登录才能够post，会将session作为username存入该Solution
         一个用户对同一个关卡只保存一个解法，最新创建的解法将覆盖之前对该关卡的解法
+        参数solution_info需要是一个字典的json字符串，字典中必须包含关键字'block_num'，其值即为该解法用的块数(Int)，用于计算得分
+        如果level_id对应的是一个默认关卡，则要求该默认关卡已经有标准解法（否则无法计算得分）
 
         return json dict:
             status = 1000
@@ -198,6 +200,9 @@
             status = 1019
             status = 1023
             status = 1027
+            status = 1040
+            status = 1041
+            status = 1042
 
 ### Get Solution Info
         Post('/api/get_solution_info'), attributes: solution_id = solution_id_Int
