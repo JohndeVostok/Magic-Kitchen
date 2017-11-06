@@ -32,7 +32,7 @@ function Logic()
 	function User()
 	{
 		var username = "";
-		var editLevel = "";
+		var content = "";
 
 		var login = function(usernameIn)
 		{
@@ -40,7 +40,12 @@ function Logic()
 			editLevel = "";
 		};
 
-		var getEdit = function()
+		var editContent = function(str)
+		{
+			content = str;
+		}
+
+		var getContent = function()
 		{
 			return editLevel;
 		};
@@ -1138,8 +1143,7 @@ function Logic()
 		network.login(username, password, function(res) {
 			if (res.status == 1000)
 			{
-				// TODO: Store user info in logic for further use (e.g. fetching level).
-
+				user.login(username);
 				callback(undefined, {
 					status: "succeeded",
 					username: username
@@ -1229,6 +1233,7 @@ function Logic()
 
 	this.doNewLevel = function(content, callback)
 	{
+		user.editContent(content);
 		callback(undefined, {status: "succeeded"});
 	};
 
@@ -1236,6 +1241,14 @@ function Logic()
 	{
 		initLevel(JSON.parse(content));
 	};
+
+	this.getUserContent()
+	{
+		if (user.getContent() == "")
+			return config.emptyLevelInfo;
+		else
+			return user.getContent();
+	}
 
 }
 
