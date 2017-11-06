@@ -206,7 +206,29 @@ var network = function() {
 			callback
 		);
 	}
+
+	var shareLevel = function(levelId, callback) {
+		postRequest(
+			"api/share_level",
+			{
+				"level_id": levelId,
+				"share": 1
+			},
+			callback
+		);
+	}
 	
+	var unshareLevel = function(levelId, callback) {
+		postRequest(
+			"api/share_level",
+			{
+				"level_id": levelId,
+				"share": 0
+			},
+			callback
+		);
+	}
+
 	return {
 		doLoad: doLoad,
 		register: register,
@@ -220,6 +242,8 @@ var network = function() {
 		getLevelInfo: getLevelInfo,
 		getCurrentUserInfo: getCurrentUserInfo,
 		newUsermadeLevel: newUsermadeLevel,
+		shareLevel: shareLevel,
+		unshareLevel: unshareLevel,
 		newSolution: newSolution,
 		getAllLevel: getAllLevel,
 		vipCharge: vipCharge,
