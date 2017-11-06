@@ -34,6 +34,7 @@ function Logic()
 		var status = false;
 		var username = "";
 		var content = "";
+		var levelId = 0;
 
 		this.status = function()
 		{
@@ -61,6 +62,16 @@ function Logic()
 		this.getContent = function()
 		{
 			return content;
+		};
+
+		this.setLevelId = function(id)
+		{
+			levelId = id;
+		};
+
+		this.getLevelId = function()
+		{
+			return id;
 		};
 	}
 
@@ -1282,7 +1293,27 @@ function Logic()
 		});
 	}
 
-
+	this.doShareLevel = function(callback)
+	{
+		var id = user.getLevelId();
+		if (id == 0)
+		{
+			return callback(msg.getMessage(3101), {status: "failed"});
+		}
+		network.shareLevel(id, function(res) {
+			if (res.status == 1000)
+			{
+				alert(res.level_id);
+				callback(undefined, {
+					status: "succeeded"
+				});
+			}
+			else
+			{
+				callback(msg.getMessage(res.status), {status: "failed"});
+			}
+		});
+	}
 }
 
 var logic = new Logic();
