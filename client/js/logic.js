@@ -609,16 +609,16 @@ function Logic()
 				map[p].itemId = itemList.length;
 				itemList.push($.extend(true, {}, itemList[player.itemId], {pos: p}));
 				ui.addAnimation(-1, p, undefined);
-				ui.addAnimation(p, -1, undefined);
-				ui.newItem(p, 1, undefined);
+				ui.newItem(-1, 1, undefined);
+				ui.setItemValue(-1, itemList[player.itemId].value);
 			}
 			else
 			{
 				itemList[map[p].itemId].value = itemList[player.itemId].value;
 				ui.deleteItem(p, undefined);
 				ui.addAnimation(-1, p, undefined);
-				ui.addAnimation(p, -1, undefined);
-				ui.newItem(p, 1, undefined);
+				ui.newItem(-1, 1, undefined);
+				ui.setItemValue(-1, itemList[player.itemId].value);
 			}
 		};
 		
