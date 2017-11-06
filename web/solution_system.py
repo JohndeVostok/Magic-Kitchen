@@ -137,7 +137,7 @@ def new_solution(request):
         ret['status'] = 1023 #'solution info can't be empty'
         return json_response(ret)
     _solution_info = content['solution_info']
-    info = json.loads(_solution_info)
+    _info = json.loads(_solution_info)
     if not 'block_num' in _info:
         ret['status'] = 1041 #'solution info dict needs to contain key 'block_num''
         return json_response(ret)
