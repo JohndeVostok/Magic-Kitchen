@@ -99,6 +99,8 @@ function Logic()
 			{
 				var item = itemList[i];
 				ui.newItem(item.pos, item.type, undefined);
+				if (item.type == 1)
+					ui.setItemValue(item.pos, item.value);
 			}
 			ui.addPlayerAnimation(player.pos, player.pos, player.dir, player.dir);
 			ui.setInput(input[0]);
