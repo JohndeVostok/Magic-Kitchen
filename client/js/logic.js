@@ -34,18 +34,18 @@ function Logic()
 		var username = "";
 		var content = "";
 
-		var login = function(usernameIn)
+		this.login = function(usernameIn)
 		{
 			username = usernameIn;
 			editLevel = "";
 		};
 
-		var editContent = function(str)
+		this.editContent = function(str)
 		{
 			content = str;
 		}
 
-		var getContent = function()
+		this.getContent = function()
 		{
 			return editLevel;
 		};
@@ -1242,7 +1242,7 @@ function Logic()
 		initLevel(JSON.parse(content));
 	};
 
-	this.getUserContent()
+	this.getUserContent = function()
 	{
 		if (user.getContent() == "")
 			return config.emptyLevelInfo;
