@@ -94,6 +94,9 @@ function Logic()
 					mp[i] = 0;
 			}
 			ui.loadMap(mp);
+			for (let i = 0; i < map.length; i++)
+				if (map[i].isOpFloor && map[i].address < opFloor.length - 2)
+					ui.setMapGridValue(i, map[i].address);
 			ui.clearItems();
 			for (let i = 0; i < itemList.length; i++)
 			{
