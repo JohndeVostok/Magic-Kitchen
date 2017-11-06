@@ -99,6 +99,8 @@ function Logic()
 			{
 				var item = itemList[i];
 				ui.newItem(item.pos, item.type, undefined);
+				if (item.type == 1)
+					ui.setItemValue(item.pos, item.value);
 			}
 			ui.addPlayerAnimation(player.pos, player.pos, player.dir, player.dir);
 			ui.setInput(input[0]);
@@ -526,6 +528,8 @@ function Logic()
 				player.itemId = itemList.length - 1;
 				ui.setInput(input[0]);
 				ui.newItem(p, itemList[itemList.length - 1].type, undefined);
+				if (itemList[itemList.length - 1].type == 1)
+					ui.setItemValue(p, itemList[itemList.length - 1].value);
 				ui.addAnimation(p, -1, undefined);
 			}
 			else
@@ -583,6 +587,7 @@ function Logic()
 				itemList.push($.extend(true, {}, itemList[map[p].itemId], {pos: -1}));
 				ui.addAnimation(p, -1, undefined);
 				ui.newItem(p, 1, undefined);
+				ui.setItemValue(p, itemList[map[p].itemId].value);
 			}
 			else
 			{
@@ -590,6 +595,7 @@ function Logic()
 				ui.deleteItem(-1, undefined);
 				ui.addAnimation(p, -1, undefined);
 				ui.newItem(p, 1, undefined);
+				ui.setItemValue(p, itemList[map[p].itemId].value);
 			}
 		};
 
@@ -603,16 +609,16 @@ function Logic()
 				map[p].itemId = itemList.length;
 				itemList.push($.extend(true, {}, itemList[player.itemId], {pos: p}));
 				ui.addAnimation(-1, p, undefined);
-				ui.addAnimation(p, -1, undefined);
-				ui.newItem(p, 1, undefined);
+				ui.newItem(-1, 1, undefined);
+				ui.setItemValue(-1, itemList[player.itemId].value);
 			}
 			else
 			{
 				itemList[map[p].itemId].value = itemList[player.itemId].value;
 				ui.deleteItem(p, undefined);
 				ui.addAnimation(-1, p, undefined);
-				ui.addAnimation(p, -1, undefined);
-				ui.newItem(p, 1, undefined);
+				ui.newItem(-1, 1, undefined);
+				ui.setItemValue(-1, itemList[player.itemId].value);
 			}
 		};
 		
@@ -624,6 +630,8 @@ function Logic()
 			ui.addAnimation(-1, p, undefined);
 			ui.addAnimation(p, -1, undefined);
 			ui.newItem(p, 1, undefined);
+			ui.setItemValue(p, itemList[map[p].itemId].value);
+			ui.setItemValue(-1, itemList[player.itemId].value);
 		};
 
 		this.subPaper = function()
@@ -634,12 +642,15 @@ function Logic()
 			ui.addAnimation(-1, p, undefined);
 			ui.addAnimation(p, -1, undefined);
 			ui.newItem(p, 1, undefined);
+			ui.setItemValue(p, itemList[map[p].itemId].value);
+			ui.setItemValue(-1, itemList[player.itemId].value);
 		};
 
 		this.incPaper = function()
 		{
 			var p = getFront();
 			itemList[map[p].itemId].value++;
+			ui.setItemValue(p, itemList[map[p].itemId].value);
 			this.loadPaper();
 		};
 
@@ -647,6 +658,7 @@ function Logic()
 		{
 			var p = getFront();
 			itemList[map[p].itemId].value--;
+			ui.setItemValue(p, itemList[map[p].itemId].value);
 			this.loadPaper();
 		};
 
