@@ -630,6 +630,8 @@ function Logic()
 			ui.addAnimation(-1, p, undefined);
 			ui.addAnimation(p, -1, undefined);
 			ui.newItem(p, 1, undefined);
+			ui.setItemValue(p, itemList[map[p].itemId].value);
+			ui.setItemValue(-1, itemList[player.itemId].value);
 		};
 
 		this.subPaper = function()
@@ -640,6 +642,8 @@ function Logic()
 			ui.addAnimation(-1, p, undefined);
 			ui.addAnimation(p, -1, undefined);
 			ui.newItem(p, 1, undefined);
+			ui.setItemValue(p, itemList[map[p].itemId].value);
+			ui.setItemValue(-1, itemList[player.itemId].value);
 		};
 
 		this.incPaper = function()
