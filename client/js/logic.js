@@ -714,9 +714,23 @@ function Logic()
 	this.loadLevel = function(levelId)
 	{
 		if (levelId == undefined)
-			levelId = config.defaultOnlineLevelId;
-		if (config.useFakeLevel)
-			initLevel(config.fakeLevelInfo);
+		{
+			if (config.useFakeLevel)
+				initLevel(config.fakeLevelInfo);
+			else
+			{
+				levelId = config.defaultOnlineLevelId;
+				network.getDefaultLevelInfo(levelId, function(data){
+					if (data["status"] == 1000)
+					{
+						alert("!!!");
+						user.setLevelId(levelId);
+						initLevel(JSON.parse(data["level_info"]));
+					}
+					else alert(msg.getMessage(data["status"]));
+				});
+			}
+		}
 		else network.getLevelInfo(
 			levelId,
 			function(data){
