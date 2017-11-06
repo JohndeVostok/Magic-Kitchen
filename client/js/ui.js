@@ -358,6 +358,12 @@ var ui = function() {
 				$("#changePasswordModal").modal("hide");
 			});
 		});
+		$("#newLevelButton").click(function() {
+			// Init login modal.
+			$("#newLevelContent").val("");
+			$("#newLevelModal").modal();
+		});
+
 	};
 	
 	var start = function() {
