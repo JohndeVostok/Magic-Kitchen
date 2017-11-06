@@ -183,6 +183,19 @@
             status = 1026
             status = 1027
 
+### Get Solution Info
+        Post('api/get_solution_info'), attributes: solution_id = solution_id_Int
+
+        return json dict:
+            status = 1000
+                solution_info = solution_info_jsonStr
+                score = score_Int([0,4])
+                level_id = level_id_Int (this solution belongs to)
+                author = author_name_Str
+            status = 1035
+            status = 1036
+            status = 1037
+
 ### VIP Charge
         Post('/api/vip_charge'), attributes: days = day_num_Int
         要求days属于区间[1,99999]

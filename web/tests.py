@@ -1019,3 +1019,55 @@ class SolutionSystemTestCase(TestCase):
         self.assertEqual(name_filter[0].solution_id, 1)
         self.assertEqual(name_filter[0].info, 'jsonStr2')
         self.assertEqual(name_filter[0].score, 1)
+
+    def test_get_solution_info(self):
+        c = Client()
+
+        #test empty solution id
+        response = c.post('/api/get_solution_info')
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 1035) #'solution id can't be empty'
+
+        #test solution id is not Integer
+        response = c.post('/api/get_solution_info', {'solution_id': 'a'})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 1036) #'the input solution id needs to be an Integer'
+
+        #test solution id is not Integer
+        response = c.post('/api/get_solution_info', {'solution_id': 2147483648})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 1036) #'the input solution id needs to be an Integer'
+
+        #test solution id is not Integer
+        response = c.post('/api/get_solution_info', {'solution_id': 1})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 1037) #'this solution doesn't exist'
+
+        #register
+        response = c.post('/api/register', {'name': 'sth', 'password': 'abc', 'email': '123@111.com'})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 1000) #'succeeded'
+
+        #login
+        response = c.post('/api/login', {'name': 'sth', 'password': 'abc'})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 1000) #'succeeded'
+
+        #new usermade level
+        response = c.post('/api/new_usermade_level', {'level_info': 'jsonStr'})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 1000) #'succeeded'
+
+        #new solution
+        response = c.post('/api/new_solution', {'level_id': 1, 'solution_info': 'solution info', 'score': 3})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 1000) #'succeeded'
+
+        #test get solution info
+        response = c.post('/api/get_solution_info', {'solution_id': 1})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 1000)
+        self.assertEqual(ret['solution_info'], 'solution info')
+        self.assertEqual(ret['score'], 3)
+        self.assertEqual(ret['level_id'], 1)
+        self.assertEqual(ret['author'], 'sth')

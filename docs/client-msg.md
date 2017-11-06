@@ -41,6 +41,9 @@ msg is a map for message between blocks.
         1032 you can't create more level    你无法创建更多关卡
         1033 share can't be empty    是否分享不能为空
         1034 the input share needs to be 0 or 1 输入的"是否分享"需要是0或1
+        1035 solution id can't be empty    解法ID不能为空
+        1036 the input solution id needs to be an Integer    解法ID需要是Int类型
+        1037 this solution doesn't exist    这个解法不存在
 
 	Functions for other blocks
 		class msg
