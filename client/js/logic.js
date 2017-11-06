@@ -587,6 +587,8 @@ function Logic()
 				itemList.push($.extend(true, {}, itemList[map[p].itemId], {pos: -1}));
 				ui.addAnimation(p, -1, undefined);
 				ui.newItem(p, 1, undefined);
+				if (itemList[map[p].itemId].type == 1)
+					ui.setItemValue(p, itemList[map[p].itemId].value);
 			}
 			else
 			{
@@ -594,6 +596,8 @@ function Logic()
 				ui.deleteItem(-1, undefined);
 				ui.addAnimation(p, -1, undefined);
 				ui.newItem(p, 1, undefined);
+				if (itemList[map[p].itemId].type == 1)
+					ui.setItemValue(p, itemList[map[p].itemId].value);
 			}
 		};
 
