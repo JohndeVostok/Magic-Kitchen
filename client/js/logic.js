@@ -71,7 +71,7 @@ function Logic()
 
 		this.getLevelId = function()
 		{
-			return id;
+			return levelId;
 		};
 	}
 
@@ -721,7 +721,10 @@ function Logic()
 			levelId,
 			function(data){
 				if (data["status"] == 1000)
+				{
+					user.setLevelId(levelId);
 					initLevel(JSON.parse(data["level_info"]));
+				}
 				else alert(msg.getMessage(data["status"]));
 			}
 		);
@@ -1303,7 +1306,6 @@ function Logic()
 		network.shareLevel(id, function(res) {
 			if (res.status == 1000)
 			{
-				alert(res.level_id);
 				callback(undefined, {
 					status: "succeeded"
 				});
