@@ -53,7 +53,7 @@
             status = 1011
 
         之后通过得到的验证码来修改密码。
-        Post('api/change_password_by_identifyingCode'), attributes: name = namestr, identifyingCode = identCodeStr, new_password = new_passwordstr
+        Post('/api/change_password_by_identifyingCode'), attributes: name = namestr, identifyingCode = identCodeStr, new_password = new_passwordstr
         return json dict:
             status = 1000
             status = 1002
@@ -148,7 +148,7 @@
             status = 1034
 
 ### Get All Level
-        Post('api/get_all_level')
+        Post('/api/get_all_level')
         用户必须登录，且具有管理员及以上权限才可以调用该API。
         未登录用户、普通用户及VIP只能看到其他用户分享的关卡，未分享的关卡无法看到。之后会提供获得分享关卡的API。
 
@@ -159,7 +159,7 @@
             status = 1031
 
 ### Get All Shared Level
-        Post('api/get_all_shared_level')
+        Post('/api/get_all_shared_level')
         不需要登录即可调用此API。
 
         return json dict:
@@ -184,7 +184,7 @@
             status = 1027
 
 ### Get Solution Info
-        Post('api/get_solution_info'), attributes: solution_id = solution_id_Int
+        Post('/api/get_solution_info'), attributes: solution_id = solution_id_Int
 
         return json dict:
             status = 1000
@@ -192,9 +192,32 @@
                 score = score_Int([0,4])
                 level_id = level_id_Int (this solution belongs to)
                 author = author_name_Str
+                shared = shared_Bool
             status = 1035
             status = 1036
             status = 1037
+
+### Share Solution
+        Post('/api/share_solution'), attributes: solution_id = solution_id_Int, share = Int(0 or 1, 0 means not share, 1 means share)
+        用户必须登录才能分享/取消分享解法。只有该解法的创建者或管理员才有操作权限。
+
+        return json dict:
+            status = 1000
+            status = 1001
+            status = 1031
+            status = 1033
+            status = 1034
+            status = 1035
+            status = 1036
+            status = 1037
+
+### Get All Shared Solution
+        Post('/api/get_all_shared_solution')
+        不需要登录即可调用此API。
+
+        return json dict:
+            status = 1000
+                all_shared_solution = all_shared_solution_id_list_jsonStr
 
 ### VIP Charge
         Post('/api/vip_charge'), attributes: days = day_num_Int

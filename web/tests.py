@@ -863,7 +863,7 @@ class LevelSystemTestCase(TestCase):
         self.assertEqual(ret['status'], 1000) #'succeeded'
         self.assertEqual(json.loads(ret['all_level']), [1, 2])
 
-    def test_get_shared_all_level(self):
+    def test_get_all_shared_level(self):
         c = Client()
 
         #register
@@ -1038,7 +1038,7 @@ class SolutionSystemTestCase(TestCase):
         ret = json.loads(response.content)
         self.assertEqual(ret['status'], 1036) #'the input solution id needs to be an Integer'
 
-        #test solution id is not Integer
+        #test solution id doesn't exist
         response = c.post('/api/get_solution_info', {'solution_id': 1})
         ret = json.loads(response.content)
         self.assertEqual(ret['status'], 1037) #'this solution doesn't exist'
@@ -1071,3 +1071,169 @@ class SolutionSystemTestCase(TestCase):
         self.assertEqual(ret['score'], 3)
         self.assertEqual(ret['level_id'], 1)
         self.assertEqual(ret['author'], 'sth')
+        self.assertEqual(ret['shared'], False)
+
+        solution = Solution.objects.filter(solution_id = 1)[0]
+        solution.shared = True
+        solution.save()
+
+        #test get solution info
+        response = c.post('/api/get_solution_info', {'solution_id': 1})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 1000)
+        self.assertEqual(ret['solution_info'], 'solution info')
+        self.assertEqual(ret['score'], 3)
+        self.assertEqual(ret['level_id'], 1)
+        self.assertEqual(ret['author'], 'sth')
+        self.assertEqual(ret['shared'], True)
+
+    def test_share_solution(self):
+        c = Client()
+
+        #test share solution before login
+        response = c.post('/api/share_solution')
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 1001) #'please log in first'
+
+        #register
+        response = c.post('/api/register', {'name': 'sth', 'password': 'abc', 'email': '765215342@qq.com'})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 1000) #'succeeded'
+
+        #login
+        response = c.post('/api/login', {'name': 'sth', 'password': 'abc'})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 1000) #'succeeded'
+
+        #test empty solution id
+        response = c.post('/api/share_solution')
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 1035) #'solution id can't be empty'
+
+        #test empty share or not
+        response = c.post('/api/share_solution', {'solution_id': 1})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 1033) #'share can't be empty'
+
+        #test share isn't 0 or 1
+        response = c.post('/api/share_solution', {'solution_id': 1, 'share': 'a'})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 1034) #'the input share needs to be 0 or 1'
+
+        #test share isn't 0 or 1
+        response = c.post('/api/share_solution', {'solution_id': 1, 'share': 2})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 1034) #'the input share needs to be 0 or 1'
+
+        #test solution id is not Integer
+        response = c.post('/api/share_solution', {'solution_id': 'a', 'share': 1})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 1036) #'the input solution id needs to be an Integer'
+
+        #test solution id is not Integer
+        response = c.post('/api/share_solution', {'solution_id': 2147483648, 'share': 1})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 1036) #'the input solution id needs to be an Integer'
+
+        #test solution id doesn't exist
+        response = c.post('/api/share_solution', {'solution_id': 1, 'share': 1})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 1037) #'this solution doesn't exist'
+
+        solution1 = Solution.objects.create(info = 'solution1', user_name = 'sth2', level_id = 2, score = 2)
+
+        #test session isn't author or admin
+        response = c.post('/api/share_solution', {'solution_id': solution1.solution_id, 'share': 1})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 1031) #'you don't have operation authority'
+
+        solution2 = Solution.objects.create(info = 'solution2', user_name = 'sth', level_id = 3, score = 3)
+
+        #test share solution
+        response = c.post('/api/share_solution', {'solution_id': solution2.solution_id, 'share': 1})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 1000) #'succeeded'
+        solution2 = Solution.objects.filter(solution_id = 2)[0]
+        self.assertEqual(solution2.shared, True)
+
+        user = User.objects.filter(name = 'sth')[0]
+        user.authority = 3
+        user.save()
+
+        #test admin share solution
+        response = c.post('/api/share_solution', {'solution_id': solution1.solution_id, 'share': 1})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 1000) #'succeeded'
+        solution1 = Solution.objects.filter(solution_id = 1)[0]
+        self.assertEqual(solution1.shared, True)
+
+        #test not share solution
+        response = c.post('/api/share_solution', {'solution_id': solution1.solution_id, 'share': 0})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 1000) #'succeeded'
+        solution1 = Solution.objects.filter(solution_id = 1)[0]
+        self.assertEqual(solution1.shared, False)
+
+    def test_get_all_shared_solution(self):
+        c = Client()
+
+        #register
+        response = c.post('/api/register', {'name': 'sth', 'password': 'abc', 'email': '765215342@qq.com'})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 1000) #'succeeded'
+
+        #login
+        response = c.post('/api/login', {'name': 'sth', 'password': 'abc'})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 1000) #'succeeded'
+
+        Level.objects.create(default_level_id = -1, info = 'levelinfo', user_name = 'abc')
+
+        #new solution
+        response = c.post('/api/new_solution', {'solution_info': 'jsonStr', 'level_id': 1, 'score': 3})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 1000) #'succeeded'
+
+        #test get all shared solution
+        response = c.post('/api/get_all_shared_solution')
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 1000) #'succeeded'
+        self.assertEqual(json.loads(ret['all_shared_solution']), [])
+
+        solution1 = Solution.objects.filter(solution_id = 1)[0]
+        solution1.shared = True
+        solution1.save()
+
+        #test get all shared solution
+        response = c.post('/api/get_all_shared_solution')
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 1000) #'succeeded'
+        self.assertEqual(json.loads(ret['all_shared_solution']), [1])
+
+        Solution.objects.create(user_name = 'abc', level_id = 2, info = 'solution info', score = 2)
+
+        #test get all shared solution
+        response = c.post('/api/get_all_shared_solution')
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 1000) #'succeeded'
+        self.assertEqual(json.loads(ret['all_shared_solution']), [1])
+
+        solution2 = Solution.objects.filter(solution_id = 2)[0]
+        solution2.shared = True
+        solution2.save()
+
+        #test get all shared solution
+        response = c.post('/api/get_all_shared_solution')
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 1000) #'succeeded'
+        self.assertEqual(json.loads(ret['all_shared_solution']), [1, 2])
+
+        solution2 = Solution.objects.filter(solution_id = 2)[0]
+        solution2.shared = False
+        solution2.save()
+        
+        #test get all shared solution
+        response = c.post('/api/get_all_shared_solution')
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 1000) #'succeeded'
+        self.assertEqual(json.loads(ret['all_shared_solution']), [1])

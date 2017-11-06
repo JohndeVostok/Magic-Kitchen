@@ -27,3 +27,4 @@ class Solution(models.Model):
     level_id = models.IntegerField()
     info = models.TextField() #jsonStr
     score = models.IntegerField() #score range is [0,4], 0 means not pass, 4 means not need to score
+    shared = models.BooleanField(default = False)
