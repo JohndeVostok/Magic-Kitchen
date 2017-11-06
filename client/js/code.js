@@ -90,8 +90,27 @@ var code = function() {
 		return ret;
 	};
 
+	var callCodeOp = function(blockID, op) {
+		highlight(blockID);
+		switch (op.typeId)
+		{
+			case 42:
+				funcList[op.op] = true;
+				calledLogic = true;
+			break;
+			case 43:
+				if (funcList[op.op] == undefined)
+				{
+					logic.step({typeId: 43, op: 7000});
+				}
+				calledLogic = true;
+			break;
+		};
+	};
+
 	var start = function() {
 		setLock(true);
+		funcList = {};
 		highlight();
 		var code = config.blocklyConstants.overallInitialization + 
 				Blockly.JavaScript.workspaceToCode(workspace) +
@@ -103,6 +122,14 @@ var code = function() {
 					return interpreter.nativeToPseudo(callLogicOps(
 						interpreter.pseudoToNative(blockID),
 						interpreter.pseudoToNative(ops)
+					));
+				}
+			));
+			interpreter.setProperty(scope, 'extCall2', interpreter.createNativeFunction(
+				function(blockID, op) {
+					return interpreter.nativeToPseudo(callCodeOp(
+						interpreter.pseudoToNative(blockID),
+						interpreter.pseudoToNative(op)
 					));
 				}
 			));
@@ -145,6 +172,7 @@ var code = function() {
 
 	var enabledToolbox;
 	var disabledToolbox;
+	var funcList;
 
 	return {
 		doLoad: doLoad,

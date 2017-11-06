@@ -5,6 +5,8 @@
 msg is a map for message between blocks.
 1000-1999 is for back-end.
 3000-3999 is for logic.
+7000-7999 is for code.
+9000-9999 is for network.
 
         1000 succeeded    成功
         1001 please log in first    请先登录

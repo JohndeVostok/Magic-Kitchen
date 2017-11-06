@@ -12,7 +12,7 @@ var config = {
 	// The fake level used in logic.
 	// Please update it when the level specifications change.
 	fakeLevelInfo: {
-		blockTypes: [21, 22, 23, 24, 25, 26, 31, 32, 41],
+		blockTypes: [21, 22, 23, 24, 25, 26, 31, 32, 41, 42, 43, 11],
 		playerInfo: {pos: 7, dir: 0},
 		opFloor: [1, 2, 3, 4, 5, 22, 23, 24, 25, 26, 36, 37, 38, 39, 40, 6, 0],
 		input: [[{type: 1, value: 1}, {type: 1, value: 2}]],
@@ -57,6 +57,15 @@ var config = {
 	blocklyConstants: {
 		overallInitialization: "stacklvl=0;blockID=[];simpleRepeatVars=[];",
 		eachInitialization: "blockID[stacklvl] = %1;",
-		overallFinalization: "extCall1(\"\", [{\"typeId\": 50}]);"
+		overallFinalization: "extCall1(\"\", [{\"typeId\": 50}]);",
+		userDefinedNamePacker: function(userDefinedName) {
+			var name_chars = userDefinedName.split("");
+			var safe_strs = [];
+			for (let i in name_chars)
+			{
+				safe_strs[i] = name_chars[i].charCodeAt(0) + "Sep";
+			}
+			return "userDefinedName" + safe_strs.join("");
+		}
 	}
 };
