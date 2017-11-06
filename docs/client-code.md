@@ -37,6 +37,16 @@
 			Redo blockly.
 			return: undefined
 
+		code.dumpSolution()
+			Dump present solution.
+			return: dict
+				solution: Text solution.
+				block_num: Number of blocks used.
+
+		code.loadSolution(solution)
+			Load solution. (Same structure as return value of dumpSolution)
+			return: undefined
+
 #### Tests
 		
 		0. (Optional) Add console.log to logic.step. This can make sure the function is properly called.

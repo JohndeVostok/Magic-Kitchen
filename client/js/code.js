@@ -163,6 +163,18 @@ var code = function() {
 		workspace.undo(true);
 	}
 
+	var dumpSolution = function() {
+		return {
+			solution: Blockly.Xml.domToText(Blockly.Xml.workspaceToDom(workspace)),
+			block_num: workspace.getAllBlocks().length
+		};
+	}
+
+	var loadSolution = function(solution) {
+		workspace.clear();
+		Blockly.Xml.domToWorkspace(Blockly.Xml.textToDom(solution.solution), workspace);
+	}
+
 	// Blockly workspace
 	var workspace;
 
@@ -181,6 +193,8 @@ var code = function() {
 		step: step,
 		stop: stop,
 		undo: undo,
-		redo: redo
+		redo: redo,
+		dumpSolution: dumpSolution,
+		loadSolution: loadSolution
 	};
 }();
