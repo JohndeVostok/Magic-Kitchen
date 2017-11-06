@@ -358,12 +358,29 @@ var ui = function() {
 				$("#changePasswordModal").modal("hide");
 			});
 		});
+
+
 		$("#newLevelButton").click(function() {
 			// Init login modal.
 			$("#newLevelContent").val("");
 			$("#newLevelModal").modal();
 		});
-
+		$("#newLevelSubmitButton").click(function() {
+			$("#newLevelSubmitButton").attr("disabled", "disabled");
+			
+			// Call logic login interface.
+			logic.doNewLevel($("#newLevelContent").val(), function(err, res) {
+				$("#newLevelSubmitButton").removeAttr("disabled");
+				
+				if (err != undefined) {
+					alert("创建失败： " + err);
+					return;
+				}
+				
+				// Login ok
+				$("#newLevelModal").modal("hide");
+			});
+		});
 	};
 	
 	var start = function() {

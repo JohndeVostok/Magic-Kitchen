@@ -1207,6 +1207,18 @@ function Logic()
 			}
 		});
 	}
+
+	this.doNewLevel = function(content, callback)
+	{
+		alert(content);
+		callback(undefined, {status: "succeeded"});
+	}
+
+	this.runNewLevel(content)
+	{
+		initLevel(JSON.parse(content));
+	}
+
 }
 
 var logic = new Logic();
