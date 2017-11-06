@@ -639,6 +639,16 @@ class LevelSystemTestCase(TestCase):
         ret = json.loads(response.content)
         self.assertEqual(ret['status'], 1018) #'the input default level id needs to be an Integer'
 
+        #test edit is not 0 or 1
+        response = c.post('/api/new_default_level', {'default_level_id': 1, 'level_info': 'jsonStr', 'edit': 'a'})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 1038) #'the input edit needs to be 0 or 1'
+
+        #test edit is not 0 or 1
+        response = c.post('/api/new_default_level', {'default_level_id': 1, 'level_info': 'jsonStr', 'edit': 2})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 1038) #'the input edit needs to be 0 or 1'
+
         #test new default level
         response = c.post('/api/new_default_level', {'default_level_id': 1, 'level_info': 'jsonStr'})
         ret = json.loads(response.content)
@@ -655,7 +665,7 @@ class LevelSystemTestCase(TestCase):
         self.assertEqual(ret['status'], 1022) #'this default level id already exists'
 
         #test edit default level
-        response = c.post('/api/new_default_level', {'default_level_id': 1, 'level_info': 'jsonStr2', 'edit': 'True'})
+        response = c.post('/api/new_default_level', {'default_level_id': 1, 'level_info': 'jsonStr2', 'edit': 1})
         ret = json.loads(response.content)
         self.assertEqual(ret['status'], 1000) #'succeeded'
         _filter = Level.objects.filter(default_level_id = 1)
@@ -676,7 +686,7 @@ class LevelSystemTestCase(TestCase):
         self.assertEqual(ret['level_id'], 3)
 
         #test edit non-existent default level
-        response = c.post('/api/new_default_level', {'default_level_id': 2, 'level_info': 'jsonStr2', 'edit': 'True'})
+        response = c.post('/api/new_default_level', {'default_level_id': 2, 'level_info': 'jsonStr2', 'edit': 1})
         ret = json.loads(response.content)
         self.assertEqual(ret['status'], 1017) #'this level doesn't exist'
 
