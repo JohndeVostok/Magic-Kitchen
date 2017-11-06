@@ -528,6 +528,8 @@ function Logic()
 				player.itemId = itemList.length - 1;
 				ui.setInput(input[0]);
 				ui.newItem(p, itemList[itemList.length - 1].type, undefined);
+				if (itemList[itemList.length - 1].type == 1)
+					ui.setItemValue(p, itemList[itemList.length - 1].value);
 				ui.addAnimation(p, -1, undefined);
 			}
 			else
