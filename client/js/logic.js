@@ -29,6 +29,25 @@ function Logic()
 
 	var validator = new Validator();
 
+	function User()
+	{
+		var username = "";
+		var editLevel = "";
+
+		var login = function(usernameIn)
+		{
+			username = usernameIn;
+			editLevel = "";
+		};
+
+		var getEdit = function()
+		{
+			return editLevel;
+		};
+	}
+
+	var user = new User();
+
 	function State()
 	{
 		var player = {pos: 0, dir: 0, haveItem: 0, itemId: 0}
@@ -1210,7 +1229,6 @@ function Logic()
 
 	this.doNewLevel = function(content, callback)
 	{
-		alert(content);
 		callback(undefined, {status: "succeeded"});
 	};
 
