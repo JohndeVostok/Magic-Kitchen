@@ -118,11 +118,80 @@ var network = function() {
 		);
 	};
 
+	var getDefaultLevelInfo = function(default_level_id, callback) {
+		postRequest(
+			"/api/get_level_info",
+			{
+				"default_level_id": default_level_id
+			},
+			callback
+		);
+	};
+
 	var getLevelInfo = function(level_id, callback) {
 		postRequest(
 			"/api/get_level_info",
 			{
-				"default_level_id": level_id
+				"level_id": level_id
+			},
+			callback
+		);
+	};
+
+	var getCurrentUserInfo = function(callback) {
+		postRequest(
+			"/api/get_current_user_info",
+			{},
+			callback
+		);
+	};
+
+	var newUsermadeLevel = function(level_info, callback) {
+		postRequest(
+			"/api/new_usermade_level",
+			{
+				"level_info": level_info,
+			},
+			callback
+		);
+	};
+
+	var newSolution = function(level_id, solution_info, score, callback) {
+		postRequest(
+			"/api/new_solution",
+			{
+				"level_id": level_id,
+				"solution_info": solution_info,
+				"score": score
+			},
+			callback
+		);
+	};
+
+	var getAllLevel = function(callback) {
+		postRequest(
+			"/api/get_all_level",
+			{
+			},
+			callback
+		);
+	};
+
+	var vipCharge = function(days, callback) {
+		postRequest(
+			"/api/vip_charge",
+			{
+				"days": days
+			},
+			callback
+		);
+	};
+
+	var setAdmin = function(name, callback) {
+		postRequest(
+			"api/set_admin",
+			{
+				"name": name
 			},
 			callback
 		);
@@ -137,6 +206,13 @@ var network = function() {
 		changePasswordAfterLogin: changePasswordAfterLogin,
 		newDefaultLevel: newDefaultLevel,
 		editDefaultLevel: editDefaultLevel,
-		getLevelInfo: getLevelInfo
+		getDefaultLevelInfo: getDefaultLevelInfo,
+		getLevelInfo: getLevelInfo,
+		getCurrentUserInfo: getCurrentUserInfo,
+		newUsermadeLevel: newUsermadeLevel,
+		newSolution: newSolution,
+		getAllLevel: getAllLevel,
+		vipCharge: vipCharge,
+		setAdmin: setAdmin
 	};
 }();

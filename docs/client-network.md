@@ -59,7 +59,7 @@
 					"status": return code. 1000 for "Succeeded", 9000 for "Network timeout", otherwise see client-msg.md for details.
 			return: undefined
 
-		network.getLevelInfo(level_id, callback)
+		network.getDefaultLevelInfo(level_id, callback)
 			level_id: type = int, range in [0, 100]
 			callback: type = function, content = Callback(result)
 				result: type = json
