@@ -94,6 +94,9 @@ function Logic()
 					mp[i] = 0;
 			}
 			ui.loadMap(mp);
+			for (let i = 0; i < map.length; i++)
+				if (map[i].isOpFloor && map[i].address < opFloor.length - 2)
+					ui.setMapGridValue(i, map[i].address);
 			ui.clearItems();
 			for (let i = 0; i < itemList.length; i++)
 			{
@@ -106,27 +109,6 @@ function Logic()
 			ui.setInput(input[0]);
 			ui.setOutput(output[0]);
 		}
-
-		//function for test
-		this.test = function()
-		{
-			var p = {map: [], player: "E", out: []};
-			if (player.haveItem && itemList[player.itemId].type == 1)
-				p.player = itemList[player.itemId].value;
-			for (let i = 0; i < opFloor.length; i++)
-			{
-				p.map[i] = "E";
-				if (map[opFloor[i]].haveItem && itemList[map[opFloor[i]].itemId].type == 1)
-					p.map[i] = itemList[map[opFloor[i]].itemId].value;
-			}
-			for (let i = 0; i < output[0].length; i++)
-			{
-				p.out[i] = "E";
-				if (output[0][i].type == 1)
-					p.out[i] = output[0][i].value;
-			}
-			return p;
-		};
 
 	//functions for play
 
@@ -1121,7 +1103,6 @@ function Logic()
 			//nothing
 			break;
 		}
-		debug.log(state.test());
 	};
 
 	// Do login using network module
