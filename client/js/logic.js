@@ -31,14 +31,27 @@ function Logic()
 
 	function User()
 	{
+		var status = false;
 		var username = "";
 		var content = "";
 
+		this.status = function()
+		{
+			return status;
+		}
+
 		this.login = function(usernameIn)
 		{
+			status = true;
 			username = usernameIn;
 			editLevel = "";
 		};
+
+		this.logout = function()
+		{
+			status = false;
+			username = "";
+		}
 
 		this.editContent = function(str)
 		{
@@ -47,7 +60,7 @@ function Logic()
 
 		this.getContent = function()
 		{
-			return editLevel;
+			return content;
 		};
 	}
 
@@ -1159,6 +1172,7 @@ function Logic()
 	// Do logout with network module
 	this.doLogout = function(callback)
 	{
+		user.logout();
 		network.logout(function(res) {
 			if (res.status == 1000)
 			{
@@ -1244,8 +1258,8 @@ function Logic()
 
 	this.getUserContent = function()
 	{
-		if (user.getContent() == "")
-			return config.emptyLevelInfo;
+		if (user.status() == false || user.getContent() == "")
+			return JSON.stringify(config.emptyLevelInfo);
 		else
 			return user.getContent();
 	}

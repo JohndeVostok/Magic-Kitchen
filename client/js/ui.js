@@ -362,7 +362,7 @@ var ui = function() {
 
 		$("#newLevelButton").click(function() {
 			// Init login modal.
-			$("#newLevelContent").val(JSON.stringify(config.emptyLevelInfo));
+			$("#newLevelContent").val(logic.getUserContent);
 			$("#newLevelModal").modal();
 		});
 		$("#newLevelSubmitButton").click(function() {
@@ -379,6 +379,10 @@ var ui = function() {
 				$("#newLevelModal").modal("hide");
 				logic.runNewLevel($("#newLevelContent").val());
 			});
+		});
+		$("#saveLevelButton").click(function() {
+			// Init login modal.
+			logic.doSaveLevel();
 		});
 	};
 	
