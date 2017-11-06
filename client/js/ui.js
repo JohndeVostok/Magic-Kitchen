@@ -173,8 +173,26 @@ var ui = function() {
 		playerDirection = 0;
 		
 		// Draw I/O queue.
-		stage.addChild(setInputItemPos(new createjs.Sprite(mapSpriteSheets[1]), -1.2));
-		stage.addChild(setOutputItemPos(new createjs.Sprite(mapSpriteSheets[2]), -1.2));
+		(function() {
+			var inputTrans = getIOItemPosTransform(-1.2, false);
+			var outputTrans = getIOItemPosTransform(-1.2, true);
+			var s1 = new createjs.Sprite(mapSpriteSheets[1]);
+			s1.setTransform(
+				inputTrans.x,
+				inputTrans.y,
+				inputTrans.scaleX,
+				inputTrans.scaleY
+			);
+			var s2 = new createjs.Sprite(mapSpriteSheets[2]);
+			s2.setTransform(
+				outputTrans.x,
+				outputTrans.y,
+				outputTrans.scaleX,
+				outputTrans.scaleY
+			);
+			stage.addChild(s1);
+			stage.addChild(s2);
+		})();
 		
 		// Init DOM elements.
 		// For test only.
@@ -487,6 +505,8 @@ var ui = function() {
 			runAddPlayerAnimation(animation.args);
 		} else if (animation.type == "deleteItem") {
 			runDeleteItem(animation.args);
+		} else if (animation.type == "setItemValue") {
+			runSetItemValue(animation.args);
 		} else if (animation.type == "setInput") {
 			runSetInput(animation.args);
 		} else if (animation.type == "setOutput") {
@@ -498,15 +518,20 @@ var ui = function() {
 		}
 	};
 	
+	var removeItem = function(item) {
+		stage.removeChild(item.sprite);
+		stage.removeChild(item.textSprite);
+	};
+	
 	var runClearItems = function(args) {
 		for (var i = 0; i < mapSize; i++) {
 			if (items[i] != undefined) {
-				stage.removeChild(items[i].sprite);
+				removeItem(items[i]);
 			}
 			items[i] = undefined;
 		}
 		if (itemOnHead != undefined) {
-			stage.removeChild(itemOnHead.sprite);
+			removeItem(itemOnHead);
 			itemOnHead = undefined;
 		}
 		
@@ -520,7 +545,7 @@ var ui = function() {
 		
 		return {
 			x: mapLeftPos + mapGridWidth * (j + 0.25),
-			y: mapTopPos + mapGridWidth * (i -0.2),
+			y: mapTopPos + mapGridWidth * (i - 0.2),
 			scaleX: 0.5 * mapGridWidth / config.UI.object.imageWidth,
 			scaleY: 0.5 * mapGridHeight / config.UI.object.imageHeight
 		};
@@ -547,15 +572,59 @@ var ui = function() {
 		};
 	};
 	
-	// Set an item's pos
-	var setItemPos = function(sprite, pos) {
-		var transform = getItemPosTransform(pos);
-		sprite.setTransform(
-			transform.x,
-			transform.y,
-			transform.scaleX,
-			transform.scaleY
+	var getItemTextPosHeadTransform = function(pos) {
+		var ret = getItemPosHeadTransform(pos);
+		return {
+			x: ret.x + mapGridWidth * 0.1,
+			y: ret.y + mapGridHeight * 0.2
+		};
+	};
+	
+	var getItemTextPosTransform = function(pos) {
+		var ret = getItemPosTransform(pos);
+		ret = {
+			x: ret.x,
+			y: ret.y
+		};
+		if (pos == -1) {
+			ret.x += mapGridWidth * 0.1;
+			ret.y += mapGridHeight * 0.2;
+		} else {
+			ret.x += mapGridWidth * 0.15;
+			ret.y += mapGridHeight * 0.25;
+		}
+		return ret;
+	};
+	
+	// Set an item's pos (including its text)
+	var setItemPos = function(item, pos) {
+		var itemTrans = getItemPosTransform(pos);
+		item.sprite.setTransform(
+			itemTrans.x,
+			itemTrans.y,
+			itemTrans.scaleX,
+			itemTrans.scaleY
 		);
+		
+		var textTrans = getItemTextPosTransform(pos);
+		item.textSprite.setTransform(
+			textTrans.x,
+			textTrans.y
+		);
+	};
+	
+	var genNewItem = function(args) {
+		var s = new createjs.Sprite(objectSpriteSheets[args.type]);
+		var ts = new createjs.Text(args.value == undefined ? "" : args.value + "", "15px Arial", "#ff7700");
+		stage.addChild(s);
+		stage.addChild(ts);
+		return {
+			type: args.type,
+			value: args.value,
+			args: args.args,
+			sprite: s,
+			textSprite: ts
+		};
 	};
 	
 	var runNewItem = function(args) {
@@ -564,14 +633,8 @@ var ui = function() {
 			if (itemOnHead != undefined) {
 				throw "There's already an item on head";
 			}
-			var s = new createjs.Sprite(objectSpriteSheets[args.type]);
-			itemOnHead = {
-				type: args.type,
-				args: args.args,
-				sprite: s
-			};
-			setItemPos(s, pos);
-			stage.addChild(s);
+			itemOnHead = genNewItem(args);
+			setItemPos(itemOnHead, pos);
 		} else {
 			if (items[pos] != undefined) {
 				throw "Invalid newItem on " + pos;
@@ -579,17 +642,26 @@ var ui = function() {
 			if (objectSpriteSheets[args.type] == undefined) {
 				throw "Invalid newItem type " + type + " on pos " + pos;
 			}
-			var s = new createjs.Sprite(objectSpriteSheets[args.type]);
-			items[pos] = {
-				type: args.type,
-				args: args.args,
-				sprite: s
-			};
-			setItemPos(s, pos);
-			stage.addChild(s);
+			items[pos] = genNewItem(args);
+			setItemPos(items[pos], pos);
 		}
 		
 		setTimeout(setAnimationComplete, 0);
+	};
+	
+	// Move an item to pos with animations
+	var moveItem = function(item, pos, isOnHead = false, callback = function() {}) {
+		var itemTrans, textTrans;
+		if (isOnHead) {
+			itemTrans = getItemPosHeadTransform(pos);
+			textTrans = getItemTextPosHeadTransform(pos);
+		} else {
+			itemTrans = getItemPosTransform(pos);
+			textTrans = getItemTextPosTransform(pos);
+		}
+		
+		createjs.Tween.get(item.sprite).to(itemTrans, 500, createjs.Ease.getPowInOut(3)).call(callback);
+		createjs.Tween.get(item.textSprite).to(textTrans, 500, createjs.Ease.getPowInOut(3));
 	};
 	
 	var runAddAnimation = function(args) {
@@ -624,8 +696,7 @@ var ui = function() {
 		} else {
 			items[pos2] = item;
 		}
-		createjs.Tween.get(item.sprite).to(getItemPosTransform(pos2), 500, createjs.Ease.getPowInOut(3))
-			.call(setAnimationComplete);
+		moveItem(item, pos2, false, setAnimationComplete);
 	};
 	
 	// Set player's pos
@@ -665,7 +736,7 @@ var ui = function() {
 		if (args.pos1 != args.pos2 && args.dir1 == args.dir2) {
 			movePlayerPos(playerSprite, args.pos2).call(setAnimationComplete);
 			if (itemOnHead != undefined) {
-				createjs.Tween.get(itemOnHead.sprite).to(getItemPosHeadTransform(args.pos2), 500, createjs.Ease.getPowInOut(3));
+				moveItem(itemOnHead, args.pos2, true);
 			}
 		} else if (args.pos1 == args.pos2 && args.dir1 != args.dir2) {
 			setTimeout(function() {
@@ -679,7 +750,7 @@ var ui = function() {
 		} else {
 			movePlayerPos(playerSprite, args.pos2);
 			if (itemOnHead != undefined) {
-				createjs.Tween.get(itemOnHead.sprite).to(getItemPosHeadTransform(args.pos2), 500, createjs.Ease.getPowInOut(3));
+				moveItem(itemOnHead, args.pos2, true);
 			}
 			setTimeout(function() {
 				playerSprite.gotoAndPlay("a" + args.dir2);
@@ -695,55 +766,83 @@ var ui = function() {
 			if (itemOnHead == undefined) {
 				throw "No item on head";
 			}
-			stage.removeChild(itemOnHead.sprite);
+			removeItem(itemOnHead);
 			itemOnHead = undefined;
 		} else {
 			if (items[pos] == undefined) {
 				throw "No such item on " + pos;
 			}
-			stage.removeChild(items[pos].sprite);
+			removeItem(items[pos]);
 			items[pos] = undefined;
 		}
 		
 		setTimeout(setAnimationComplete, 0);
 	};
 	
-	var setInputItemPos = function(sprite, pos) {
-		sprite.setTransform(
-			IOItemsLeftPos + pos * (IOItemsWidth + IOItemsHorizontalGap),
-			inputTopPos,
-			IOItemsWidth / config.UI.map.imageWidth,
-			IOItemsHeight / config.UI.map.imageHeight
-		);
-		return sprite;
+	var runSetItemValue = function(args) {
+		var pos = args.pos;
+		if (pos == -1) {
+			if (itemOnHead == undefined) {
+				throw "No item on head";
+			}
+			itemOnHead.textSprite.text = args.value;
+		} else {
+			if (items[pos] == undefined) {
+				throw "No such item on " + pos;
+			}
+			items[pos].textSprite.text = args.value;
+		}
+		
+		setTimeout(setAnimationComplete, 0);
 	};
 	
-	var setOutputItemPos = function(sprite, pos) {
-		sprite.setTransform(
-			IOItemsLeftPos + pos * (IOItemsWidth + IOItemsHorizontalGap),
-			outputTopPos,
-			IOItemsWidth / config.UI.map.imageWidth,
-			IOItemsHeight / config.UI.map.imageHeight
+	var getIOItemPosTransform = function(pos, isOutput = false) {
+		return {
+			x: IOItemsLeftPos + pos * (IOItemsWidth + IOItemsHorizontalGap),
+			y: isOutput ? outputTopPos : inputTopPos,
+			scaleX: IOItemsWidth / config.UI.map.imageWidth,
+			scaleY: IOItemsHeight / config.UI.map.imageHeight
+		};
+	};
+	
+	var setInputItemPos = function(item, pos) {
+		var itemTrans = getIOItemPosTransform(pos, false);
+		item.sprite.setTransform(
+			itemTrans.x,
+			itemTrans.y,
+			itemTrans.scaleX,
+			itemTrans.scaleY
 		);
-		return sprite;
+		item.textSprite.setTransform(
+			itemTrans.x + 0.2 * IOItemsWidth,
+			itemTrans.y + 0.4 * IOItemsHeight
+		);
+	};
+	
+	var setOutputItemPos = function(item, pos) {
+		var itemTrans = getIOItemPosTransform(pos, true);
+		item.sprite.setTransform(
+			itemTrans.x,
+			itemTrans.y,
+			itemTrans.scaleX,
+			itemTrans.scaleY
+		);
+		item.textSprite.setTransform(
+			itemTrans.x + 0.2 * IOItemsWidth,
+			itemTrans.y + 0.4 * IOItemsHeight
+		);
 	};
 	
 	var runSetInput = function(args) {
 		for (let i in inputItems) {
-			stage.removeChild(inputItems[i].sprite);
+			removeItem(inputItems[i]);
 		}
 		inputItems = [];
 		
 		for (let i in args.itemList) {
-			let item = args.itemList[i];
-			let s = new createjs.Sprite(objectSpriteSheets[item.type]);
-			let id = inputItems.length;
-			inputItems.push({
-				type: item.type,
-				sprite: s
-			});
-			setInputItemPos(s, id);
-			stage.addChild(s);
+			let item = genNewItem(args.itemList[i]);
+			setInputItemPos(item, inputItems.length);
+			inputItems.push(item);
 		}
 		
 		setTimeout(setAnimationComplete, 0);
@@ -751,20 +850,14 @@ var ui = function() {
 	
 	var runSetOutput = function(args) {
 		for (let i in outputItems) {
-			stage.removeChild(outputItems[i].sprite);
+			removeItem(outputItems[i]);
 		}
 		outputItems = [];
 		
 		for (let i in args.itemList) {
-			let item = args.itemList[i];
-			let s = new createjs.Sprite(objectSpriteSheets[item.type]);
-			let id = outputItems.length;
-			outputItems.push({
-				type: item.type,
-				sprite: s
-			});
-			setOutputItemPos(s, id);
-			stage.addChild(s);
+			let item = genNewItem(args.itemList[i]);
+			setOutputItemPos(item, outputItems.length);
+			outputItems.push(item);
 		}
 		
 		setTimeout(setAnimationComplete, 0);
@@ -783,7 +876,7 @@ var ui = function() {
 		});
 	};
 	
-	var newItem = function(pos, type, args) {
+	var newItem = function(pos, type, value = "", args) {
 		pos = checkValidItemPos(pos);
 		
 		if (isNaN(type)) {
@@ -796,6 +889,7 @@ var ui = function() {
 			args: {
 				pos: pos,
 				type: type,
+				value: value,
 				args: args
 			}
 		});
@@ -808,6 +902,19 @@ var ui = function() {
 			type: "deleteItem",
 			args: {
 				pos: pos
+			}
+		});
+	};
+	
+	var setItemValue = function(pos, value) {
+		pos = checkValidItemPos(pos);
+		value = value == undefined ? "" : value + "";
+		
+		animationQueue.push({
+			type: "setItemValue",
+			args: {
+				pos: pos,
+				value: value
 			}
 		});
 	};
@@ -848,7 +955,8 @@ var ui = function() {
 		for (var i in itemList) {
 			var item = itemList[i];
 			ret[i] = {
-				type: item.type
+				type: item.type,
+				value: item.value
 			};
 		}
 		return ret;
@@ -923,6 +1031,7 @@ var ui = function() {
 		clearItems: clearItems,
 		newItem: newItem,
 		deleteItem: deleteItem,
+		setItemValue: setItemValue,
 		addAnimation: addAnimation,
 		addPlayerAnimation: addPlayerAnimation,
 		setInput: setInput,

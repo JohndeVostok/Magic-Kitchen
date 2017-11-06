@@ -57,11 +57,12 @@
 			Clear all the items on the map.
 			return: undefined
 
-		ui.newItem(pos, type, args)
+		ui.newItem(pos, type, value = "", args)
 			Create a new item on the map.
 			The item will be placed at pos if and ONLY if it has no animation this step.
 			pos: Integer
 			type: Integer
+			value: String, the value (text) of the item
 			args: Currently not used, reserved for futher development
 			The specifications of pos and type are discussed in the following section.
 			return: undefined
@@ -71,6 +72,12 @@
 			pos: Integer
 			args: Currently not used, reserved for futher development
 			The specifications of pos are discussed in the following section.
+			return: undefined
+
+		ui.setItemValue(pos, value)
+			Set the value of the item on pos to value.
+			pos: Integer
+			value: String
 			return: undefined
 
 		ui.addAnimation(pos1, pos2, args)
