@@ -1096,26 +1096,65 @@ class SolutionSystemTestCase(TestCase):
         ret = json.loads(response.content)
         self.assertEqual(ret['status'], 1023) #'solution info can't be empty'
 
-        #test empty solution info
-        response = c.post('/api/new_solution', {'level_id': 1, 'solution_info': 'jsonStr'})
+        #test solution info doesn't contain 'block_num'
+        response = c.post('/api/new_solution', {'level_id': 1, 'solution_info': json.dumps({})})
         ret = json.loads(response.content)
-        self.assertEqual(ret['status'], 1024) #'score can't be empty'
+        self.assertEqual(ret['status'], 1041) #'solution info dict needs to contain key 'block_num''
 
-        #test score is not Integer
-        response = c.post('/api/new_solution', {'level_id': 1, 'solution_info': 'jsonStr', 'score': 'a'})
+        #test block_num is not Integer
+        response = c.post('/api/new_solution', {'level_id': 1, 'solution_info': json.dumps({'block_num': 'a'})})
         ret = json.loads(response.content)
-        self.assertEqual(ret['status'], 1025) #'the input score needs to be an Integer'
+        self.assertEqual(ret['status'], 1042) #''block_num' in solution_info dict needs to be an Integer'
 
-        #test score is not in range[0,4]
-        response = c.post('/api/new_solution', {'level_id': 1, 'solution_info': 'jsonStr', 'score': 5})
+        #test block_num is not Integer
+        response = c.post('/api/new_solution', {'level_id': 1, 'solution_info': json.dumps({'block_num': 2147483648})})
         ret = json.loads(response.content)
-        self.assertEqual(ret['status'], 1026) #'the input score needs to be in range[0,4]'
-        
-        #test new solution
-        response = c.post('/api/new_solution', {'level_id': 1, 'solution_info': 'jsonStr', 'score': 0})
+        self.assertEqual(ret['status'], 1042) #''block_num' in solution_info dict needs to be an Integer'
+
+        #test default level doesn't have one std solution
+        response = c.post('/api/new_solution', {'level_id': 1, 'solution_info': json.dumps({'block_num': 5})})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 1040) #'calculate score error, this default level doesn't have one std solution'
+
+        #logout
+        response = c.post('/api/logout')
         ret = json.loads(response.content)
         self.assertEqual(ret['status'], 1000) #'succeeded'
-        self.assertEqual(ret['solution_id'], 1)
+
+        #register
+        response = c.post('/api/register', {'name': 'sth2', 'password': 'abc', 'email': '122@111.com'})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 1000) #'succeeded'
+
+        #login
+        response = c.post('/api/login', {'name': 'sth2', 'password': 'abc'})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 1000) #'succeeded'
+
+        #new std solution
+        response = c.post('/api/new_std_solution', {'solution_info': json.dumps({'block_num': 6}), 'default_level_id': 1, 'edit': 1})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 1000) #'succeeded'
+
+        #logout
+        response = c.post('/api/logout')
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 1000) #'succeeded'
+
+        #login
+        response = c.post('/api/login', {'name': 'sth', 'password': 'abc'})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 1000) #'succeeded'
+        
+        #test new solution
+        response = c.post('/api/new_solution', {'level_id': 1, 'solution_info': json.dumps({'block_num': 5})})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 1000) #'succeeded'
+        self.assertEqual(ret['solution_id'], 2)
+        solution = Solution.objects.filter(solution_id = 2)[0]
+        self.assertEqual(solution.score, 3)
+
+        
 
         name_filter = Solution.objects.all()
         self.assertEqual(len(name_filter), 1)

@@ -186,8 +186,7 @@
             status = 1039
 
 ### New Solution
-        Post('/api/new_solution') , attributes: level_id: idInt, solution_info= jsonStr, score= scoreInt
-        其中，score应该是[0,4]的整数，0表示未通过，1～3表示评级，4表示通过（用户自定义关卡仅记是否通过，不评级）
+        Post('/api/new_solution') , attributes: level_id: idInt, solution_info= jsonStr
         必须登录才能够post，会将session作为username存入该Solution
         一个用户对同一个关卡只保存一个解法，最新创建的解法将覆盖之前对该关卡的解法
 
@@ -198,9 +197,6 @@
             status = 1017
             status = 1019
             status = 1023
-            status = 1024
-            status = 1025
-            status = 1026
             status = 1027
 
 ### Get Solution Info

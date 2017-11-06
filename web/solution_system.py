@@ -16,6 +16,13 @@ def int_range(x):
     else:
         return False
 
+def calc_score(std_block_num, user_block_num):
+    if user_block_num <= std_block_num:
+        return 3
+    if user_block_num <= std_block_num * 2:
+        return 2
+    return 1
+
 def new_std_solution(request):
     content = request.POST
     ret = {}
@@ -130,21 +137,34 @@ def new_solution(request):
         ret['status'] = 1023 #'solution info can't be empty'
         return json_response(ret)
     _solution_info = content['solution_info']
-
-    if not 'score' in content:
-        ret['status'] = 1024 #'score can't be empty'
+    info = json.loads(_solution_info)
+    if not 'block_num' in _info:
+        ret['status'] = 1041 #'solution info dict needs to contain key 'block_num''
         return json_response(ret)
 
     try:
-        _score = int(content['score'])
+        user_block_num = int(_info['block_num'])
     except ValueError,e :
         print e
-        ret['status'] = 1025 #'the input score needs to be an Integer'
+        ret['status'] = 1042 #''block_num' in solution_info dict needs to be an Integer'
         return json_response(ret)
 
-    if _score > 4 or _score < 0:
-        ret['status'] = 1026 #'the input score needs to be in range[0,4]'
+    if not int_range(user_block_num):
+        ret['status'] = 1042 #''block_num' in solution_info dict needs to be an Integer'
         return json_response(ret)
+
+    level = level_id_filter[0]
+    if level.default_level_id != -1:
+        if level.std_solution_id == -1:
+            ret['status'] = 1040 #'calculate score error, this default level doesn't have one std solution'
+            return json_response(ret)
+
+        std_solution = Solution.objects.filter(solution_id = level.std_solution_id)[0]
+        _info = json.loads(std_solution.info)
+        std_block_num = _info['block_num']
+        _score = calc_score(std_block_num, user_block_num)
+    else:
+        _score = 4
 
     name_filter = User.objects.filter(name = session)
     user = name_filter[0]
