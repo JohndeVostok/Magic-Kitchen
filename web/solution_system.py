@@ -229,7 +229,7 @@ def get_solution_info(request):
     solution = solution_id_filter[0]
     ret['status'] = 1000 #'succeeded'
     ret['solution_info'] = solution.info
-    ret['score'] = solution.score #score range is [0,4], 0 means not pass, 4 means not need to score
+    ret['score'] = solution.score #score range is [1,4], 4 means pass, [1,3] means score
     ret['level_id'] = solution.level_id
     ret['author'] = solution.user_name
     ret['shared'] = solution.shared
