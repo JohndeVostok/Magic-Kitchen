@@ -650,6 +650,7 @@ function Logic()
 		{
 			var p = getFront();
 			itemList[map[p].itemId].value++;
+			ui.setItemValue(p, itemList[map[p].itemId].value);
 			this.loadPaper();
 		};
 
@@ -657,6 +658,7 @@ function Logic()
 		{
 			var p = getFront();
 			itemList[map[p].itemId].value--;
+			ui.setItemValue(p, itemList[map[p].itemId].value);
 			this.loadPaper();
 		};
 
