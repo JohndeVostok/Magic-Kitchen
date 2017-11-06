@@ -399,6 +399,15 @@ var ui = function() {
 				alert("shared");
 			});
 		});
+		$("#getSharedLevelButton").click(function() {
+			// Init login modal.
+			logic.doGetSharedLevel(function(err, res) {
+				if (err != undefined) {
+					alert("查询失败： " + err);
+					return;
+				}
+			});
+		});
 	};
 	
 	var start = function() {
