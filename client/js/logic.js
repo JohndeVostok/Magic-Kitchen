@@ -1348,6 +1348,48 @@ function Logic()
 			}
 		});
 	}
+
+	this.doGetSharedLevel = function(callback)
+	{
+		network.getSharedLevel(function(res) {
+			if (res.status == 1000)
+			{
+				callback(undefined, {
+					status: "succeeded",
+					levelList: JSON.parse(res.all_shared_level)
+				});
+			}
+			else
+			{
+				callback(msg.getMessage(res.status), {status: "failed"});
+			}
+		});
+	}
+
+	var getDefaultLevelList = function(list, callback)
+	{
+		callback(undefined, list);
+	}
+
+	var getSharedLevelList = function(list, callback)
+	{
+		network.getSharedLevel(function(res) {
+			if (res.status == 1000)
+			{
+				var ans = $.extend(true, list, {levelList: JSON.parse(res.all_shared_level});
+				getDefaultLevelList(ans, callback);
+			}
+			else
+			{
+				callback(msg.getMessage(res.status), {status: "failed"});
+			}
+		});
+	}
+
+	this.doGetLevelList = function(callback)
+	{
+		this.getSharedLevel({}, callback);
+	}
 }
 
 var logic = new Logic();
