@@ -481,6 +481,7 @@ class LevelSystemTestCase(TestCase):
         Level.objects.create(default_level_id = 1, info = json.dumps([1,3,5]), user_name = "sth")
         Level.objects.create(default_level_id = -1, info = "123", user_name = "sth2")
         vip_level = Level.objects.create(default_level_id = 6, info = 'vip level', user_name = 'sth')
+        Level.objects.create(default_level_id = 2, info = json.dumps([1,3,5]), user_name = "sth2")
 
         #test level id and default level id empty in the same time
         response = c.post('/api/get_level_info')
@@ -507,11 +508,11 @@ class LevelSystemTestCase(TestCase):
         ret = json.loads(response.content)
         self.assertEqual(ret['status'], 1018) #'the input default level id needs to be an Integer'
 
-        #test get level info
+        '''#test get level info
         response = c.post('/api/get_level_info', {'default_level_id': 1})
         ret = json.loads(response.content)
         self.assertEqual(ret['status'], 1000) #'succeeded'
-        self.assertEqual(json.loads(ret['level_info']), [1,3,5])
+        self.assertEqual(json.loads(ret['level_info']), [1,3,5])'''
 
         #test get vip level info before login
         response = c.post('/api/get_level_info', {'default_level_id': 6})
@@ -527,6 +528,29 @@ class LevelSystemTestCase(TestCase):
         response = c.post('/api/login', {'name': 'sth', 'password': 'abc'})
         ret = json.loads(response.content)
         self.assertEqual(ret['status'], 1000) #'succeeded'
+
+        #test get unshared level info
+        response = c.post('/api/get_level_info', {'default_level_id': 2})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 1031) #'you don't have operation authority'
+        
+        level = Level.objects.filter(default_level_id = 2)[0]
+        level.shared = True
+        level.save()
+        #test get shared level info
+        response = c.post('/api/get_level_info', {'default_level_id': 2})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 1000) #'succeeded'
+
+        level = Level.objects.filter(default_level_id = 2)[0]
+        level.shared = False
+        level.save()
+
+        #test get unshared level info, the user is the auther
+        response = c.post('/api/get_level_info', {'default_level_id': 1})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 1000) #'succeeded'
+
 
         #test get vip level info without vip authority
         response = c.post('/api/get_level_info', {'default_level_id': 6})
@@ -549,7 +573,6 @@ class LevelSystemTestCase(TestCase):
         ret = json.loads(response.content)
         self.assertEqual(ret['status'], 1000) #'succeeded'
 
-
         #test level id not exists
         response = c.post('/api/get_level_info', {'level_id': 2147483647})
         ret = json.loads(response.content)
@@ -570,11 +593,11 @@ class LevelSystemTestCase(TestCase):
         ret = json.loads(response.content)
         self.assertEqual(ret['status'], 1019) #'the input level id needs to be an Integer'
 
-        #test get level info
+        '''#test get level info
         response = c.post('/api/get_level_info', {'level_id': 2})
         ret = json.loads(response.content)
         self.assertEqual(ret['status'], 1000) #'succeeded'
-        self.assertEqual(ret['level_info'], "123")
+        self.assertEqual(ret['level_info'], "123")'''
 
         #test get vip level info before login
         response = c.post('/api/get_level_info', {'level_id': vip_level.level_id})
@@ -583,6 +606,28 @@ class LevelSystemTestCase(TestCase):
 
         #login
         response = c.post('/api/login', {'name': 'sth', 'password': 'abc'})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 1000) #'succeeded'
+
+        #test get unshared level info
+        response = c.post('/api/get_level_info', {'level_id': 4})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 1031) #'you don't have operation authority'
+        
+        level = Level.objects.filter(default_level_id = 2)[0]
+        level.shared = True
+        level.save()
+        #test get shared level info
+        response = c.post('/api/get_level_info', {'level_id': 4})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 1000) #'succeeded'
+
+        level = Level.objects.filter(default_level_id = 2)[0]
+        level.shared = False
+        level.save()
+
+        #test get unshared level info, the user is the auther
+        response = c.post('/api/get_level_info', {'default_level_id': 1})
         ret = json.loads(response.content)
         self.assertEqual(ret['status'], 1000) #'succeeded'
 
@@ -1264,6 +1309,24 @@ class SolutionSystemTestCase(TestCase):
         ret = json.loads(response.content)
         self.assertEqual(ret['status'], 1000) #'succeeded'
 
+        solution2 = Solution.objects.create(info = 'solution2', user_name = 'sth2', level_id = 1, score = 2)
+        c.post('/api/logout')
+
+        #test not login
+        response = c.post('/api/get_solution_info', {'solution_id': solution2.solution_id})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 1001) #'please log in first'
+
+        #login
+        response = c.post('/api/login', {'name': 'sth', 'password': 'abc'})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 1000) #'succeeded'
+
+        #test not author
+        response = c.post('/api/get_solution_info', {'solution_id': solution2.solution_id})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 1031) #'you don't have operation authority'
+        
         #test get solution info
         response = c.post('/api/get_solution_info', {'solution_id': 1})
         ret = json.loads(response.content)
