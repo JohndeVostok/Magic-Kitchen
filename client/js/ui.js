@@ -450,11 +450,14 @@ var ui = function() {
 							+ '"><span>'
 							+ res.levelList[i]
 							+ '</span></button>&nbsp&nbsp';
-					console.log(btn);
 					$("#chooseLevelDiv").append(btn);
 					btn = "#chooseLevelButtonId" + i;
 					$(btn).click(function() {
-						alert($(this).attr("value"));
+						var targetLevelId = $(this).attr("value");
+						if (isNaN(targetLevelId)) alert("请输入正确的关卡编号");
+						else logic.loadLevel(parseInt(targetLevelId));
+						resetGameButtons();
+						$("#chooseLevelModal").modal("hide");
 					});
 				}
 			});
