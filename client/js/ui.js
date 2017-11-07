@@ -101,6 +101,9 @@ var ui = function() {
 	var inputItems = [];
 	var outputItems = [];
 	
+	// For continuous-run function.
+	var gameRunning = false;
+	
 	var initUI = function() {
 		// Init map.
 		mapSize = N * M;
@@ -209,18 +212,42 @@ var ui = function() {
 			$("#buttonUndo").attr("disabled", true);
 			$("#buttonRedo").attr("disabled", true);
 			$("#buttonCompile").attr("disabled", true);
+			$("#buttonRun").attr("disabled", false);
+			$("#buttonRun").css("display", "");
+			$("#buttonPause").css("display", "none");
 			$("#buttonStep").attr("disabled", false);
 			$("#buttonStop").attr("disabled", false);
 		});
+		$("#buttonRun").click(function() {
+			$("#buttonRun").css("display", "none");
+			$("#buttonPause").css("display", "");
+			$("#buttonStep").attr("disabled", true);
+			gameRunning = true;
+		});
+		$("#buttonPause").click(function() {
+			$("#buttonRun").css("display", "");
+			$("#buttonPause").css("display", "none");
+			$("#buttonStep").attr("disabled", false);
+			gameRunning = false;
+		});
 		$("#buttonStep").click(function() {
-			if (!logic.step()) $("#buttonStep").attr("disabled", true);
+			if (!logic.step()) {
+				$("#buttonStep").attr("disabled", true);
+				$("#buttonRun").attr("disabled", true);
+				$("#buttonRun").css("display", "");
+				$("#buttonPause").css("display", "none");
+			}
 		});
 		$("#buttonStop").click(function() {
 			$("#buttonUndo").attr("disabled", false);
 			$("#buttonRedo").attr("disabled", false);
 			$("#buttonCompile").attr("disabled", false);
+			$("#buttonRun").attr("disabled", true);
+			$("#buttonRun").css("display", "");
+			$("#buttonPause").css("display", "none");
 			$("#buttonStep").attr("disabled", true);
 			$("#buttonStop").attr("disabled", true);
+			gameRunning = false;
 			code.stop();
 		});
 		$("#buttonChangeLevel").click(function() {
@@ -236,8 +263,12 @@ var ui = function() {
 		$("#buttonUndo").attr("disabled", false);
 		$("#buttonRedo").attr("disabled", true);
 		$("#buttonCompile").attr("disabled", false);
+		$("#buttonRun").attr("disabled", true);
+		$("#buttonRun").css("display", "");
+		$("#buttonPause").css("display", "none");
 		$("#buttonStep").attr("disabled", true);
 		$("#buttonStop").attr("disabled", true);
+		gameRunning = false;
 	}
 	
 	var initUIControls = function() {
@@ -423,13 +454,30 @@ var ui = function() {
 		if (animationQueue.length > 0) {
 			animationRunning = true;
 			startAnimation(animationQueue.shift());
+			return true;
+		} else {
+			return false;
 		}
 	}
+	
+	var idleTicks = 0;
+	const MaxIdleTicks = 10;
 	
 	// Handle the ticks from Ticker.
 	var tickHandler = function() {
 		if (animationRunning == false) {
-			checkAnimationQueue();
+			if (checkAnimationQueue()) {
+				idleTicks = 0;
+			} else if (gameRunning == true && ++idleTicks >= MaxIdleTicks) {
+				idleTicks = 0;
+				if (!logic.step()) {
+					$("#buttonStep").attr("disabled", true);
+					$("#buttonRun").attr("disabled", true);
+					$("#buttonRun").css("display", "");
+					$("#buttonPause").css("display", "none");
+					gameRunning = false;
+				}
+			}
 		}
 	};
 	
@@ -1072,6 +1120,10 @@ var ui = function() {
 
 	var blockStep = function(s) {
 		$("#buttonStep").attr("disabled", true);
+		$("#buttonRun").attr("disabled", true);
+		$("#buttonRun").css("display", "");
+		$("#buttonPause").css("display", "none");
+		gameRunning = false;
 		
 		animationQueue.push({
 			type: "alert",
