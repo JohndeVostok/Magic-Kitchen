@@ -176,7 +176,7 @@ var blocks = {
 		json: {
 			"message0": "从%1读取",
 			"args0": [
-				{"type": "field_input", "name": "ADDRESS", "check": "Number", "text": "address"},
+				{"type": "field_input", "name": "ADDRESS", "check": "Number", "text": "0"},
 			],
 			"previousStatement": null,
 			"nextStatement": null,
@@ -193,7 +193,7 @@ var blocks = {
 		json: {
 			"message0": "存到%1",
 			"args0": [
-				{"type": "field_input", "name": "ADDRESS", "check": "Number", "text": "address"},
+				{"type": "field_input", "name": "ADDRESS", "check": "Number", "text": "0"},
 			],
 			"previousStatement": null,
 			"nextStatement": null,
@@ -236,13 +236,13 @@ var blocks = {
 	21: {
 		name: "loadPaper",
 		json: {
-			"message0": "Load from %1",
+			"message0": "从操作台%1读取数值",
 			"args0": [
-				{"type": "field_input", "name": "ADDRESS", "check": "Number", "text": "address"},
+				{"type": "field_input", "name": "ADDRESS", "check": "Number", "text": "0"},
 			],
 			"previousStatement": null,
 			"nextStatement": null,
-			"tooltip": "load",
+			"tooltip": "操作台上必须放置有数值，手上必须是空的或者有数值。如果手上有数值，旧的数值会被覆盖。操作台上的数值不变",
 			"colour": 0
 		},
 		initExtra: function(block){},
@@ -253,13 +253,13 @@ var blocks = {
 	22: {
 		name: "storePaper",
 		json: {
-			"message0": "Store to %1",
+			"message0": "将数值存放到操作台%1",
 			"args0": [
-				{"type": "field_input", "name": "ADDRESS", "check": "Number", "text": "address"},
+				{"type": "field_input", "name": "ADDRESS", "check": "Number", "text": "0"},
 			],
 			"previousStatement": null,
 			"nextStatement": null,
-			"tooltip": "store",
+			"tooltip": "手上必须有数值，操作台必须是空的或者有数值。如果操作台上有数值，旧的数值会被覆盖。手上的数值不变",
 			"colour": 0
 		},
 		initExtra: function(block){},
@@ -270,13 +270,13 @@ var blocks = {
 	23: {
 		name: "addPaper",
 		json: {
-			"message0": "Add %1",
+			"message0": "将手上的数值加上操作台%1的数值",
 			"args0": [
-				{"type": "field_input", "name": "ADDRESS", "check": "Number", "text": "address"},
+				{"type": "field_input", "name": "ADDRESS", "check": "Number", "text": "0"},
 			],
 			"previousStatement": null,
 			"nextStatement": null,
-			"tooltip": "add",
+			"tooltip": "手上和操作台上必须有数值。操作台的数值不会变化",
 			"colour": 0
 		},
 		initExtra: function(block){},
@@ -287,13 +287,13 @@ var blocks = {
 	24: {
 		name: "subPaper",
 		json: {
-			"message0": "Sub %1",
+			"message0": "将手上的数值减去操作台%1的数值",
 			"args0": [
-				{"type": "field_input", "name": "ADDRESS", "check": "Number", "text": "address"},
+				{"type": "field_input", "name": "ADDRESS", "check": "Number", "text": "0"},
 			],
 			"previousStatement": null,
 			"nextStatement": null,
-			"tooltip": "sub",
+			"tooltip": "手上和操作台上必须有数值。操作台的数值不会变化",
 			"colour": 0
 		},
 		initExtra: function(block){},
@@ -304,13 +304,13 @@ var blocks = {
 	25: {
 		name: "incPaper",
 		json: {
-			"message0": "Inc %1",
+			"message0": "使操作台%1的数值增加1",
 			"args0": [
-				{"type": "field_input", "name": "ADDRESS", "check": "Number", "text": "address"},
+				{"type": "field_input", "name": "ADDRESS", "check": "Number", "text": "0"},
 			],
 			"previousStatement": null,
 			"nextStatement": null,
-			"tooltip": "inc",
+			"tooltip": "复合操作，操作台上必须有数值，让这个数自增1后再读取到手中。手上必须是空的或者数字，如果是数字则会被覆盖。",
 			"colour": 0
 		},
 		initExtra: function(block){},
@@ -321,13 +321,13 @@ var blocks = {
 	26: {
 		name: "decPaper",
 		json: {
-			"message0": "Dec %1",
+			"message0": "使操作台%1的数值减少1",
 			"args0": [
-				{"type": "field_input", "name": "ADDRESS", "check": "Number", "text": "address"},
+				{"type": "field_input", "name": "ADDRESS", "check": "Number", "text": "0"},
 			],
 			"previousStatement": null,
 			"nextStatement": null,
-			"tooltip": "dec",
+			"tooltip": "复合操作，操作台上必须有数值，让这个数自减1后再读取到手中。手上必须是空的或者数字，如果是数字则会被覆盖。",
 			"colour": 0
 		},
 		initExtra: function(block){},
@@ -338,8 +338,8 @@ var blocks = {
 	31: {
 		name: "inbox",
 		json: {
-			"message0": "inbox",
-			"tooltip": "inbox",
+			"message0": "从进货口拿取",
+			"tooltip": "手上必须是空的。进货序列在地图上方。",
 			"previousStatement": null,
 			"nextStatement": null,
 			"colour": 90
@@ -352,8 +352,8 @@ var blocks = {
 	32: {
 		name: "outbox",
 		json: {
-			"message0": "outbox",
-			"tooltip": "outbox",
+			"message0": "向出货口放置",
+			"tooltip": "手上的东西必须是出货口所需要的。需求序列在地图上方。",
 			"previousStatement": null,
 			"nextStatement": null,
 			"colour": 90
