@@ -251,12 +251,6 @@ var ui = function() {
 			code.stop();
 			animationQueue = [];
 		});
-		$("#buttonChangeLevel").click(function() {
-			var targetLevelId = $("input#targetLevelId").val();
-			if (isNaN(targetLevelId)) alert("请输入正确的关卡编号");
-			else logic.loadLevel(parseInt(targetLevelId));
-			resetGameButtons();
-		});
 		resetGameButtons();
 	};
 
