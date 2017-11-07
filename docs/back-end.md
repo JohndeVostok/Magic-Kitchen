@@ -170,6 +170,15 @@
             status = 1000
                 all_shared_level = all_shared_level_id_list_jsonStr
 
+### Get All Default Level
+        Post('/api/get_all_default_level')
+
+        return json dict:
+            status = 1000
+                level = list_jsonStr 其格式为[{'default_level_id': id_int, 'status': status_int}, {...}]
+                其中，status = 0/1/2，0表示有权限玩但是未通过，1表示没有权限玩vip关卡，2表示已通过
+
+
 ### Change Level Info
         Post('/api/change_level_info'), attributes: level_id = idInt, level_info = jsonStr
         只有关卡创建者及管理员有权限修改关卡信息。

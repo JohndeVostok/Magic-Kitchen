@@ -29,6 +29,7 @@ urlpatterns = [
     url(r'^api/get_all_shared_solution$', solution_system.get_all_shared_solution),
     url(r'^api/new_std_solution$', solution_system.new_std_solution),
     url(r'^api/change_level_info$', level_system.change_level_info),
+    url(r'^api/get_all_default_level$', level_system.get_all_default_level),
     # Force to serve static files, which is not recommended by Django
     url(r'^(?P<path>.*)$', views.static_file),
 ]
