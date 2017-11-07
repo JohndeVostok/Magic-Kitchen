@@ -431,12 +431,31 @@ var ui = function() {
 				alert("shared");
 			});
 		});
-		$("#getSharedLevelButton").click(function() {
+		$("#chooseLevelButton").click(function() {
 			// Init login modal.
 			logic.doGetSharedLevel(function(err, res) {
 				if (err != undefined) {
 					alert("查询失败： " + err);
 					return;
+				}
+				$("#chooseLevelModal").modal();
+				$("#chooseLevelDiv").empty();
+				var but = "";
+				for (let i = 0; i < res.levelList.length; i++)
+				{
+					var btn = '<button type="button" class="btn btn-primary" id="'
+							+ 'chooseLevelButtonId' + i
+							+ '" value = "'
+							+ res.levelList[i]
+							+ '"><span>'
+							+ res.levelList[i]
+							+ '</span></button>&nbsp&nbsp';
+					console.log(btn);
+					$("#chooseLevelDiv").append(btn);
+					btn = "#chooseLevelButtonId" + i;
+					$(btn).click(function() {
+						alert($(this).attr("value"));
+					});
 				}
 			});
 		});

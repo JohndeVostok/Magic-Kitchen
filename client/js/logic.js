@@ -723,7 +723,6 @@ function Logic()
 				network.getDefaultLevelInfo(levelId, function(data){
 					if (data["status"] == 1000)
 					{
-						alert("!!!");
 						user.setLevelId(levelId);
 						initLevel(JSON.parse(data["level_info"]));
 					}
@@ -1338,9 +1337,9 @@ function Logic()
 		network.getSharedLevel(function(res) {
 			if (res.status == 1000)
 			{
-				alert(res.all_shared_level);
 				callback(undefined, {
-					status: "succeeded"
+					status: "succeeded",
+					levelList: JSON.parse(res.all_shared_level)
 				});
 			}
 			else
