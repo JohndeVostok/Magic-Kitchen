@@ -251,12 +251,6 @@ var ui = function() {
 			code.stop();
 			animationQueue = [];
 		});
-		$("#buttonChangeLevel").click(function() {
-			var targetLevelId = $("input#targetLevelId").val();
-			if (isNaN(targetLevelId)) alert("请输入正确的关卡编号");
-			else logic.loadLevel(parseInt(targetLevelId));
-			resetGameButtons();
-		});
 		resetGameButtons();
 	};
 
@@ -431,12 +425,58 @@ var ui = function() {
 				alert("shared");
 			});
 		});
-		$("#getSharedLevelButton").click(function() {
+		$("#chooseLevelButton").click(function() {
 			// Init login modal.
-			logic.doGetSharedLevel(function(err, res) {
+			logic.doGetLevelList(function(err, res) {
 				if (err != undefined) {
 					alert("查询失败： " + err);
 					return;
+				}
+				var sharedList = res.sharedLevelList;
+				$("#chooseLevelModal").modal();
+				$("#chooseSharedLevelDiv").empty();
+				var but = "";
+				for (let i = 0; i < sharedList.length; i++)
+				{
+					var btn = '<button type="button" class="btn btn-primary" id="'
+							+ 'chooseSharedLevelButtonId' + i
+							+ '" value = "'
+							+ sharedList[i]
+							+ '"><span>'
+							+ sharedList[i]
+							+ '</span></button>&nbsp&nbsp';
+					$("#chooseSharedLevelDiv").append(btn);
+					btn = "#chooseSharedLevelButtonId" + i;
+					$(btn).click(function() {
+						var targetLevelId = $(this).attr("value");
+						if (isNaN(targetLevelId)) alert("请输入正确的关卡编号");
+						else logic.loadLevel(parseInt(targetLevelId));
+						resetGameButtons();
+						$("#chooseLevelModal").modal("hide");
+					});
+				}
+				var defaultList = res.defaultLevelList;
+				$("#chooseLevelModal").modal();
+				$("#chooseDefaultLevelDiv").empty();
+				var but = "";
+				for (let i = 0; i < defaultList.length; i++)
+				{
+					var btn = '<button type="button" class="btn btn-primary" id="'
+							+ 'chooseDefaultLevelButtonId' + i
+							+ '" value = "'
+							+ defaultList[i]
+							+ '"><span>'
+							+ defaultList[i]
+							+ '</span></button>&nbsp&nbsp';
+					$("#chooseDefaultLevelDiv").append(btn);
+					btn = "#chooseDefaultLevelButtonId" + i;
+					$(btn).click(function() {
+						var targetLevelId = $(this).attr("value");
+						if (isNaN(targetLevelId)) alert("请输入正确的关卡编号");
+						else logic.loadLevel(parseInt(targetLevelId));
+						resetGameButtons();
+						$("#chooseLevelModal").modal("hide");
+					});
 				}
 			});
 		});

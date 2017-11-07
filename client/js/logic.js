@@ -723,7 +723,6 @@ function Logic()
 				network.getDefaultLevelInfo(levelId, function(data){
 					if (data["status"] == 1000)
 					{
-						alert("!!!");
 						user.setLevelId(levelId);
 						initLevel(JSON.parse(data["level_info"]));
 					}
@@ -1338,9 +1337,9 @@ function Logic()
 		network.getSharedLevel(function(res) {
 			if (res.status == 1000)
 			{
-				alert(res.all_shared_level);
 				callback(undefined, {
-					status: "succeeded"
+					status: "succeeded",
+					levelList: JSON.parse(res.all_shared_level)
 				});
 			}
 			else
@@ -1348,6 +1347,49 @@ function Logic()
 				callback(msg.getMessage(res.status), {status: "failed"});
 			}
 		});
+	}
+
+	this.doGetSharedLevel = function(callback)
+	{
+		network.getSharedLevel(function(res) {
+			if (res.status == 1000)
+			{
+				callback(undefined, {
+					status: "succeeded",
+					levelList: JSON.parse(res.all_shared_level)
+				});
+			}
+			else
+			{
+				callback(msg.getMessage(res.status), {status: "failed"});
+			}
+		});
+	}
+
+	var getDefaultLevelList = function(list, callback)
+	{
+		var ans = $.extend(true, {}, list, {defaultLevelList: []});
+		callback(undefined, ans);
+	}
+
+	var getSharedLevelList = function(list, callback)
+	{
+		network.getSharedLevel(function(res) {
+			if (res.status == 1000)
+			{
+				var ans = $.extend(true, {}, list, {sharedLevelList: JSON.parse(res.all_shared_level)});
+				getDefaultLevelList(ans, callback);
+			}
+			else
+			{
+				callback(msg.getMessage(res.status), {status: "failed"});
+			}
+		});
+	}
+
+	this.doGetLevelList = function(callback)
+	{
+		getSharedLevelList({}, callback);
 	}
 }
 

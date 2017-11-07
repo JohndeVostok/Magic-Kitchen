@@ -91,8 +91,8 @@
 								<button class="btn btn-primary" id="shareLevelButton">
 									<span class="glyphicon glyphicon-star"> 分享 </span>
 								</button>
-								<button class="btn btn-primary" id="getSharedLevelButton">
-									<span class="glyphicon glyphicon-star"> 查找 </span>
+								<button class="btn btn-primary" id="chooseLevelButton">
+									<span class="glyphicon glyphicon-star"> 选关 </span>
 								</button>
 							</h4>
 						</div>
@@ -123,16 +123,6 @@
 						</div>
 					</div>
 					<div id="blocklyDiv" style="height: 550px; width: 550px;"></div>
-				</td>
-			</tr>
-			<tr>
-				<td class="col-xs-6">
-					<div id="changeLevel">
-						<button class="btn btn-primary" id="buttonChangeLevel">
-							<span class="glyphicon glyphicon-off"> 转到关卡 </span>
-						</button>
-						<input id="targetLevelId"></input>
-					</div>
 				</td>
 			</tr>
 		</table>
@@ -327,6 +317,30 @@
 	</div>
 </div>
 
+<div class="modal fade" id="chooseLevelModal" tabindex="-1" role="dialog">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal">
+					<span aria-hidden="true"> &times; </span>
+				</button>
+				<h4 class="modal-title">
+					选择你想要的关卡
+				</h4>
+			</div>
+			<div class="modal-body" id="chooseDefaultLevelDiv">
+			</div>
+			<div class="modal-body" id="chooseSharedLevelDiv">
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">
+					<span class="glyphicon glyphicon-remove" />
+					<span> 取消 </span>
+				</button>
+			</div>
+		</div>
+	</div>
+</div>
 
 </body>
 
