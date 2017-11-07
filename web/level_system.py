@@ -302,3 +302,60 @@ def get_all_shared_level(request):
     ret['all_shared_level'] = json.dumps(shared_level_id)
     ret['status'] = 1000 #'succeeded'
     return json_response(ret)
+
+def change_level_info(request):
+    content = request.POST
+    ret = {}
+
+    session = get_session(request)
+    if (session == None):
+        ret['status'] = 1001 #'please log in first'
+        return json_response(ret)
+
+    if not 'level_id' in content:
+        ret['status'] = 1027 #'level id can't be empty'
+        return json_response(ret)
+
+    try:
+        _level_id = int(content['level_id'])
+    except ValueError,e :
+        print e
+        ret['status'] = 1019 #'the input level id needs to be an Integer'
+        return json_response(ret)
+
+    if not int_range(_level_id):
+        ret['status'] = 1019 #'the input level id needs to be an Integer'
+        return json_response(ret)
+
+    level_id_filter = Level.objects.filter(level_id = _level_id)
+    if len(level_id_filter) == 0:
+        ret['status'] = 1017 #'this level doesn't exist'
+        return json_response(ret)
+
+    user = User.objects.filter(name = session)[0]
+    level = level_id_filter[0]
+
+    #only the author or admin can share this level
+    if not ((session == level.user_name) or (user.authority >= 3)):
+        ret['status'] = 1031 #'you don't have operation authority'
+        return json_response(ret)
+
+    if level.shared:
+        ret['status'] = 1045 #'you can't edit shared level'
+        return json_response(ret)
+
+    if not 'level_info' in content:
+        ret['status'] = 1021 #'level info can't be empty'
+        return json_response(ret)
+    _level_info = content['level_info']
+
+    level.info = _level_info
+    level.save()
+
+    solutions = Solution.objects.filter(level_id = _level_id)
+    for solution in solutions:
+        solution.score = 0 #pass or not pass is unknown
+        solution.save()
+
+    ret['status'] = 1000 #'succeeded'
+    return json_response(ret)

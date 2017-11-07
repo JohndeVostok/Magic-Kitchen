@@ -53,6 +53,7 @@ msg is a map for message between blocks.
         1042 'block_num' in solution_info dict needs to be an Integer    solution_info 字典中'block_num'关键字对应值需要是Int类型
         1043 the level need to be shared before sharing the solution    分享解法前需要分享对应关卡
         1044 you can't cancel share the level    你无法取消分享该关卡
+        1045 you can't edit shared level    你无法编辑已经分享的关卡
 
 	Functions for other blocks
 		class msg
