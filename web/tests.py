@@ -786,6 +786,11 @@ class LevelSystemTestCase(TestCase):
         ret = json.loads(response.content)
         self.assertEqual(ret['status'], 1034) #'the input share needs to be 0 or 1'
 
+        #test can't cancel share
+        response = c.post('/api/share_level', {'level_id': 1, 'share': 0})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 1044) #'you can't cancle share the level'
+
         #test level id is not Integer
         response = c.post('/api/share_level', {'level_id': 'a', 'share': 1})
         ret = json.loads(response.content)
@@ -828,12 +833,12 @@ class LevelSystemTestCase(TestCase):
         level1 = Level.objects.filter(level_id = 1)[0]
         self.assertEqual(level1.shared, True)
 
-        #test not share level
+        '''#test not share level
         response = c.post('/api/share_level', {'level_id': level1.level_id, 'share': 0})
         ret = json.loads(response.content)
         self.assertEqual(ret['status'], 1000) #'succeeded'
         level1 = Level.objects.filter(level_id = 1)[0]
-        self.assertEqual(level1.shared, False)
+        self.assertEqual(level1.shared, False)'''
 
     def test_get_all_level(self):
         c = Client()

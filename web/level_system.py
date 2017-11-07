@@ -224,6 +224,9 @@ def share_level(request):
     if (_shared != 0) and (_shared != 1):
         ret['status'] = 1034 #'the input share needs to be 0 or 1'
         return json_response(ret)
+    if _shared == 0:
+        ret['status'] = 1044 #'you can't cancel share the level'
+        return json_response(ret)
 
     try:
         _level_id = int(content['level_id'])
