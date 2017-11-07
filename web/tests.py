@@ -1309,6 +1309,24 @@ class SolutionSystemTestCase(TestCase):
         ret = json.loads(response.content)
         self.assertEqual(ret['status'], 1000) #'succeeded'
 
+        solution2 = Solution.objects.create(info = 'solution2', user_name = 'sth2', level_id = 1, score = 2)
+        c.post('/api/logout')
+
+        #test not login
+        response = c.post('/api/get_solution_info', {'solution_id': solution2.solution_id})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 1001) #'please log in first'
+
+        #login
+        response = c.post('/api/login', {'name': 'sth', 'password': 'abc'})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 1000) #'succeeded'
+
+        #test not author
+        response = c.post('/api/get_solution_info', {'solution_id': solution2.solution_id})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 1031) #'you don't have operation authority'
+        
         #test get solution info
         response = c.post('/api/get_solution_info', {'solution_id': 1})
         ret = json.loads(response.content)

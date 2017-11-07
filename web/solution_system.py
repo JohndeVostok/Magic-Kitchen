@@ -227,6 +227,16 @@ def get_solution_info(request):
         return json_response(ret)
 
     solution = solution_id_filter[0]
+    if not solution.shared:
+        session = get_session(request)
+        if not session:
+            ret['status'] = 1001 #'please log in first'
+            return json_response(ret)
+        user = User.objects.filter(name = session)[0]
+        if not ((session == solution.user_name) or (user.authority >= 3)):
+            ret['status'] = 1031 #'you don't have operation authority'
+            return json_response(ret)
+            
     ret['status'] = 1000 #'succeeded'
     ret['solution_info'] = solution.info
     ret['score'] = solution.score #score range is [1,4], 4 means pass, [1,3] means score
