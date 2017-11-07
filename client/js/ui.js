@@ -461,6 +461,29 @@ var ui = function() {
 						$("#chooseLevelModal").modal("hide");
 					});
 				}
+				var defaultList = res.defaultLevelList;
+				$("#chooseLevelModal").modal();
+				$("#chooseDefaultLevelDiv").empty();
+				var but = "";
+				for (let i = 0; i < defaultList.length; i++)
+				{
+					var btn = '<button type="button" class="btn btn-primary" id="'
+							+ 'chooseDefaultLevelButtonId' + i
+							+ '" value = "'
+							+ defaultList[i]
+							+ '"><span>'
+							+ defaultList[i]
+							+ '</span></button>&nbsp&nbsp';
+					$("#chooseDefaultLevelDiv").append(btn);
+					btn = "#chooseDefaultLevelButtonId" + i;
+					$(btn).click(function() {
+						var targetLevelId = $(this).attr("value");
+						if (isNaN(targetLevelId)) alert("请输入正确的关卡编号");
+						else logic.loadLevel(parseInt(targetLevelId));
+						resetGameButtons();
+						$("#chooseLevelModal").modal("hide");
+					});
+				}
 			});
 		});
 	};
