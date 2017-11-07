@@ -1286,7 +1286,7 @@ function Logic()
 
 	this.getUserContent = function()
 	{
-		if (user.status() == false || user.getContent() == "")
+		if (!user.status() || user.getContent() == "")
 			return JSON.stringify(config.emptyLevelInfo);
 		else
 			return user.getContent();
