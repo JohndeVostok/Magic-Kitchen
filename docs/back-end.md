@@ -169,6 +169,22 @@
         return json dict:
             status = 1000
                 all_shared_level = all_shared_level_id_list_jsonStr
+
+### Change Level Info
+        Post('/api/change_level_info'), attributes: level_id = idInt, level_info = jsonStr
+        只有关卡创建者及管理员有权限修改关卡信息。
+        不能修改已分享的关卡。
+        关卡修改后，若已经有之前创建好的解法，则解法得分都将被置0，因为这些解法可能无法再次通过关卡。不过由于只有未分享的关卡可以修改，所以应该只有关卡创建者自己创建过这关的解法。
+
+        return json dict:
+            status = 1000
+            status = 1001
+            status = 1017
+            status = 1019
+            status = 1021
+            status = 1027
+            status = 1031
+            status = 1045
     
 ### New Std Solution
         Post('/api/new_std_solution') attributes: default_level_id= idInt, solution_info= jsonStr, edit= Int(0 or 1, 0 means create, 1 means edit) 
@@ -198,6 +214,7 @@
         一个用户对同一个关卡只保存一个解法，最新创建的解法将覆盖之前对该关卡的解法
         参数solution_info需要是一个字典的json字符串，字典中必须包含关键字'block_num'，其值即为该解法用的块数(Int)，用于计算得分
         如果level_id对应的是一个默认关卡，则要求该默认关卡已经有标准解法（否则无法计算得分）
+        关卡修改后，若已经有之前创建好的解法，则解法得分都将被置0，因为这些解法可能无法再次通过关卡。不过由于只有未分享的关卡可以修改，所以应该只有关卡创建者自己创建过这关的解法。
 
         return json dict:
             status = 1000

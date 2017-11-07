@@ -29,7 +29,7 @@ msg is a map for message between blocks.
         1018 the input default level id needs to be an Integer    默认关卡ID需要是Int类型
         1019 the input level id needs to be an Integer    关卡ID需要是Int类型
         1020 default level id can't be empty    默认关卡ID不能为空
-        1021 level info can't be empty    关卡ID不能为空
+        1021 level info can't be empty    关卡信息不能为空
         1022 this default level id already exists    这个默认关卡已经存在
         1023 solution info can't be empty    解法信息不能为空
         1024 score can't be empty    得分不能为空

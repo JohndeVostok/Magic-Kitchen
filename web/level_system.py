@@ -1,5 +1,6 @@
 from models import Level
 from models import User
+from models import Solution
 import json
 from django.http import HttpResponse
 from custom_system import refresh_vip_authority
