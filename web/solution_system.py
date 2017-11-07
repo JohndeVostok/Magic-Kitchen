@@ -284,6 +284,13 @@ def share_solution(request):
     if not ((session == solution.user_name) or (user.authority >= 3)):
         ret['status'] = 1031 #'you don't have operation authority'
         return json_response(ret)
+    
+    _level_id = solution.level_id
+    level = Level.objects.filter(level_id = _level_id)[0]
+    if not level.shared:
+        ret['status'] = 1043 #'the level need to be shared before sharing the solution'
+        return json_response(ret)
+
     solution.shared = (_shared == 1)
     solution.save()
     ret['status'] = 1000 #'succeeded'

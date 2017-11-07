@@ -134,8 +134,10 @@
             status = 1032
 
 ### Share Level
-        Post('/api/share_level'), attributes: level_id = idInt, share = Int(0 or 1, 0 means not share, 1 means share)
+        Post('/api/share_level'), attributes: level_id = idInt, share = Int(1 means share)
+        目前暂不支持取消分享关卡，所以参数share 只能为1。
         用户必须登录才能分享/取消分享关卡。只有该关卡的创建者或管理员才有操作权限。
+        分享解法前需要分享对应关卡。
 
         return json dict:
             status = 1000
@@ -146,6 +148,7 @@
             status = 1031
             status = 1033
             status = 1034
+            status = 1044
 
 ### Get All Level
         Post('/api/get_all_level')
@@ -224,6 +227,7 @@
 ### Share Solution
         Post('/api/share_solution'), attributes: solution_id = solution_id_Int, share = Int(0 or 1, 0 means not share, 1 means share)
         用户必须登录才能分享/取消分享解法。只有该解法的创建者或管理员才有操作权限。
+        分享解法前需要分享对应关卡。
 
         return json dict:
             status = 1000
@@ -234,6 +238,7 @@
             status = 1035
             status = 1036
             status = 1037
+            status = 1043
 
 ### Get All Shared Solution
         Post('/api/get_all_shared_solution')

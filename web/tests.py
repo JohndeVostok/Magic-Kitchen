@@ -786,6 +786,11 @@ class LevelSystemTestCase(TestCase):
         ret = json.loads(response.content)
         self.assertEqual(ret['status'], 1034) #'the input share needs to be 0 or 1'
 
+        #test can't cancel share
+        response = c.post('/api/share_level', {'level_id': 1, 'share': 0})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 1044) #'you can't cancle share the level'
+
         #test level id is not Integer
         response = c.post('/api/share_level', {'level_id': 'a', 'share': 1})
         ret = json.loads(response.content)
@@ -828,12 +833,12 @@ class LevelSystemTestCase(TestCase):
         level1 = Level.objects.filter(level_id = 1)[0]
         self.assertEqual(level1.shared, True)
 
-        #test not share level
+        '''#test not share level
         response = c.post('/api/share_level', {'level_id': level1.level_id, 'share': 0})
         ret = json.loads(response.content)
         self.assertEqual(ret['status'], 1000) #'succeeded'
         level1 = Level.objects.filter(level_id = 1)[0]
-        self.assertEqual(level1.shared, False)
+        self.assertEqual(level1.shared, False)'''
 
     def test_get_all_level(self):
         c = Client()
@@ -1336,14 +1341,27 @@ class SolutionSystemTestCase(TestCase):
         ret = json.loads(response.content)
         self.assertEqual(ret['status'], 1037) #'this solution doesn't exist'
 
-        solution1 = Solution.objects.create(info = 'solution1', user_name = 'sth2', level_id = 2, score = 2)
+        level1 = Level.objects.create(default_level_id = -1, info = 'levelinfo', user_name = 'abc')
+        level2 = Level.objects.create(default_level_id = -1, info = 'levelinfo', user_name = 'abc')
+
+        solution1 = Solution.objects.create(info = 'solution1', user_name = 'sth2', level_id = 1, score = 2)
 
         #test session isn't author or admin
         response = c.post('/api/share_solution', {'solution_id': solution1.solution_id, 'share': 1})
         ret = json.loads(response.content)
         self.assertEqual(ret['status'], 1031) #'you don't have operation authority'
 
-        solution2 = Solution.objects.create(info = 'solution2', user_name = 'sth', level_id = 3, score = 3)
+        solution2 = Solution.objects.create(info = 'solution2', user_name = 'sth', level_id = 2, score = 3)
+
+        #test can't share solution before sharing level
+        response = c.post('/api/share_solution', {'solution_id': solution2.solution_id, 'share': 1})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 1043) #'the level need to be shared before sharing the solution'
+
+        level1.shared = True
+        level1.save()
+        level2.shared = True
+        level2.save()
 
         #test share solution
         response = c.post('/api/share_solution', {'solution_id': solution2.solution_id, 'share': 1})
