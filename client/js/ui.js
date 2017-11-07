@@ -438,7 +438,9 @@ var ui = function() {
 					alert("查询失败： " + err);
 					return;
 				}
-				$("#chooseLevelModal").modal();
+				var list = res.sharedLevelList;
+				console.log(list);
+/*				$("#chooseLevelModal").modal();
 				$("#chooseLevelDiv").empty();
 				var but = "";
 				for (let i = 0; i < res.levelList.length; i++)
@@ -459,7 +461,7 @@ var ui = function() {
 						resetGameButtons();
 						$("#chooseLevelModal").modal("hide");
 					});
-				}
+				}*/
 			});
 		});
 	};
