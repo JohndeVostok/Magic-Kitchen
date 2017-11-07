@@ -91,12 +91,10 @@ function Msg()
 	this.getMessage = function(msgId)
 	{
 		var msgStr = content[msgId];
-		var str = "";
 		if (msgStr == undefined)
-			str = "INVALID MSG CODE: " + msgId;
+			return ("INVALID MSG CODE: " + msgId);
 		else
-			str = msgStr[language];
-		return str;
+			return (msgStr[language]);
 	};
 }
 
