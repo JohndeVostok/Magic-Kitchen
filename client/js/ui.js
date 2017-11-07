@@ -433,7 +433,7 @@ var ui = function() {
 		});
 		$("#chooseLevelButton").click(function() {
 			// Init login modal.
-			logic.doGetSharedLevel(function(err, res) {
+			logic.doGetLevelList(function(err, res) {
 				if (err != undefined) {
 					alert("查询失败： " + err);
 					return;

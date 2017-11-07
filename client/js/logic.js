@@ -1376,7 +1376,7 @@ function Logic()
 		network.getSharedLevel(function(res) {
 			if (res.status == 1000)
 			{
-				var ans = $.extend(true, {}, list, {SharedLevelList: JSON.parse(res.all_shared_level});
+				var ans = $.extend(true, {}, list, {sharedLevelList: JSON.parse(res.all_shared_level)});
 				getDefaultLevelList(ans, callback);
 			}
 			else
@@ -1388,7 +1388,7 @@ function Logic()
 
 	this.doGetLevelList = function(callback)
 	{
-		this.getSharedLevel({}, callback);
+		getSharedLevelList({}, callback);
 	}
 }
 
