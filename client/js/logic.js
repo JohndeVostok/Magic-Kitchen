@@ -1368,7 +1368,8 @@ function Logic()
 
 	var getDefaultLevelList = function(list, callback)
 	{
-		callback(undefined, list);
+		var ans = $.extend(true, {}, list, {defaultLevelList: []});
+		callback(undefined, ans);
 	}
 
 	var getSharedLevelList = function(list, callback)

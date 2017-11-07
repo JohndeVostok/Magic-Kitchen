@@ -438,22 +438,21 @@ var ui = function() {
 					alert("查询失败： " + err);
 					return;
 				}
-				var list = res.sharedLevelList;
-				console.log(list);
-/*				$("#chooseLevelModal").modal();
-				$("#chooseLevelDiv").empty();
+				var sharedList = res.sharedLevelList;
+				$("#chooseLevelModal").modal();
+				$("#chooseSharedLevelDiv").empty();
 				var but = "";
-				for (let i = 0; i < res.levelList.length; i++)
+				for (let i = 0; i < sharedList.length; i++)
 				{
 					var btn = '<button type="button" class="btn btn-primary" id="'
-							+ 'chooseLevelButtonId' + i
+							+ 'chooseSharedLevelButtonId' + i
 							+ '" value = "'
-							+ res.levelList[i]
+							+ sharedList[i]
 							+ '"><span>'
-							+ res.levelList[i]
+							+ sharedList[i]
 							+ '</span></button>&nbsp&nbsp';
-					$("#chooseLevelDiv").append(btn);
-					btn = "#chooseLevelButtonId" + i;
+					$("#chooseSharedLevelDiv").append(btn);
+					btn = "#chooseSharedLevelButtonId" + i;
 					$(btn).click(function() {
 						var targetLevelId = $(this).attr("value");
 						if (isNaN(targetLevelId)) alert("请输入正确的关卡编号");
@@ -461,7 +460,7 @@ var ui = function() {
 						resetGameButtons();
 						$("#chooseLevelModal").modal("hide");
 					});
-				}*/
+				}
 			});
 		});
 	};
