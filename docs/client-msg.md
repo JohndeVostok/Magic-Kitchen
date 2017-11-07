@@ -51,6 +51,7 @@ msg is a map for message between blocks.
         1040 calculate score error, this default level doesn't have one std solution    计算得分错误，这个默认关卡还没有标准解法
         1041 solution info dict needs to contain key 'block_num'    solution_info 字典中需要包含关键字'block_num'
         1042 'block_num' in solution_info dict needs to be an Integer    solution_info 字典中'block_num'关键字对应值需要是Int类型
+        1043 the level need to be shared before sharing the solution    分享解法前需要分享对应关卡
 
 	Functions for other blocks
 		class msg
