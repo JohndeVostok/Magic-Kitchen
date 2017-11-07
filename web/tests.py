@@ -310,6 +310,12 @@ class CustomSystemTestCase(TestCase):
         self.assertEqual(ret['status'], 1000) #'succeeded'
         level2 = Level.objects.filter(default_level_id = 123)[0]
 
+        #test get current user info
+        response = c.post('/api/get_current_user_info')
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 1000) #'succeeded'
+        self.assertEqual(ret['next_default_level_id'], 123)
+
         solution1 = Solution.objects.create(user_name = 'abc', level_id = level1.level_id, info = json.dumps({'block_num': 6}), score = 3)
         solution2 = Solution.objects.create(user_name = 'abc', level_id = level2.level_id, info = json.dumps({'block_num': 6}), score = 3)
         level1.std_solution_id = solution1.solution_id
@@ -318,7 +324,7 @@ class CustomSystemTestCase(TestCase):
         level2.save()
 
         #test new solution
-        response = c.post('/api/new_solution', {'level_id': 1, 'solution_info': json.dumps({'block_num': 5}), 'score': 0})
+        response = c.post('/api/new_solution', {'level_id': 2, 'solution_info': json.dumps({'block_num': 5}), 'score': 0})
         ret = json.loads(response.content)
         self.assertEqual(ret['status'], 1000) #'succeeded'
 
@@ -328,8 +334,9 @@ class CustomSystemTestCase(TestCase):
         self.assertEqual(ret['status'], 1000) #'succeeded'
         self.assertEqual(ret['user_name'], 'sth')
         self.assertEqual(ret['email'], '123@111.com')
-        self.assertEqual(json.loads(ret['solution_dict']), {'1' : 3})
+        self.assertEqual(json.loads(ret['solution_dict']), {'2' : 3})
         self.assertEqual(json.loads(ret['created_level']), [1, 2])
+        self.assertEqual(ret['next_default_level_id'], 233)
 
         #test new solution
         response = c.post('/api/new_solution', {'level_id': 1, 'solution_info': json.dumps({'block_num': 6})})
@@ -344,12 +351,14 @@ class CustomSystemTestCase(TestCase):
         response = c.post('/api/new_usermade_level', {'level_info': 'jsonStr2'})
         ret = json.loads(response.content)
         self.assertEqual(ret['status'], 1000) #'succeeded'
+        
         #test get current user info
         response = c.post('/api/get_current_user_info')
         ret = json.loads(response.content)
         self.assertEqual(ret['status'], 1000) #'succeeded'
-        self.assertEqual(json.loads(ret['solution_dict']), {'1' : 3, '2' : 4})
+        self.assertEqual(json.loads(ret['solution_dict']), {'1' : 4, '2' : 3})
         self.assertEqual(json.loads(ret['created_level']), [1, 2, 4])
+        self.assertEqual(ret['next_default_level_id'], -1)
 
     def test_vip_charge(self):
         c = Client()

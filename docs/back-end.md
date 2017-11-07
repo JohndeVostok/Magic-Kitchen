@@ -75,11 +75,9 @@
                 email = email_str
                 solution_dict = solution_dict_jsonStr 
                 created_level = created_level_id_list_jsonStr
+                next_default_level_id = id_Int #返回已创建的默认关卡中default_level_id最小的未通过的关卡，不保证有权限玩（如已经玩完所有非vip关卡，会返回第一个vip关卡）。如已完成所有关卡，则返回-1。
 
             status = 1001
-
-
-
 
 ### Get Level Info
         Post('/api/get_level_info'), attributes: level_id = idInt, default_level_id = idInt (两个参数只传一个即可)
