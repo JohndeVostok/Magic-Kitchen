@@ -110,18 +110,24 @@ def get_level_info(request):
         if len(default_level_id_filter) == 0:
             ret['status'] = 1017 #'this level doesn't exist'
             return json_response(ret)
+        level = default_level_id_filter[0]
 
         #only vip can play the level which default_level_id > 5
-        if _default_level_id > 5:
+        if (_default_level_id > 5) or (not level.shared):
             session = get_session(request)
             if not session:
                 ret['status'] = 1001 #'please log in first'
                 return json_response(ret)
             user = User.objects.filter(name = session)[0]
-            refresh_vip_authority(user)
-            if user.authority < 2:
-                ret['status'] = 1031 #'you don't have operation authority'
-                return json_response(ret)
+            if not level.shared:
+                if not ((session == level.user_name) or (user.authority >= 3)):
+                    ret['status'] = 1031 #'you don't have operation authority'
+                    return json_response(ret)    
+            if _default_level_id > 5:
+                refresh_vip_authority(user)
+                if user.authority < 2:
+                    ret['status'] = 1031 #'you don't have operation authority'
+                    return json_response(ret)
 
         ret['status'] = 1000 #'succeeded'
         ret['level_info'] = default_level_id_filter[0].info #json
@@ -143,19 +149,25 @@ def get_level_info(request):
         if len(level_id_filter) == 0:
             ret['status'] = 1017 #'this level doesn't exist'
             return json_response(ret)
+        level = level_id_filter[0]
 
-        ##only vip can play the level which default_level_id > 5
+        #only vip can play the level which default_level_id > 5
         _default_level_id = level_id_filter[0].default_level_id
-        if _default_level_id > 5:
+        if (_default_level_id > 5) or (not level.shared):
             session = get_session(request)
             if not session:
                 ret['status'] = 1001 #'please log in first'
                 return json_response(ret)
             user = User.objects.filter(name = session)[0]
-            refresh_vip_authority(user)
-            if user.authority < 2:
-                ret['status'] = 1031 #'you don't have operation authority'
-                return json_response(ret)
+            if not level.shared:
+                if not ((session == level.user_name) or (user.authority >= 3)):
+                    ret['status'] = 1031 #'you don't have operation authority'
+                    return json_response(ret)
+            if (_default_level_id > 5):
+                refresh_vip_authority(user)
+                if user.authority < 2:
+                    ret['status'] = 1031 #'you don't have operation authority'
+                    return json_response(ret)
 
         ret['status'] = 1000 #'succeeded'
         ret['level_info'] = level_id_filter[0].info #json

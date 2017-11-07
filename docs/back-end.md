@@ -88,6 +88,7 @@
         level_id则用来get任意一关（可以是预置关卡，也可以是用户创建关卡，但是建议用来get用户创建关卡）
         关于这两个参数在数据库中的存储：level_id是AutoField，也就是每个level_id唯一对应一个关卡；default_level_id则不是，用户创建的关卡的default_level_id都为-1。
         游戏的前5个关卡提供试玩,用户在登录或未登录状态下均可进行游戏（调用API），从第5关以后的关卡需要用户登录且具有VIP权限。这里的“第五关之后”是指default_level_id>5。
+        只有管理员和关卡作者可以获得未分享关卡信息。
         
 
         return json dict:
