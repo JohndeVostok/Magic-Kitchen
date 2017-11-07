@@ -249,6 +249,7 @@ var ui = function() {
 			$("#buttonStop").attr("disabled", true);
 			gameRunning = false;
 			code.stop();
+			animationQueue = [];
 		});
 		$("#buttonChangeLevel").click(function() {
 			var targetLevelId = $("input#targetLevelId").val();
