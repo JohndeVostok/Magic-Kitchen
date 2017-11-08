@@ -1,5 +1,6 @@
 from models import User
 from models import Level
+from models import Solution
 import json
 from django.http import HttpResponse 
 from send_email import email_thread
@@ -237,11 +238,24 @@ def get_current_user_info(request):
     ret['email'] = user.email
     ret['solution_dict'] = user.solution_dict
     ret['status'] = 1000 #'succeeded'
+
     level_filter = Level.objects.filter(user_name = session)
     created_level = []
     for level in level_filter:
         created_level.append(level.level_id)
     ret['created_level'] = json.dumps(created_level)
+
+    all_default_level = Level.objects.exclude(default_level_id = -1).order_by('default_level_id')
+    solution_dict = json.loads(user.solution_dict)
+    has_next_level = False
+    for level in all_default_level:
+        if not (str(level.level_id) in solution_dict):
+            ret['next_default_level_id'] = level.default_level_id
+            has_next_level = True
+            break
+    if not has_next_level:
+        ret['next_default_level_id'] = -1
+
     return json_response(ret)
 
 def vip_charge(request):

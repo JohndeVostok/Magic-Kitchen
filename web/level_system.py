@@ -304,6 +304,49 @@ def get_all_shared_level(request):
     ret['status'] = 1000 #'succeeded'
     return json_response(ret)
 
+def get_all_default_level(request):
+    content = request.POST
+    ret = {}
+    ret['status'] = 1000 #'succeeded'
+    all_default_level = Level.objects.exclude(default_level_id = -1).order_by('default_level_id')
+
+    session = get_session(request)
+    if (session == None):
+        l = []
+        for level in all_default_level:
+            if (level.default_level_id > 5):
+                l.append({'default_level_id': level.default_level_id, 'status': 1}) #vip level, can't access
+            else:
+                l.append({'default_level_id': level.default_level_id, 'status': 0}) #can access but not pass
+        ret['level'] = json.dumps(l)
+        return json_response(ret)
+
+    user = User.objects.filter(name = session)[0]
+    refresh_vip_authority(user)
+    user = User.objects.filter(name = session)[0]
+    solution_dict = json.loads(user.solution_dict)
+    if user.authority >= 2:
+        l = []
+        for level in all_default_level:
+            if str(level.level_id) in solution_dict:
+                l.append({'default_level_id': level.default_level_id, 'status': 2}) #passed
+            else:
+                l.append({'default_level_id': level.default_level_id, 'status': 0}) #can access but not pass
+        ret['level'] = json.dumps(l)
+        return json_response(ret)
+    else:
+        l = []
+        for level in all_default_level:
+            if str(level.level_id) in solution_dict:
+                l.append({'default_level_id': level.default_level_id, 'status': 2}) #passed
+            else:
+                if (level.default_level_id > 5):
+                    l.append({'default_level_id': level.default_level_id, 'status': 1}) #vip level, can't access
+                else:
+                    l.append({'default_level_id': level.default_level_id, 'status': 0}) #can access but not pass
+        ret['level'] = json.dumps(l)
+        return json_response(ret)
+
 def change_level_info(request):
     content = request.POST
     ret = {}

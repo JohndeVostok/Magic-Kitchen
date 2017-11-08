@@ -310,6 +310,12 @@ class CustomSystemTestCase(TestCase):
         self.assertEqual(ret['status'], 1000) #'succeeded'
         level2 = Level.objects.filter(default_level_id = 123)[0]
 
+        #test get current user info
+        response = c.post('/api/get_current_user_info')
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 1000) #'succeeded'
+        self.assertEqual(ret['next_default_level_id'], 123)
+
         solution1 = Solution.objects.create(user_name = 'abc', level_id = level1.level_id, info = json.dumps({'block_num': 6}), score = 3)
         solution2 = Solution.objects.create(user_name = 'abc', level_id = level2.level_id, info = json.dumps({'block_num': 6}), score = 3)
         level1.std_solution_id = solution1.solution_id
@@ -318,7 +324,7 @@ class CustomSystemTestCase(TestCase):
         level2.save()
 
         #test new solution
-        response = c.post('/api/new_solution', {'level_id': 1, 'solution_info': json.dumps({'block_num': 5}), 'score': 0})
+        response = c.post('/api/new_solution', {'level_id': 2, 'solution_info': json.dumps({'block_num': 5}), 'score': 0})
         ret = json.loads(response.content)
         self.assertEqual(ret['status'], 1000) #'succeeded'
 
@@ -328,8 +334,9 @@ class CustomSystemTestCase(TestCase):
         self.assertEqual(ret['status'], 1000) #'succeeded'
         self.assertEqual(ret['user_name'], 'sth')
         self.assertEqual(ret['email'], '123@111.com')
-        self.assertEqual(json.loads(ret['solution_dict']), {'1' : 3})
+        self.assertEqual(json.loads(ret['solution_dict']), {'2' : 3})
         self.assertEqual(json.loads(ret['created_level']), [1, 2])
+        self.assertEqual(ret['next_default_level_id'], 233)
 
         #test new solution
         response = c.post('/api/new_solution', {'level_id': 1, 'solution_info': json.dumps({'block_num': 6})})
@@ -344,12 +351,14 @@ class CustomSystemTestCase(TestCase):
         response = c.post('/api/new_usermade_level', {'level_info': 'jsonStr2'})
         ret = json.loads(response.content)
         self.assertEqual(ret['status'], 1000) #'succeeded'
+        
         #test get current user info
         response = c.post('/api/get_current_user_info')
         ret = json.loads(response.content)
         self.assertEqual(ret['status'], 1000) #'succeeded'
-        self.assertEqual(json.loads(ret['solution_dict']), {'1' : 3, '2' : 4})
+        self.assertEqual(json.loads(ret['solution_dict']), {'1' : 4, '2' : 3})
         self.assertEqual(json.loads(ret['created_level']), [1, 2, 4])
+        self.assertEqual(ret['next_default_level_id'], -1)
 
     def test_vip_charge(self):
         c = Client()
@@ -999,6 +1008,91 @@ class LevelSystemTestCase(TestCase):
         ret = json.loads(response.content)
         self.assertEqual(ret['status'], 1000) #'succeeded'
         self.assertEqual(json.loads(ret['all_shared_level']), [1])
+
+    def test_get_all_default_level(self):
+        c = Client()
+        level6 = Level.objects.create(info = 'level6', default_level_id = 6)
+        level3 = Level.objects.create(info = 'level3', default_level_id = 3)
+        level7 = Level.objects.create(info = 'level7', default_level_id = 7)
+        level1 = Level.objects.create(info = 'level1', default_level_id = 1)
+
+        #test get all default level
+        response = c.post('/api/get_all_default_level')
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 1000) #'succeeded'
+        self.assertEqual(json.loads(ret['level']), [{'default_level_id': 1, 'status': 0},{'default_level_id': 3, 'status': 0}, {'default_level_id': 6, 'status': 1}, {'default_level_id': 7, 'status': 1}])
+
+        #register
+        response = c.post('/api/register', {'name': 'sth2', 'password': 'abc', 'email': '7652153422@qq.com'})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 1000) #'succeeded'
+
+        #login
+        response = c.post('/api/login', {'name': 'sth2', 'password': 'abc'})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 1000) #'succeeded'
+
+        user = User.objects.filter(name = 'sth2')[0]
+        user.authority = 3
+        user.save()
+
+        #test new std solution
+        response = c.post('/api/new_std_solution', {'solution_info': json.dumps({'block_num': 6}), 'default_level_id': 1, 'edit': 1})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 1000) #'succeeded'
+
+        #test new std solution
+        response = c.post('/api/new_std_solution', {'solution_info': json.dumps({'block_num': 6}), 'default_level_id': 3, 'edit': 1})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 1000) #'succeeded'
+
+        #test new std solution
+        response = c.post('/api/new_std_solution', {'solution_info': json.dumps({'block_num': 6}), 'default_level_id': 6, 'edit': 1})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 1000) #'succeeded'
+
+        #test new std solution
+        response = c.post('/api/new_std_solution', {'solution_info': json.dumps({'block_num': 6}), 'default_level_id': 7, 'edit': 1})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 1000) #'succeeded'
+
+        c.post('/api/logout')
+
+        #register
+        response = c.post('/api/register', {'name': 'sth', 'password': 'abc', 'email': '765215342@qq.com'})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 1000) #'succeeded'
+
+        #login
+        response = c.post('/api/login', {'name': 'sth', 'password': 'abc'})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 1000) #'succeeded'
+
+        #test new solution
+        response = c.post('/api/new_solution', {'level_id': level3.level_id, 'solution_info': json.dumps({'block_num': 6})})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 1000) #'succeeded'
+
+        #test get all default level
+        response = c.post('/api/get_all_default_level')
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 1000) #'succeeded'
+        self.assertEqual(json.loads(ret['level']), [{'default_level_id': 1, 'status': 0},{'default_level_id': 3, 'status': 2}, {'default_level_id': 6, 'status': 1}, {'default_level_id': 7, 'status': 1}])
+
+        user = User.objects.filter(name = 'sth')[0]
+        set_vip(user)
+
+        #test new solution
+        response = c.post('/api/new_solution', {'level_id': level7.level_id, 'solution_info': json.dumps({'block_num': 6})})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 1000) #'succeeded'
+
+        #test get all default level
+        response = c.post('/api/get_all_default_level')
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 1000) #'succeeded'
+        self.assertEqual(json.loads(ret['level']), [{'default_level_id': 1, 'status': 0},{'default_level_id': 3, 'status': 2}, {'default_level_id': 6, 'status': 0}, {'default_level_id': 7, 'status': 2}])
+
 
 class SolutionSystemTestCase(TestCase):
     def test_new_std_solution(self):
