@@ -1514,3 +1514,98 @@ class SolutionSystemTestCase(TestCase):
         ret = json.loads(response.content)
         self.assertEqual(ret['status'], 1000) #'succeeded'
         self.assertEqual(json.loads(ret['all_shared_solution']), [1])
+
+    def test_change_level_info(self):
+        c = Client()
+
+        #test change level info before login
+        response = c.post('/api/change_level_info')
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 1001) #'please log in first'
+
+        #register
+        response = c.post('/api/register', {'name': 'sth', 'password': 'abc', 'email': '765215342@qq.com'})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 1000) #'succeeded'
+
+        #login
+        response = c.post('/api/login', {'name': 'sth', 'password': 'abc'})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 1000) #'succeeded'
+
+        #test empty level id
+        response = c.post('/api/change_level_info')
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 1027) #'level id can't be empty'
+
+        #test level id is not Integer
+        response = c.post('/api/change_level_info', {'level_id': 'a'})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 1019) #'the input level id needs to be an Integer'
+
+        #test level id is not Integer
+        response = c.post('/api/change_level_info', {'level_id': 2147483648})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 1019) #'the input level id needs to be an Integer'
+
+        #test level doesn't exist
+        response = c.post('/api/change_level_info', {'level_id': 1})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 1017) #'this level doesn't exist'
+
+        level1 = Level.objects.create(info = 'level1', user_name = 'sth2', default_level_id = -1)
+
+        #test session isn't author or admin
+        response = c.post('/api/change_level_info', {'level_id': level1.level_id})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 1031) #'you don't have operation authority'
+
+        level2 = Level.objects.create(info = 'level2', user_name = 'sth', default_level_id = -1)
+        level2.shared = True
+        level2.save()
+
+        #test can't edit shared level
+        response = c.post('/api/change_level_info', {'level_id': level2.level_id})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 1045) #'you can't edit shared level'
+
+        level2 = Level.objects.filter(info = 'level2')[0]
+        level2.shared = False
+        level2.save()
+
+        #test empty level info
+        response = c.post('/api/change_level_info', {'level_id': level2.level_id})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 1021) #'level info can't be empty'
+
+        solution1 = Solution.objects.create(user_name = 'abc', level_id = level2.level_id, info = json.dumps({'block_num': 6}), score = 3)
+        solution2 = Solution.objects.create(user_name = 'abc', level_id = level2.level_id, info = json.dumps({'block_num': 6}), score = 3)
+        
+        #test change level info
+        response = c.post('/api/change_level_info', {'level_id': level2.level_id, 'level_info': 'change_info'})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 1000) #'succeeded'
+        level2 = Level.objects.filter(level_id = 2)[0]
+        self.assertEqual(level2.info, 'change_info')
+        solution1 = Solution.objects.filter(solution_id = 1)[0]
+        solution2 = Solution.objects.filter(solution_id = 2)[0]
+        self.assertEqual(solution1.score, 0)
+        self.assertEqual(solution2.score, 0)
+
+        user = User.objects.filter(name = 'sth')[0]
+        user.authority = 3
+        user.save()
+
+        solution3 = Solution.objects.create(user_name = 'abc', level_id = level1.level_id, info = json.dumps({'block_num': 6}), score = 3)
+        solution4 = Solution.objects.create(user_name = 'abc', level_id = level1.level_id, info = json.dumps({'block_num': 6}), score = 3)
+
+        #test admin change level info
+        response = c.post('/api/change_level_info', {'level_id': level1.level_id, 'level_info': 'change_info_level1'})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], 1000) #'succeeded'
+        level1 = Level.objects.filter(level_id = 1)[0]
+        self.assertEqual(level1.info, 'change_info_level1')
+        solution3 = Solution.objects.filter(solution_id = 3)[0]
+        solution4 = Solution.objects.filter(solution_id = 4)[0]
+        self.assertEqual(solution3.score, 0)
+        self.assertEqual(solution4.score, 0)

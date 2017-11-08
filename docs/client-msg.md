@@ -29,7 +29,7 @@ msg is a map for message between blocks.
         1018 the input default level id needs to be an Integer    默认关卡ID需要是Int类型
         1019 the input level id needs to be an Integer    关卡ID需要是Int类型
         1020 default level id can't be empty    默认关卡ID不能为空
-        1021 level info can't be empty    关卡ID不能为空
+        1021 level info can't be empty    关卡信息不能为空
         1022 this default level id already exists    这个默认关卡已经存在
         1023 solution info can't be empty    解法信息不能为空
         1024 score can't be empty    得分不能为空
@@ -53,6 +53,7 @@ msg is a map for message between blocks.
         1042 'block_num' in solution_info dict needs to be an Integer    solution_info 字典中'block_num'关键字对应值需要是Int类型
         1043 the level need to be shared before sharing the solution    分享解法前需要分享对应关卡
         1044 you can't cancel share the level    你无法取消分享该关卡
+        1045 you can't edit shared level    你无法编辑已经分享的关卡
 
 	Functions for other blocks
 		class msg
