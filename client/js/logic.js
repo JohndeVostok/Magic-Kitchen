@@ -1368,7 +1368,7 @@ function Logic()
 
 	var getDefaultLevelList = function(list, callback)
 	{
-		network.getSharedLevel(function(res) {
+		network.getDefaultLevel(function(res) {
 			if (res.status == 1000)
 			{
 				var ans = $.extend(true, {}, list, {defaultLevelList: JSON.parse(res.level)});
