@@ -464,9 +464,9 @@ var ui = function() {
 					var btn = '<button type="button" class="btn btn-primary" id="'
 							+ 'chooseDefaultLevelButtonId' + i
 							+ '" value = "'
-							+ defaultList[i]
+							+ defaultList[i].default_level_id
 							+ '"><span>'
-							+ defaultList[i]
+							+ defaultList[i].default_level_id
 							+ '</span></button>&nbsp&nbsp';
 					$("#chooseDefaultLevelDiv").append(btn);
 					btn = "#chooseDefaultLevelButtonId" + i;
