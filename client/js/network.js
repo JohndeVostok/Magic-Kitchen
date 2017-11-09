@@ -253,6 +253,7 @@ var network = function() {
 		newSolution: newSolution,
 		getAllLevel: getAllLevel,
 		getSharedLevel: getSharedLevel,
+		getDefaultLevel: getDefaultLevel,
 		vipCharge: vipCharge,
 		setAdmin: setAdmin
 	};
