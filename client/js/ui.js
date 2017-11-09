@@ -871,7 +871,6 @@ var ui = function() {
 		
 		return createjs.Tween.get(sprite).to({
 			x: mapLeftPos + mapGridWidth * j,
-
 			y: mapTopPos + mapGridHeight * i,
 			scaleX: mapGridWidth / config.UI.player.imageWidth,
 			scaleY: mapGridHeight / config.UI.player.imageHeight
