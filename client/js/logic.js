@@ -1368,8 +1368,17 @@ function Logic()
 
 	var getDefaultLevelList = function(list, callback)
 	{
-		var ans = $.extend(true, {}, list, {defaultLevelList: []});
-		callback(undefined, ans);
+		network.getSharedLevel(function(res) {
+			if (res.status == 1000)
+			{
+				var ans = $.extend(true, {}, list, {defaultLevelList: JSON.parse(res.level)});
+				callback(undefined, ans);
+			}
+			else
+			{
+				callback(msg.getMessage(res.status), {status: "failed"});
+			}
+		});
 	}
 
 	var getSharedLevelList = function(list, callback)
