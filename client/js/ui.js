@@ -767,7 +767,7 @@ var ui = function() {
 	
 	var genNewItem = function(args) {
 		var s = new createjs.Sprite(objectSpriteSheets[args.type]);
-		var ts = new createjs.Text(args.value == undefined ? "" : args.value + "", "15px Arial", "#ff7700");
+		var ts = new createjs.Text(args.value == undefined ? "" : args.value + "", "15px Arial", "yellow");
 		stage.addChild(s);
 		stage.addChild(ts);
 		return {

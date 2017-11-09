@@ -44,7 +44,7 @@ var config = {
 		},
 		object: {
 			images: {
-				1: "/images/map/objects/apple.png",
+				1: "/images/map/objects/magic_paper.png",
 				2: "/images/map/objects/banana.png"
 			},
 			imageWidth: 300,
