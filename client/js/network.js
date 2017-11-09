@@ -219,6 +219,14 @@ var network = function() {
 		);
 	}
 
+	var getDefaultLevel = function(callback) {
+		postRequest(
+			"api/get_all_default_level",
+			{},
+			callback
+		);
+	}
+
 	var getSharedLevel = function(callback) {
 		postRequest(
 			"api/get_all_shared_level",
@@ -245,6 +253,7 @@ var network = function() {
 		newSolution: newSolution,
 		getAllLevel: getAllLevel,
 		getSharedLevel: getSharedLevel,
+		getDefaultLevel: getDefaultLevel,
 		vipCharge: vipCharge,
 		setAdmin: setAdmin
 	};
