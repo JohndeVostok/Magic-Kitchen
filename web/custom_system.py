@@ -280,7 +280,7 @@ def vip_charge(request):
         return json_response(ret)
 
     if not _days in range(1, 100000):
-            ret['status'] = 1030 #'the input days needs to be in range[1, 99999]'
+            ret['status'] = msgid.DAYS_OUT_OF_RANGE #'the input days needs to be in range[1, 99999]'
             return json_response(ret)
 
     user = User.objects.filter(name = session)[0]
@@ -306,7 +306,7 @@ def set_admin(request):
         return json_response(ret)
     super_admin = User.objects.filter(name = session)[0]
     if super_admin.authority != 4:
-        ret['status'] = 1031 #'you don't have operation authority'
+        ret['status'] = msgid.NO_AUTHORITY #'you don't have operation authority'
         return json_response(ret)
 
     if not 'name' in content:

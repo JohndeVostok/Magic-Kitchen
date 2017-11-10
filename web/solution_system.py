@@ -35,7 +35,7 @@ def new_std_solution(request):
 
     admin = User.objects.filter(name = session)[0]
     if admin.authority < 3:
-        ret['status'] = 1031 #'you don't have operation authority'
+        ret['status'] = msgid.NO_AUTHORITY #'you don't have operation authority'
         return json_response(ret)
 
     if not 'default_level_id' in content:
@@ -67,15 +67,15 @@ def new_std_solution(request):
             _edit = int(content['edit'])
         except ValueError,e :
             print e
-            ret['status'] = 1038 #'the input edit needs to be 0 or 1'
+            ret['status'] = msgid.EDIT_OUT_OF_RANGE #'the input edit needs to be 0 or 1'
             return json_response(ret)
         if (_edit != 0) and (_edit != 1):
-            ret['status'] = 1038 #'the input edit needs to be 0 or 1'
+            ret['status'] = msgid.EDIT_OUT_OF_RANGE #'the input edit needs to be 0 or 1'
             return json_response(ret)
         change = (_edit == 1)
 
     if (not change) and (level.std_solution_id != -1):
-        ret['status'] = 1039 #'this default level has already had one std solution'
+        ret['status'] = msgid.ALREADY_HAVE_STD_SOLUTION #'this default level has already had one std solution'
         return json_response(ret)
 
     if not 'solution_info' in content:
@@ -208,23 +208,23 @@ def get_solution_info(request):
     ret = {}
 
     if not 'solution_id' in content:
-        ret['status'] = 1035 #'solution id can't be empty'
+        ret['status'] = msgid.SOLUTION_ID_EMPTY #'solution id can't be empty'
         return json_response(ret)
 
     try:
         _solution_id = int(content['solution_id'])
     except ValueError,e :
         print e
-        ret['status'] = 1036 #'the input solution id needs to be an Integer'
+        ret['status'] = msgid.SOLUTION_ID_NOT_INT #'the input solution id needs to be an Integer'
         return json_response(ret)
 
     if not int_range(_solution_id):
-        ret['status'] = 1036 #'the input solution id needs to be an Integer'
+        ret['status'] = msgid.SOLUTION_ID_NOT_INT #'the input solution id needs to be an Integer'
         return json_response(ret)
 
     solution_id_filter = Solution.objects.filter(solution_id = _solution_id)
     if len(solution_id_filter) == 0:
-        ret['status'] = 1037 #'this solution doesn't exist'
+        ret['status'] = msgid.SOLUTION_NOT_EXIST #'this solution doesn't exist'
         return json_response(ret)
 
     solution = solution_id_filter[0]
@@ -235,7 +235,7 @@ def get_solution_info(request):
             return json_response(ret)
         user = User.objects.filter(name = session)[0]
         if not ((session == solution.user_name) or (user.authority >= 3)):
-            ret['status'] = 1031 #'you don't have operation authority'
+            ret['status'] = msgid.NO_AUTHORITY #'you don't have operation authority'
             return json_response(ret)
             
     ret['status'] = msgid.SUCCESS #'succeeded'
@@ -256,36 +256,36 @@ def share_solution(request):
         return json_response(ret)
 
     if not 'solution_id' in content:
-        ret['status'] = 1035 #'solution id can't be empty'
+        ret['status'] = msgid.SOLUTION_ID_EMPTY #'solution id can't be empty'
         return json_response(ret)
 
     if not 'share' in content:
-        ret['status'] = 1033 #'share can't be empty'
+        ret['status'] = msgid.SHARE_EMPTY #'share can't be empty'
         return json_response(ret)
     try:
         _shared = int(content['share'])
     except ValueError,e :
         print e
-        ret['status'] = 1034 #'the input share needs to be 0 or 1'
+        ret['status'] = msgid.SHARE_OUT_OF_RANGE #'the input share needs to be 0 or 1'
         return json_response(ret)
     if (_shared != 0) and (_shared != 1):
-        ret['status'] = 1034 #'the input share needs to be 0 or 1'
+        ret['status'] = msgid.SHARE_OUT_OF_RANGE #'the input share needs to be 0 or 1'
         return json_response(ret)
 
     try:
         _solution_id = int(content['solution_id'])
     except ValueError,e :
         print e
-        ret['status'] = 1036 #'the input solution id needs to be an Integer'
+        ret['status'] = msgid.SOLUTION_ID_NOT_INT #'the input solution id needs to be an Integer'
         return json_response(ret)
 
     if not int_range(_solution_id):
-        ret['status'] = 1036 #'the input solution id needs to be an Integer'
+        ret['status'] = msgid.SOLUTION_ID_NOT_INT #'the input solution id needs to be an Integer'
         return json_response(ret)
 
     solution_id_filter = Solution.objects.filter(solution_id = _solution_id)
     if len(solution_id_filter) == 0:
-        ret['status'] = 1037 #'this solution doesn't exist'
+        ret['status'] = msgid.SOLUTION_NOT_EXIST #'this solution doesn't exist'
         return json_response(ret)
 
     user = User.objects.filter(name = session)[0]
@@ -293,7 +293,7 @@ def share_solution(request):
 
     #only the author or admin can share this solution
     if not ((session == solution.user_name) or (user.authority >= 3)):
-        ret['status'] = 1031 #'you don't have operation authority'
+        ret['status'] = msgid.NO_AUTHORITY #'you don't have operation authority'
         return json_response(ret)
     
     _level_id = solution.level_id

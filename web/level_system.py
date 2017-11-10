@@ -28,7 +28,7 @@ def new_default_level(request):
         return json_response(ret)
     user = User.objects.filter(name = session)[0]
     if user.authority < 3:
-        ret['status'] = 1031 #'you don't have operation authority'
+        ret['status'] = msgid.NO_AUTHORITY #'you don't have operation authority'
         return json_response(ret)
 
     if not 'default_level_id' in content:
@@ -56,10 +56,10 @@ def new_default_level(request):
             _edit = int(content['edit'])
         except ValueError,e :
             print e
-            ret['status'] = 1038 #'the input edit needs to be 0 or 1'
+            ret['status'] = msgid.EDIT_OUT_OF_RANGE #'the input edit needs to be 0 or 1'
             return json_response(ret)
         if (_edit != 0) and (_edit != 1):
-            ret['status'] = 1038 #'the input edit needs to be 0 or 1'
+            ret['status'] = msgid.EDIT_OUT_OF_RANGE #'the input edit needs to be 0 or 1'
             return json_response(ret)
         change = (_edit == 1)
 
@@ -123,12 +123,12 @@ def get_level_info(request):
             user = User.objects.filter(name = session)[0]
             if not level.shared:
                 if not ((session == level.user_name) or (user.authority >= 3)):
-                    ret['status'] = 1031 #'you don't have operation authority'
+                    ret['status'] = msgid.NO_AUTHORITY #'you don't have operation authority'
                     return json_response(ret)    
             if _default_level_id > 5:
                 refresh_vip_authority(user)
                 if user.authority < 2:
-                    ret['status'] = 1031 #'you don't have operation authority'
+                    ret['status'] = msgid.NO_AUTHORITY #'you don't have operation authority'
                     return json_response(ret)
 
         ret['status'] = msgid.SUCCESS #'succeeded'
@@ -163,12 +163,12 @@ def get_level_info(request):
             user = User.objects.filter(name = session)[0]
             if not level.shared:
                 if not ((session == level.user_name) or (user.authority >= 3)):
-                    ret['status'] = 1031 #'you don't have operation authority'
+                    ret['status'] = msgid.NO_AUTHORITY #'you don't have operation authority'
                     return json_response(ret)
             if (_default_level_id > 5):
                 refresh_vip_authority(user)
                 if user.authority < 2:
-                    ret['status'] = 1031 #'you don't have operation authority'
+                    ret['status'] = msgid.NO_AUTHORITY #'you don't have operation authority'
                     return json_response(ret)
 
         ret['status'] = msgid.SUCCESS #'succeeded'
@@ -199,10 +199,10 @@ def new_usermade_level(request):
         refresh_vip_authority(user)
         level_filter = Level.objects.filter(user_name = session)
         if (len(level_filter) >= MAX_USER_CREATED_LEVEL_NUM) and (user.authority == 1):
-            ret['status'] = 1032 #'you can't create more level'
+            ret['status'] = msgid.CANT_CREATE_MORE_LEVEL #'you can't create more level'
             return json_response(ret)
         if (len(level_filter) >= MAX_VIP_CREATED_LEVEL_NUM) and (user.authority == 2):
-            ret['status'] = 1032 #'you can't create more level'
+            ret['status'] = msgid.CANT_CREATE_MORE_LEVEL #'you can't create more level'
             return json_response(ret)
 
     _info = content['level_info']
@@ -227,16 +227,16 @@ def share_level(request):
         return json_response(ret)
 
     if not 'share' in content:
-        ret['status'] = 1033 #'share can't be empty'
+        ret['status'] = msgid.SHARE_EMPTY #'share can't be empty'
         return json_response(ret)
     try:
         _shared = int(content['share'])
     except ValueError,e :
         print e
-        ret['status'] = 1034 #'the input share needs to be 0 or 1'
+        ret['status'] = msgid.SHARE_OUT_OF_RANGE #'the input share needs to be 0 or 1'
         return json_response(ret)
     if (_shared != 0) and (_shared != 1):
-        ret['status'] = 1034 #'the input share needs to be 0 or 1'
+        ret['status'] = msgid.SHARE_OUT_OF_RANGE #'the input share needs to be 0 or 1'
         return json_response(ret)
     if _shared == 0:
         ret['status'] = 1044 #'you can't cancel share the level'
@@ -263,7 +263,7 @@ def share_level(request):
 
     #only the author or admin can share this level
     if not ((session == level.user_name) or (user.authority >= 3)):
-        ret['status'] = 1031 #'you don't have operation authority'
+        ret['status'] = msgid.NO_AUTHORITY #'you don't have operation authority'
         return json_response(ret)
     level.shared = (_shared == 1)
     level.save()
@@ -282,7 +282,7 @@ def get_all_level(request):
     user = User.objects.filter(name = session)[0]
     #only admin or super admin can get all level, normal user or vip can only get shared level
     if user.authority < 3:
-        ret['status'] = 1031 #'you don't have operation authority'
+        ret['status'] = msgid.NO_AUTHORITY #'you don't have operation authority'
         return json_response(ret)
 
     all_level = Level.objects.all()
@@ -382,7 +382,7 @@ def change_level_info(request):
 
     #only the author or admin can share this level
     if not ((session == level.user_name) or (user.authority >= 3)):
-        ret['status'] = 1031 #'you don't have operation authority'
+        ret['status'] = msgid.NO_AUTHORITY #'you don't have operation authority'
         return json_response(ret)
 
     if level.shared:

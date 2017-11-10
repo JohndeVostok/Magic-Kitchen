@@ -392,7 +392,7 @@ class CustomSystemTestCase(TestCase):
         #test days is not in range[1,99999]
         response = c.post('/api/vip_charge', {'days': '0'})
         ret = json.loads(response.content)
-        self.assertEqual(ret['status'], 1030) #'the input days needs to be in range[1, 99999]'
+        self.assertEqual(ret['status'], msgid.DAYS_OUT_OF_RANGE) #'the input days needs to be in range[1, 99999]'
 
         #test vip charge
         response = c.post('/api/vip_charge', {'days': '30'})
@@ -429,7 +429,7 @@ class CustomSystemTestCase(TestCase):
         #test no authority
         response = c.post('/api/set_admin')
         ret = json.loads(response.content)
-        self.assertEqual(ret['status'], 1031) #'you don't have operation authority'
+        self.assertEqual(ret['status'], msgid.NO_AUTHORITY) #'you don't have operation authority'
 
         super_admin.authority = 4
         super_admin.save()
@@ -480,7 +480,7 @@ class CustomSystemTestCase(TestCase):
         #test get level info
         response = c.post('/api/get_level_info', {'default_level_id': 6})
         ret = json.loads(response.content)
-        self.assertEqual(ret['status'], 1031) #'you don't have operation authority'
+        self.assertEqual(ret['status'], msgid.NO_AUTHORITY) #'you don't have operation authority'
 
 
 class LevelSystemTestCase(TestCase):
@@ -542,7 +542,7 @@ class LevelSystemTestCase(TestCase):
         #test get unshared level info
         response = c.post('/api/get_level_info', {'default_level_id': 2})
         ret = json.loads(response.content)
-        self.assertEqual(ret['status'], 1031) #'you don't have operation authority'
+        self.assertEqual(ret['status'], msgid.NO_AUTHORITY) #'you don't have operation authority'
         
         level = Level.objects.filter(default_level_id = 2)[0]
         level.shared = True
@@ -565,7 +565,7 @@ class LevelSystemTestCase(TestCase):
         #test get vip level info without vip authority
         response = c.post('/api/get_level_info', {'default_level_id': 6})
         ret = json.loads(response.content)
-        self.assertEqual(ret['status'], 1031) #'you don't have operation authority'
+        self.assertEqual(ret['status'], msgid.NO_AUTHORITY) #'you don't have operation authority'
 
         user = User.objects.filter(name = 'sth')[0]
         set_vip(user)
@@ -622,7 +622,7 @@ class LevelSystemTestCase(TestCase):
         #test get unshared level info
         response = c.post('/api/get_level_info', {'level_id': 4})
         ret = json.loads(response.content)
-        self.assertEqual(ret['status'], 1031) #'you don't have operation authority'
+        self.assertEqual(ret['status'], msgid.NO_AUTHORITY) #'you don't have operation authority'
         
         level = Level.objects.filter(default_level_id = 2)[0]
         level.shared = True
@@ -644,7 +644,7 @@ class LevelSystemTestCase(TestCase):
         #test get vip level info without vip authority
         response = c.post('/api/get_level_info', {'level_id': vip_level.level_id})
         ret = json.loads(response.content)
-        self.assertEqual(ret['status'], 1031) #'you don't have operation authority'
+        self.assertEqual(ret['status'], msgid.NO_AUTHORITY) #'you don't have operation authority'
 
         user = User.objects.filter(name = 'sth')[0]
         set_vip(user)
@@ -677,7 +677,7 @@ class LevelSystemTestCase(TestCase):
         #test no operation authority
         response = c.post('/api/new_default_level', {'default_level_info': 'jsonStr'})
         ret = json.loads(response.content)
-        self.assertEqual(ret['status'], 1031) #'you don't have operation authority'
+        self.assertEqual(ret['status'], msgid.NO_AUTHORITY) #'you don't have operation authority'
 
         user = User.objects.filter(name = 'sth')[0]
         user.authority = 3
@@ -706,12 +706,12 @@ class LevelSystemTestCase(TestCase):
         #test edit is not 0 or 1
         response = c.post('/api/new_default_level', {'default_level_id': 1, 'level_info': 'jsonStr', 'edit': 'a'})
         ret = json.loads(response.content)
-        self.assertEqual(ret['status'], 1038) #'the input edit needs to be 0 or 1'
+        self.assertEqual(ret['status'], msgid.EDIT_OUT_OF_RANGE) #'the input edit needs to be 0 or 1'
 
         #test edit is not 0 or 1
         response = c.post('/api/new_default_level', {'default_level_id': 1, 'level_info': 'jsonStr', 'edit': 2})
         ret = json.loads(response.content)
-        self.assertEqual(ret['status'], 1038) #'the input edit needs to be 0 or 1'
+        self.assertEqual(ret['status'], msgid.EDIT_OUT_OF_RANGE) #'the input edit needs to be 0 or 1'
 
         #test new default level
         response = c.post('/api/new_default_level', {'default_level_id': 1, 'level_info': 'jsonStr'})
@@ -787,7 +787,7 @@ class LevelSystemTestCase(TestCase):
         #test MAX_USER_CREATED_LEVEL_NUM
         response = c.post('/api/new_usermade_level', {'level_info': 'jsonStr'})
         ret = json.loads(response.content)
-        self.assertEqual(ret['status'], 1032) #'you can't create more level'
+        self.assertEqual(ret['status'], msgid.CANT_CREATE_MORE_LEVEL) #'you can't create more level'
 
         user = User.objects.filter(name = 'sth')[0]
         set_vip(user)
@@ -801,7 +801,7 @@ class LevelSystemTestCase(TestCase):
         #test MAX_VIP_CREATED_LEVEL_NUM
         response = c.post('/api/new_usermade_level', {'level_info': 'jsonStr'})
         ret = json.loads(response.content)
-        self.assertEqual(ret['status'], 1032) #'you can't create more level'
+        self.assertEqual(ret['status'], msgid.CANT_CREATE_MORE_LEVEL) #'you can't create more level'
 
     def test_share_level(self):
         c = Client()
@@ -829,17 +829,17 @@ class LevelSystemTestCase(TestCase):
         #test empty share or not
         response = c.post('/api/share_level', {'level_id': 1})
         ret = json.loads(response.content)
-        self.assertEqual(ret['status'], 1033) #'share can't be empty'
+        self.assertEqual(ret['status'], msgid.SHARE_EMPTY) #'share can't be empty'
 
         #test share isn't 0 or 1
         response = c.post('/api/share_level', {'level_id': 1, 'share': 'a'})
         ret = json.loads(response.content)
-        self.assertEqual(ret['status'], 1034) #'the input share needs to be 0 or 1'
+        self.assertEqual(ret['status'], msgid.SHARE_OUT_OF_RANGE) #'the input share needs to be 0 or 1'
 
         #test share isn't 0 or 1
         response = c.post('/api/share_level', {'level_id': 1, 'share': 2})
         ret = json.loads(response.content)
-        self.assertEqual(ret['status'], 1034) #'the input share needs to be 0 or 1'
+        self.assertEqual(ret['status'], msgid.SHARE_OUT_OF_RANGE) #'the input share needs to be 0 or 1'
 
         #test can't cancel share
         response = c.post('/api/share_level', {'level_id': 1, 'share': 0})
@@ -866,7 +866,7 @@ class LevelSystemTestCase(TestCase):
         #test session isn't author or admin
         response = c.post('/api/share_level', {'level_id': level1.level_id, 'share': 1})
         ret = json.loads(response.content)
-        self.assertEqual(ret['status'], 1031) #'you don't have operation authority'
+        self.assertEqual(ret['status'], msgid.NO_AUTHORITY) #'you don't have operation authority'
 
         level2 = Level.objects.create(info = 'level2', user_name = 'sth', default_level_id = -1)
 
@@ -916,7 +916,7 @@ class LevelSystemTestCase(TestCase):
         #test no authority
         response = c.post('/api/get_all_level')
         ret = json.loads(response.content)
-        self.assertEqual(ret['status'], 1031) #'you don't have operation authority'
+        self.assertEqual(ret['status'], msgid.NO_AUTHORITY) #'you don't have operation authority'
 
         #new user-made level
         response = c.post('/api/new_usermade_level', {'level_info': 'jsonStr'})
@@ -1117,7 +1117,7 @@ class SolutionSystemTestCase(TestCase):
         #test doesn't have authority
         response = c.post('/api/new_std_solution', {'solution_info': 'jsonStr'})
         ret = json.loads(response.content)
-        self.assertEqual(ret['status'], 1031) #'you don't have operation authority'
+        self.assertEqual(ret['status'], msgid.NO_AUTHORITY) #'you don't have operation authority'
 
         user = User.objects.filter(name = 'sth')[0]
         user.authority = 3
@@ -1151,12 +1151,12 @@ class SolutionSystemTestCase(TestCase):
         #test edit is not 0 or 1
         response = c.post('/api/new_std_solution', {'solution_info': 'jsonStr', 'default_level_id': 1, 'edit': 'a'})
         ret = json.loads(response.content)
-        self.assertEqual(ret['status'], 1038) #'the input edit needs to be 0 or 1'
+        self.assertEqual(ret['status'], msgid.EDIT_OUT_OF_RANGE) #'the input edit needs to be 0 or 1'
 
         #test edit is not 0 or 1
         response = c.post('/api/new_std_solution', {'solution_info': 'jsonStr', 'default_level_id': 1, 'edit': 2})
         ret = json.loads(response.content)
-        self.assertEqual(ret['status'], 1038) #'the input edit needs to be 0 or 1'
+        self.assertEqual(ret['status'], msgid.EDIT_OUT_OF_RANGE) #'the input edit needs to be 0 or 1'
 
         #test empty solution info
         response = c.post('/api/new_std_solution', {'default_level_id': 1, 'edit': 1})
@@ -1191,7 +1191,7 @@ class SolutionSystemTestCase(TestCase):
         #test default level has one std solution
         response = c.post('/api/new_std_solution', {'solution_info': json.dumps({'block_num': 5}), 'default_level_id': 1, 'edit': 0})
         ret = json.loads(response.content)
-        self.assertEqual(ret['status'], 1039) #'this default level has already had one std solution'
+        self.assertEqual(ret['status'], msgid.ALREADY_HAVE_STD_SOLUTION) #'this default level has already had one std solution'
 
         level = Level.objects.create(default_level_id = 2, info = 'level2', user_name = 'abc')
         solution = Solution.objects.create(level_id = level.level_id, info = json.dumps({'block_num': 6}), user_name = 'xxx', score = 3)
@@ -1367,22 +1367,22 @@ class SolutionSystemTestCase(TestCase):
         #test empty solution id
         response = c.post('/api/get_solution_info')
         ret = json.loads(response.content)
-        self.assertEqual(ret['status'], 1035) #'solution id can't be empty'
+        self.assertEqual(ret['status'], msgid.SOLUTION_ID_EMPTY) #'solution id can't be empty'
 
         #test solution id is not Integer
         response = c.post('/api/get_solution_info', {'solution_id': 'a'})
         ret = json.loads(response.content)
-        self.assertEqual(ret['status'], 1036) #'the input solution id needs to be an Integer'
+        self.assertEqual(ret['status'], msgid.SOLUTION_ID_NOT_INT) #'the input solution id needs to be an Integer'
 
         #test solution id is not Integer
         response = c.post('/api/get_solution_info', {'solution_id': 2147483648})
         ret = json.loads(response.content)
-        self.assertEqual(ret['status'], 1036) #'the input solution id needs to be an Integer'
+        self.assertEqual(ret['status'], msgid.SOLUTION_ID_NOT_INT) #'the input solution id needs to be an Integer'
 
         #test solution id doesn't exist
         response = c.post('/api/get_solution_info', {'solution_id': 1})
         ret = json.loads(response.content)
-        self.assertEqual(ret['status'], 1037) #'this solution doesn't exist'
+        self.assertEqual(ret['status'], msgid.SOLUTION_NOT_EXIST) #'this solution doesn't exist'
 
         #register
         response = c.post('/api/register', {'name': 'sth', 'password': 'abc', 'email': '123@111.com'})
@@ -1420,7 +1420,7 @@ class SolutionSystemTestCase(TestCase):
         #test not author
         response = c.post('/api/get_solution_info', {'solution_id': solution2.solution_id})
         ret = json.loads(response.content)
-        self.assertEqual(ret['status'], 1031) #'you don't have operation authority'
+        self.assertEqual(ret['status'], msgid.NO_AUTHORITY) #'you don't have operation authority'
         
         #test get solution info
         response = c.post('/api/get_solution_info', {'solution_id': 1})
@@ -1467,37 +1467,37 @@ class SolutionSystemTestCase(TestCase):
         #test empty solution id
         response = c.post('/api/share_solution')
         ret = json.loads(response.content)
-        self.assertEqual(ret['status'], 1035) #'solution id can't be empty'
+        self.assertEqual(ret['status'], msgid.SOLUTION_ID_EMPTY) #'solution id can't be empty'
 
         #test empty share or not
         response = c.post('/api/share_solution', {'solution_id': 1})
         ret = json.loads(response.content)
-        self.assertEqual(ret['status'], 1033) #'share can't be empty'
+        self.assertEqual(ret['status'], msgid.SHARE_EMPTY) #'share can't be empty'
 
         #test share isn't 0 or 1
         response = c.post('/api/share_solution', {'solution_id': 1, 'share': 'a'})
         ret = json.loads(response.content)
-        self.assertEqual(ret['status'], 1034) #'the input share needs to be 0 or 1'
+        self.assertEqual(ret['status'], msgid.SHARE_OUT_OF_RANGE) #'the input share needs to be 0 or 1'
 
         #test share isn't 0 or 1
         response = c.post('/api/share_solution', {'solution_id': 1, 'share': 2})
         ret = json.loads(response.content)
-        self.assertEqual(ret['status'], 1034) #'the input share needs to be 0 or 1'
+        self.assertEqual(ret['status'], msgid.SHARE_OUT_OF_RANGE) #'the input share needs to be 0 or 1'
 
         #test solution id is not Integer
         response = c.post('/api/share_solution', {'solution_id': 'a', 'share': 1})
         ret = json.loads(response.content)
-        self.assertEqual(ret['status'], 1036) #'the input solution id needs to be an Integer'
+        self.assertEqual(ret['status'], msgid.SOLUTION_ID_NOT_INT) #'the input solution id needs to be an Integer'
 
         #test solution id is not Integer
         response = c.post('/api/share_solution', {'solution_id': 2147483648, 'share': 1})
         ret = json.loads(response.content)
-        self.assertEqual(ret['status'], 1036) #'the input solution id needs to be an Integer'
+        self.assertEqual(ret['status'], msgid.SOLUTION_ID_NOT_INT) #'the input solution id needs to be an Integer'
 
         #test solution id doesn't exist
         response = c.post('/api/share_solution', {'solution_id': 1, 'share': 1})
         ret = json.loads(response.content)
-        self.assertEqual(ret['status'], 1037) #'this solution doesn't exist'
+        self.assertEqual(ret['status'], msgid.SOLUTION_NOT_EXIST) #'this solution doesn't exist'
 
         level1 = Level.objects.create(default_level_id = -1, info = 'levelinfo', user_name = 'abc')
         level2 = Level.objects.create(default_level_id = -1, info = 'levelinfo', user_name = 'abc')
@@ -1507,7 +1507,7 @@ class SolutionSystemTestCase(TestCase):
         #test session isn't author or admin
         response = c.post('/api/share_solution', {'solution_id': solution1.solution_id, 'share': 1})
         ret = json.loads(response.content)
-        self.assertEqual(ret['status'], 1031) #'you don't have operation authority'
+        self.assertEqual(ret['status'], msgid.NO_AUTHORITY) #'you don't have operation authority'
 
         solution2 = Solution.objects.create(info = 'solution2', user_name = 'sth', level_id = 2, score = 3)
 
@@ -1653,7 +1653,7 @@ class SolutionSystemTestCase(TestCase):
         #test session isn't author or admin
         response = c.post('/api/change_level_info', {'level_id': level1.level_id})
         ret = json.loads(response.content)
-        self.assertEqual(ret['status'], 1031) #'you don't have operation authority'
+        self.assertEqual(ret['status'], msgid.NO_AUTHORITY) #'you don't have operation authority'
 
         level2 = Level.objects.create(info = 'level2', user_name = 'sth', default_level_id = -1)
         level2.shared = True
