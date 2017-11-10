@@ -2,6 +2,7 @@ from models import User
 from models import Level
 from models import Solution
 import json
+import error_id as errid
 from django.http import HttpResponse
 
 def json_response(info):
@@ -29,7 +30,7 @@ def new_std_solution(request):
 
     session = get_session(request)
     if (session == None):
-        ret['status'] = 1001 #'please log in first'
+        ret['status'] = errid.NOT_LOGIN #'please log in first'
         return json_response(ret)
 
     admin = User.objects.filter(name = session)[0]
@@ -116,7 +117,7 @@ def new_std_solution(request):
         level.save()
         ret['solution_id'] = solution.solution_id
 
-    ret['status'] = 1000 #'succeeded'
+    ret['status'] = errid.SUCCESS #'succeeded'
     return json_response(ret)
 
 def new_solution(request):
@@ -125,7 +126,7 @@ def new_solution(request):
 
     session = get_session(request)
     if (session == None):
-        ret['status'] = 1001 #'please log in first'
+        ret['status'] = errid.NOT_LOGIN #'please log in first'
         return json_response(ret)
 
     if not 'level_id' in content:
@@ -198,7 +199,7 @@ def new_solution(request):
         user.save()
         ret['solution_id'] = solution.solution_id
 
-    ret['status'] = 1000 #'succeeded'
+    ret['status'] = errid.SUCCESS #'succeeded'
     return json_response(ret)
 
 
@@ -230,14 +231,14 @@ def get_solution_info(request):
     if not solution.shared:
         session = get_session(request)
         if not session:
-            ret['status'] = 1001 #'please log in first'
+            ret['status'] = errid.NOT_LOGIN #'please log in first'
             return json_response(ret)
         user = User.objects.filter(name = session)[0]
         if not ((session == solution.user_name) or (user.authority >= 3)):
             ret['status'] = 1031 #'you don't have operation authority'
             return json_response(ret)
             
-    ret['status'] = 1000 #'succeeded'
+    ret['status'] = errid.SUCCESS #'succeeded'
     ret['solution_info'] = solution.info
     ret['score'] = solution.score #score range is [1,4], 4 means pass, [1,3] means score
     ret['level_id'] = solution.level_id
@@ -251,7 +252,7 @@ def share_solution(request):
 
     session = get_session(request)
     if (session == None):
-        ret['status'] = 1001 #'please log in first'
+        ret['status'] = errid.NOT_LOGIN #'please log in first'
         return json_response(ret)
 
     if not 'solution_id' in content:
@@ -303,7 +304,7 @@ def share_solution(request):
 
     solution.shared = (_shared == 1)
     solution.save()
-    ret['status'] = 1000 #'succeeded'
+    ret['status'] = errid.SUCCESS #'succeeded'
     return json_response(ret)
 
 def get_all_shared_solution(request):
@@ -315,5 +316,5 @@ def get_all_shared_solution(request):
     for solution in shared_solution:
         shared_solution_id.append(solution.solution_id)
     ret['all_shared_solution'] = json.dumps(shared_solution_id)
-    ret['status'] = 1000 #'succeeded'
+    ret['status'] = errid.SUCCESS #'succeeded'
     return json_response(ret)
