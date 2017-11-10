@@ -269,14 +269,14 @@ def vip_charge(request):
         return json_response(ret)
 
     if not 'days' in content:
-        ret['status'] = 1028 #'days can't be empty'
+        ret['status'] = msgid.DAYS_EMPTY #'days can't be empty'
         return json_response(ret)
 
     try:
         _days = int(content['days'])
     except ValueError,e :
         print e
-        ret['status'] = 1029 #'the input days needs to be an Integer'
+        ret['status'] = msgid.DAYS_NOT_INT #'the input days needs to be an Integer'
         return json_response(ret)
 
     if not _days in range(1, 100000):

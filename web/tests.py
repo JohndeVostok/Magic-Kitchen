@@ -382,12 +382,12 @@ class CustomSystemTestCase(TestCase):
         #test empty days
         response = c.post('/api/vip_charge')
         ret = json.loads(response.content)
-        self.assertEqual(ret['status'], 1028) #'level info can't be empty'
+        self.assertEqual(ret['status'], msgid.DAYS_EMPTY) #'level info can't be empty'
 
         #test days is not Integer
         response = c.post('/api/vip_charge', {'days': 'a'})
         ret = json.loads(response.content)
-        self.assertEqual(ret['status'], 1029) #'the input days needs to be an Integer'
+        self.assertEqual(ret['status'], msgid.DAYS_NOT_INT) #'the input days needs to be an Integer'
 
         #test days is not in range[1,99999]
         response = c.post('/api/vip_charge', {'days': '0'})
@@ -686,12 +686,12 @@ class LevelSystemTestCase(TestCase):
         #test empty default level id
         response = c.post('/api/new_default_level', {'default_level_info': 'jsonStr'})
         ret = json.loads(response.content)
-        self.assertEqual(ret['status'], 1020) #'default level id can't be empty'
+        self.assertEqual(ret['status'], msgid.DEFAULT_LEVEL_ID_EMPTY) #'default level id can't be empty'
 
         #test empty level info
         response = c.post('/api/new_default_level', {'default_level_id': 1})
         ret = json.loads(response.content)
-        self.assertEqual(ret['status'], 1021) #'level info can't be empty'
+        self.assertEqual(ret['status'], msgid.LEVEL_INFO_EMPTY) #'level info can't be empty'
 
         #test default level id is not Integer
         response = c.post('/api/new_default_level', {'default_level_id': 'a', 'level_info': 'jsonStr'})
@@ -726,7 +726,7 @@ class LevelSystemTestCase(TestCase):
         #test level id already exists
         response = c.post('/api/new_default_level', {'default_level_id': 1, 'level_info': 'jsonStr2'})
         ret = json.loads(response.content)
-        self.assertEqual(ret['status'], 1022) #'this default level id already exists'
+        self.assertEqual(ret['status'], msgid.DEFAULT_LEVEL_ID_EXIST) #'this default level id already exists'
 
         #test edit default level
         response = c.post('/api/new_default_level', {'default_level_id': 1, 'level_info': 'jsonStr2', 'edit': 1})
@@ -775,7 +775,7 @@ class LevelSystemTestCase(TestCase):
         #test empty level info
         response = c.post('/api/new_usermade_level')
         ret = json.loads(response.content)
-        self.assertEqual(ret['status'], 1021) #'level info can't be empty'
+        self.assertEqual(ret['status'], msgid.LEVEL_INFO_EMPTY) #'level info can't be empty'
 
         for i in range(10):
             #test new user-made level
@@ -824,7 +824,7 @@ class LevelSystemTestCase(TestCase):
         #test empty level id
         response = c.post('/api/share_level')
         ret = json.loads(response.content)
-        self.assertEqual(ret['status'], 1027) #'level id can't be empty'
+        self.assertEqual(ret['status'], msgid.LEVEL_ID_EMPTY) #'level id can't be empty'
 
         #test empty share or not
         response = c.post('/api/share_level', {'level_id': 1})
@@ -1126,7 +1126,7 @@ class SolutionSystemTestCase(TestCase):
         #test empty default level id
         response = c.post('/api/new_std_solution', {'solution_info': 'jsonStr'})
         ret = json.loads(response.content)
-        self.assertEqual(ret['status'], 1020) #'default level id can't be empty'
+        self.assertEqual(ret['status'], msgid.DEFAULT_LEVEL_ID_EMPTY) #'default level id can't be empty'
 
         #test default level id is not Integer
         response = c.post('/api/new_std_solution', {'solution_info': 'jsonStr', 'default_level_id': 'a'})
@@ -1161,7 +1161,7 @@ class SolutionSystemTestCase(TestCase):
         #test empty solution info
         response = c.post('/api/new_std_solution', {'default_level_id': 1, 'edit': 1})
         ret = json.loads(response.content)
-        self.assertEqual(ret['status'], 1023) #'solution info can't be empty'
+        self.assertEqual(ret['status'], msgid.SOLUTION_INFO_EMPTY) #'solution info can't be empty'
 
         #test solution info doesn't contain 'block_num'
         response = c.post('/api/new_std_solution', {'solution_info': json.dumps({}), 'default_level_id': 1, 'edit': 1})
@@ -1238,7 +1238,7 @@ class SolutionSystemTestCase(TestCase):
         #test empty level id
         response = c.post('/api/new_solution', {'solution_info': 'jsonStr', 'score': 0})
         ret = json.loads(response.content)
-        self.assertEqual(ret['status'], 1027) #'level id can\'t be empty'
+        self.assertEqual(ret['status'], msgid.LEVEL_ID_EMPTY) #'level id can\'t be empty'
 
         #test level id is not Integer
         response = c.post('/api/new_solution', {'level_id': 'a', 'solution_info': 'jsonStr', 'score': 0})
@@ -1266,7 +1266,7 @@ class SolutionSystemTestCase(TestCase):
         #test empty solution info
         response = c.post('/api/new_solution', {'level_id': 1, 'score': 0})
         ret = json.loads(response.content)
-        self.assertEqual(ret['status'], 1023) #'solution info can't be empty'
+        self.assertEqual(ret['status'], msgid.SOLUTION_INFO_EMPTY) #'solution info can't be empty'
 
         #test solution info doesn't contain 'block_num'
         response = c.post('/api/new_solution', {'level_id': 1, 'solution_info': json.dumps({})})
@@ -1631,7 +1631,7 @@ class SolutionSystemTestCase(TestCase):
         #test empty level id
         response = c.post('/api/change_level_info')
         ret = json.loads(response.content)
-        self.assertEqual(ret['status'], 1027) #'level id can't be empty'
+        self.assertEqual(ret['status'], msgid.LEVEL_ID_EMPTY) #'level id can't be empty'
 
         #test level id is not Integer
         response = c.post('/api/change_level_info', {'level_id': 'a'})
@@ -1671,7 +1671,7 @@ class SolutionSystemTestCase(TestCase):
         #test empty level info
         response = c.post('/api/change_level_info', {'level_id': level2.level_id})
         ret = json.loads(response.content)
-        self.assertEqual(ret['status'], 1021) #'level info can't be empty'
+        self.assertEqual(ret['status'], msgid.LEVEL_INFO_EMPTY) #'level info can't be empty'
 
         solution1 = Solution.objects.create(user_name = 'abc', level_id = level2.level_id, info = json.dumps({'block_num': 6}), score = 3)
         solution2 = Solution.objects.create(user_name = 'abc', level_id = level2.level_id, info = json.dumps({'block_num': 6}), score = 3)

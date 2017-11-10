@@ -32,11 +32,11 @@ def new_default_level(request):
         return json_response(ret)
 
     if not 'default_level_id' in content:
-        ret['status'] = 1020 #'default level id can't be empty'
+        ret['status'] = msgid.DEFAULT_LEVEL_ID_EMPTY #'default level id can't be empty'
         return json_response(ret)
 
     if not 'level_info' in content:
-        ret['status'] = 1021 #'level info can't be empty'
+        ret['status'] = msgid.LEVEL_INFO_EMPTY #'level info can't be empty'
         return json_response(ret)
 
     try:
@@ -71,7 +71,7 @@ def new_default_level(request):
             ret['status'] = msgid.SUCCESS #'succeeded'
             ret['level_id'] = default_level_id_filter[0].level_id
             return json_response(ret)
-        ret['status'] = 1022 #'this default level id already exists'
+        ret['status'] = msgid.DEFAULT_LEVEL_ID_EXIST #'this default level id already exists'
         return json_response(ret)
 
     if change:
@@ -189,7 +189,7 @@ def new_usermade_level(request):
 
 
     if not 'level_info' in content:
-        ret['status'] = 1021 #'level info can't be empty'
+        ret['status'] = msgid.LEVEL_INFO_EMPTY #'level info can't be empty'
         return json_response(ret)
 
     MAX_USER_CREATED_LEVEL_NUM = 10
@@ -223,7 +223,7 @@ def share_level(request):
         return json_response(ret)
 
     if not 'level_id' in content:
-        ret['status'] = 1027 #'level id can't be empty'
+        ret['status'] = msgid.LEVEL_ID_EMPTY #'level id can't be empty'
         return json_response(ret)
 
     if not 'share' in content:
@@ -358,7 +358,7 @@ def change_level_info(request):
         return json_response(ret)
 
     if not 'level_id' in content:
-        ret['status'] = 1027 #'level id can't be empty'
+        ret['status'] = msgid.LEVEL_ID_EMPTY #'level id can't be empty'
         return json_response(ret)
 
     try:
@@ -390,7 +390,7 @@ def change_level_info(request):
         return json_response(ret)
 
     if not 'level_info' in content:
-        ret['status'] = 1021 #'level info can't be empty'
+        ret['status'] = msgid.LEVEL_INFO_EMPTY #'level info can't be empty'
         return json_response(ret)
     _level_info = content['level_info']
 

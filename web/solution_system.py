@@ -39,7 +39,7 @@ def new_std_solution(request):
         return json_response(ret)
 
     if not 'default_level_id' in content:
-        ret['status'] = 1020 #'default level id can't be empty'
+        ret['status'] = msgid.DEFAULT_LEVEL_ID_EMPTY #'default level id can't be empty'
         return json_response(ret)
 
     try:
@@ -79,7 +79,7 @@ def new_std_solution(request):
         return json_response(ret)
 
     if not 'solution_info' in content:
-        ret['status'] = 1023 #'solution info can't be empty'
+        ret['status'] = msgid.SOLUTION_INFO_EMPTY #'solution info can't be empty'
         return json_response(ret)
     _solution_info = content['solution_info']
     _info = json.loads(_solution_info)
@@ -130,7 +130,7 @@ def new_solution(request):
         return json_response(ret)
 
     if not 'level_id' in content:
-        ret['status'] = 1027 #'level id can\'t be empty'
+        ret['status'] = msgid.LEVEL_ID_EMPTY #'level id can\'t be empty'
         return json_response(ret)
 
     try:
@@ -150,7 +150,7 @@ def new_solution(request):
         return json_response(ret)
 
     if not 'solution_info' in content:
-        ret['status'] = 1023 #'solution info can't be empty'
+        ret['status'] = msgid.SOLUTION_INFO_EMPTY #'solution info can't be empty'
         return json_response(ret)
     _solution_info = content['solution_info']
     _info = json.loads(_solution_info)
