@@ -84,18 +84,18 @@ def new_std_solution(request):
     _solution_info = content['solution_info']
     _info = json.loads(_solution_info)
     if not 'block_num' in _info:
-        ret['status'] = 1041 #'solution info dict needs to contain key 'block_num''
+        ret['status'] = msgid.BLOCK_NUM_EMPTY #'solution info dict needs to contain key 'block_num''
         return json_response(ret)
 
     try:
         std_block_num = int(_info['block_num'])
     except ValueError,e :
         print e
-        ret['status'] = 1042 #''block_num' in solution_info dict needs to be an Integer'
+        ret['status'] = msgid.BLOCK_NUM_NOT_INT #''block_num' in solution_info dict needs to be an Integer'
         return json_response(ret)
 
     if not int_range(std_block_num):
-        ret['status'] = 1042 #''block_num' in solution_info dict needs to be an Integer'
+        ret['status'] = msgid.BLOCK_NUM_NOT_INT #''block_num' in solution_info dict needs to be an Integer'
         return json_response(ret)
 
     solution_dict = json.loads(admin.solution_dict)
@@ -155,24 +155,24 @@ def new_solution(request):
     _solution_info = content['solution_info']
     _info = json.loads(_solution_info)
     if not 'block_num' in _info:
-        ret['status'] = 1041 #'solution info dict needs to contain key 'block_num''
+        ret['status'] = msgid.BLOCK_NUM_EMPTY #'solution info dict needs to contain key 'block_num''
         return json_response(ret)
 
     try:
         user_block_num = int(_info['block_num'])
     except ValueError,e :
         print e
-        ret['status'] = 1042 #''block_num' in solution_info dict needs to be an Integer'
+        ret['status'] = msgid.BLOCK_NUM_NOT_INT #''block_num' in solution_info dict needs to be an Integer'
         return json_response(ret)
 
     if not int_range(user_block_num):
-        ret['status'] = 1042 #''block_num' in solution_info dict needs to be an Integer'
+        ret['status'] = msgid.BLOCK_NUM_NOT_INT #''block_num' in solution_info dict needs to be an Integer'
         return json_response(ret)
 
     level = level_id_filter[0]
     if level.default_level_id != -1:
         if level.std_solution_id == -1:
-            ret['status'] = 1040 #'calculate score error, this default level doesn't have one std solution'
+            ret['status'] = msgid.CALC_ERROR #'calculate score error, this default level doesn't have one std solution'
             return json_response(ret)
 
         std_solution = Solution.objects.filter(solution_id = level.std_solution_id)[0]
@@ -299,7 +299,7 @@ def share_solution(request):
     _level_id = solution.level_id
     level = Level.objects.filter(level_id = _level_id)[0]
     if not level.shared:
-        ret['status'] = 1043 #'the level need to be shared before sharing the solution'
+        ret['status'] = msgid.SHARE_LEVEL_BEFORE_SHARE_SOLUTION #'the level need to be shared before sharing the solution'
         return json_response(ret)
 
     solution.shared = (_shared == 1)

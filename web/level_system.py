@@ -239,7 +239,7 @@ def share_level(request):
         ret['status'] = msgid.SHARE_OUT_OF_RANGE #'the input share needs to be 0 or 1'
         return json_response(ret)
     if _shared == 0:
-        ret['status'] = 1044 #'you can't cancel share the level'
+        ret['status'] = msgid.CANT_CANCEL_SHARE_LEVEL #'you can't cancel share the level'
         return json_response(ret)
 
     try:
@@ -386,7 +386,7 @@ def change_level_info(request):
         return json_response(ret)
 
     if level.shared:
-        ret['status'] = 1045 #'you can't edit shared level'
+        ret['status'] = msgid.CANT_EDIT_SHARE_LEVEL #'you can't edit shared level'
         return json_response(ret)
 
     if not 'level_info' in content:

@@ -844,7 +844,7 @@ class LevelSystemTestCase(TestCase):
         #test can't cancel share
         response = c.post('/api/share_level', {'level_id': 1, 'share': 0})
         ret = json.loads(response.content)
-        self.assertEqual(ret['status'], 1044) #'you can't cancle share the level'
+        self.assertEqual(ret['status'], msgid.CANT_CANCEL_SHARE_LEVEL) #'you can't cancle share the level'
 
         #test level id is not Integer
         response = c.post('/api/share_level', {'level_id': 'a', 'share': 1})
@@ -1166,17 +1166,17 @@ class SolutionSystemTestCase(TestCase):
         #test solution info doesn't contain 'block_num'
         response = c.post('/api/new_std_solution', {'solution_info': json.dumps({}), 'default_level_id': 1, 'edit': 1})
         ret = json.loads(response.content)
-        self.assertEqual(ret['status'], 1041) #'solution info dict needs to contain key 'block_num''
+        self.assertEqual(ret['status'], msgid.BLOCK_NUM_EMPTY) #'solution info dict needs to contain key 'block_num''
 
         #test 'block_num' isn't Integer
         response = c.post('/api/new_std_solution', {'solution_info': json.dumps({'block_num':'a'}), 'default_level_id': 1, 'edit': 1})
         ret = json.loads(response.content)
-        self.assertEqual(ret['status'], 1042) #''block_num' in solution_info dict needs to be an Integer'
+        self.assertEqual(ret['status'], msgid.BLOCK_NUM_NOT_INT) #''block_num' in solution_info dict needs to be an Integer'
 
         #test 'block_num' isn't Integer
         response = c.post('/api/new_std_solution', {'solution_info': json.dumps({'block_num':2147483648}), 'default_level_id': 1, 'edit': 1})
         ret = json.loads(response.content)
-        self.assertEqual(ret['status'], 1042) #''block_num' in solution_info dict needs to be an Integer'
+        self.assertEqual(ret['status'], msgid.BLOCK_NUM_NOT_INT) #''block_num' in solution_info dict needs to be an Integer'
 
         #test new std solution
         response = c.post('/api/new_std_solution', {'solution_info': json.dumps({'block_num': 6}), 'default_level_id': 1, 'edit': 1})
@@ -1271,22 +1271,22 @@ class SolutionSystemTestCase(TestCase):
         #test solution info doesn't contain 'block_num'
         response = c.post('/api/new_solution', {'level_id': 1, 'solution_info': json.dumps({})})
         ret = json.loads(response.content)
-        self.assertEqual(ret['status'], 1041) #'solution info dict needs to contain key 'block_num''
+        self.assertEqual(ret['status'], msgid.BLOCK_NUM_EMPTY) #'solution info dict needs to contain key 'block_num''
 
         #test block_num is not Integer
         response = c.post('/api/new_solution', {'level_id': 1, 'solution_info': json.dumps({'block_num': 'a'})})
         ret = json.loads(response.content)
-        self.assertEqual(ret['status'], 1042) #''block_num' in solution_info dict needs to be an Integer'
+        self.assertEqual(ret['status'], msgid.BLOCK_NUM_NOT_INT) #''block_num' in solution_info dict needs to be an Integer'
 
         #test block_num is not Integer
         response = c.post('/api/new_solution', {'level_id': 1, 'solution_info': json.dumps({'block_num': 2147483648})})
         ret = json.loads(response.content)
-        self.assertEqual(ret['status'], 1042) #''block_num' in solution_info dict needs to be an Integer'
+        self.assertEqual(ret['status'], msgid.BLOCK_NUM_NOT_INT) #''block_num' in solution_info dict needs to be an Integer'
 
         #test default level doesn't have one std solution
         response = c.post('/api/new_solution', {'level_id': 1, 'solution_info': json.dumps({'block_num': 5})})
         ret = json.loads(response.content)
-        self.assertEqual(ret['status'], 1040) #'calculate score error, this default level doesn't have one std solution'
+        self.assertEqual(ret['status'], msgid.CALC_ERROR) #'calculate score error, this default level doesn't have one std solution'
 
         #logout
         response = c.post('/api/logout')
@@ -1514,7 +1514,7 @@ class SolutionSystemTestCase(TestCase):
         #test can't share solution before sharing level
         response = c.post('/api/share_solution', {'solution_id': solution2.solution_id, 'share': 1})
         ret = json.loads(response.content)
-        self.assertEqual(ret['status'], 1043) #'the level need to be shared before sharing the solution'
+        self.assertEqual(ret['status'], msgid.SHARE_LEVEL_BEFORE_SHARE_SOLUTION) #'the level need to be shared before sharing the solution'
 
         level1.shared = True
         level1.save()
@@ -1662,7 +1662,7 @@ class SolutionSystemTestCase(TestCase):
         #test can't edit shared level
         response = c.post('/api/change_level_info', {'level_id': level2.level_id})
         ret = json.loads(response.content)
-        self.assertEqual(ret['status'], 1045) #'you can't edit shared level'
+        self.assertEqual(ret['status'], msgid.CANT_EDIT_SHARE_LEVEL) #'you can't edit shared level'
 
         level2 = Level.objects.filter(info = 'level2')[0]
         level2.shared = False
