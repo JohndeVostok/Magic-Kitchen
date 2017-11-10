@@ -1,6 +1,7 @@
 from models import User
 from models import Level
 from models import Solution
+import msg_id_const_value as msgid
 import json
 from django.http import HttpResponse 
 from send_email import email_thread
@@ -35,19 +36,19 @@ def register(request):
 
     session = get_session(request)
     if (session != None):
-        ret['status'] = 1010 #'you have already logged in'
+        ret['status'] = msgid.ALREADY_LOGIN #'you have already logged in'
         return json_response(ret)
 
     if not 'name' in content:
-        ret['status'] = 1002 #'user name can't be empty'
+        ret['status'] = msgid.NAME_EMPTY #'user name can't be empty'
         return json_response(ret)
 
     if not 'password' in content:
-        ret['status'] = 1003 #'password can't be empty'
+        ret['status'] = msgid.PASSWORD_EMPTY #'password can't be empty'
         return json_response(ret)
 
     if not 'email' in content:
-        ret['status'] = 1004 #'email can't be empty'
+        ret['status'] = msgid.EMAIL_EMPTY #'email can't be empty'
         return json_response(ret)
 
     _name = content['name']
@@ -55,29 +56,29 @@ def register(request):
     _password = content['password']
 
     if len(_name) >= 20:
-        ret['status'] = 1007 #'this name is too long'
+        ret['status'] = msgid.NAME_TOO_LONG #'this name is too long'
         return json_response(ret)
 
     if len(_password) >= 20:
-        ret['status'] = 1008 #'this password is too long'
+        ret['status'] = msgid.PASSWORD_TOO_LONG #'this password is too long'
         return json_response(ret)
 
     if len(_email) >= 50:
-        ret['status'] = 1009 #'this email address is too long'
+        ret['status'] = msgid.EMAIL_TOO_LONG #'this email address is too long'
         return json_response(ret)
 
     name_filter = User.objects.filter(name = _name)
     if len(name_filter) >= 1:
-        ret['status'] = 1005 #'this name already exists'
+        ret['status'] = msgid.NAME_EXIST #'this name already exists'
         return json_response(ret)
 
     email_filter = User.objects.filter(email = _email)
     if len(email_filter) >= 1:
-        ret['status'] = 1006 #'this email address already exists'
+        ret['status'] = msgid.EMAIL_EXIST #'this email address already exists'
         return json_response(ret)
 
     User.objects.create(name = _name, password = _password, email = _email, solution_dict = json.dumps({}), authority = 1, vip_due_time = timezone.now())
-    ret['status'] = 1000 #'succeeded'
+    ret['status'] = msgid.SUCCESS #'succeeded'
     return json_response(ret)
 
 def login(request):
@@ -89,15 +90,15 @@ def login(request):
 
     session = get_session(request)
     if (session != None):
-        ret['status'] = 1010 #'you have already logged in'
+        ret['status'] = msgid.ALREADY_LOGIN #'you have already logged in'
         return json_response(ret)
 
     if not 'name' in content:
-        ret['status'] = 1002 #'user name can't be empty'
+        ret['status'] = msgid.NAME_EMPTY #'user name can't be empty'
         return json_response(ret)
 
     if not 'password' in content:
-        ret['status'] = 1003 #'password can't be empty'
+        ret['status'] = msgid.PASSWORD_EMPTY #'password can't be empty'
         return json_response(ret)
 
     _name = content['name']
@@ -106,16 +107,16 @@ def login(request):
     name_filter = User.objects.filter(name = _name)
 
     if len(name_filter) == 0:
-        ret['status'] = 1011 #'this name doesn't exist'
+        ret['status'] = msgid.NAME_NOT_EXIST #'this name doesn't exist'
         return json_response(ret)
 
     user = name_filter[0]
     if user.password != _password:
-        ret['status'] = 1012 #'wrong password'
+        ret['status'] = msgid.WRONG_PASSWORD #'wrong password'
         return json_response(ret)
 
     request.session['name'] = _name
-    ret['status'] = 1000 #'succeeded'
+    ret['status'] = msgid.SUCCESS #'succeeded'
     return json_response(ret)
 
 def logout(request):
@@ -123,7 +124,7 @@ def logout(request):
     session = get_session(request)
     if (session != None):
         del request.session['name']
-    ret['status'] = 1000 #'succeeded'
+    ret['status'] = msgid.SUCCESS #'succeeded'
     return json_response(ret)
 
 def change_password_after_login(request):
@@ -133,20 +134,20 @@ def change_password_after_login(request):
 
     session = get_session(request)
     if (session == None):
-        ret['status'] = 1001 #'please log in first'
+        ret['status'] = msgid.NOT_LOGIN #'please log in first'
         return json_response(ret)
 
     if not 'new_password' in content:
-        ret['status'] = 1013 #'new password can't be empty'
+        ret['status'] = msgid.NEW_PASSWORD_EMPTY #'new password can't be empty'
         return json_response(ret)
 
     _new_password = content['new_password']
     if len(_new_password) >= 20:
-        ret['status'] = 1008 #'this password is too long'
+        ret['status'] = msgid.PASSWORD_TOO_LONG #'this password is too long'
         return json_response(ret)
 
     change_password_to(session, _new_password)
-    ret['status'] = 1000 #'succeeded'
+    ret['status'] = msgid.SUCCESS #'succeeded'
     return json_response(ret)
 
 def change_password_by_email(request):
@@ -155,14 +156,14 @@ def change_password_by_email(request):
     ret = {}
 
     if not 'name' in content:
-        ret['status'] = 1002 #'name can't be empty'
+        ret['status'] = msgid.NAME_EMPTY #'name can't be empty'
         return json_response(ret)
 
     username = content['name']
     name_filter = User.objects.filter(name = username)
 
     if len(name_filter) == 0:
-        ret['status'] = 1011 #'this name doesn't exist'
+        ret['status'] = msgid.NAME_NOT_EXIST #'this name doesn't exist'
         return json_response(ret)
 
     user = name_filter[0]
@@ -178,7 +179,7 @@ def change_password_by_email(request):
     ret['identifyingCode'] = identifyingCode
 
     email_thread('Email From CodeCheF', 'This is the identifying code needed to change the password:\n' + identifyingCode, email).start()
-    ret['status'] = 1000 #'succeeded'
+    ret['status'] = msgid.SUCCESS #'succeeded'
     return json_response(ret)
 
 def change_password_by_identifyingCode(request):
@@ -187,39 +188,39 @@ def change_password_by_identifyingCode(request):
     ret = {}
 
     if not 'name' in content:
-        ret['status'] = 1002 #'name can't be empty'
+        ret['status'] = msgid.NAME_EMPTY #'name can't be empty'
         return json_response(ret)
     _name = content['name']
 
     if not 'identifyingCode' in content:
-        ret['status'] = 1014 #'identifying code can't be empty'
+        ret['status'] = msgid.IDENTIFY_CODE_EMPTY #'identifying code can't be empty'
         return json_response(ret)
     _identifyCode = content['identifyingCode']
 
     if not 'new_password' in content:
-        ret['status'] = 1013 #'new password can't be empty'
+        ret['status'] = msgid.NEW_PASSWORD_EMPTY #'new password can't be empty'
         return json_response(ret)
     _new_password = content['new_password']
 
     if len(_new_password) >= 20:
-        ret['status'] = 1008 #'this password is too long'
+        ret['status'] = msgid.PASSWORD_TOO_LONG #'this password is too long'
         return json_response(ret)
 
     name_filter = User.objects.filter(name = _name)
     if len(name_filter) == 0:
-        ret['status'] = 1011 #'this name doesn't exist'
+        ret['status'] = msgid.NAME_NOT_EXIST #'this name doesn't exist'
         return json_response(ret)
 
     user = name_filter[0]
     if _identifyCode != user.identifyingCode or _identifyCode == "":
-        ret['status'] = 1015 #'wrong identifying code'
+        ret['status'] = msgid.WRONG_IDENTIFY_CODE #'wrong identifying code'
         return json_response(ret)
 
     user.password = _new_password
     user.identifyingCode = ""
     user.save()
 
-    ret['status'] = 1000 #'succeeded'
+    ret['status'] = msgid.SUCCESS #'succeeded'
     return json_response(ret)
 
 def get_current_user_info(request):
@@ -229,7 +230,7 @@ def get_current_user_info(request):
 
     session = get_session(request)
     if not session:
-        ret['status'] = 1001 #'please log in first'
+        ret['status'] = msgid.NOT_LOGIN #'please log in first'
         return json_response(ret)
 
     name_filter = User.objects.filter(name = session)
@@ -237,7 +238,7 @@ def get_current_user_info(request):
     ret['user_name'] = session
     ret['email'] = user.email
     ret['solution_dict'] = user.solution_dict
-    ret['status'] = 1000 #'succeeded'
+    ret['status'] = msgid.SUCCESS #'succeeded'
 
     level_filter = Level.objects.filter(user_name = session)
     created_level = []
@@ -264,22 +265,22 @@ def vip_charge(request):
     ret = {}
     session = get_session(request)
     if not session:
-        ret['status'] = 1001 #'please log in first'
+        ret['status'] = msgid.NOT_LOGIN #'please log in first'
         return json_response(ret)
 
     if not 'days' in content:
-        ret['status'] = 1028 #'days can't be empty'
+        ret['status'] = msgid.DAYS_EMPTY #'days can't be empty'
         return json_response(ret)
 
     try:
         _days = int(content['days'])
     except ValueError,e :
         print e
-        ret['status'] = 1029 #'the input days needs to be an Integer'
+        ret['status'] = msgid.DAYS_NOT_INT #'the input days needs to be an Integer'
         return json_response(ret)
 
     if not _days in range(1, 100000):
-            ret['status'] = 1030 #'the input days needs to be in range[1, 99999]'
+            ret['status'] = msgid.DAYS_OUT_OF_RANGE #'the input days needs to be in range[1, 99999]'
             return json_response(ret)
 
     user = User.objects.filter(name = session)[0]
@@ -292,7 +293,7 @@ def vip_charge(request):
     user.vip_due_time = due_time + timedelta
     user.save()
 
-    ret['status'] = 1000 #'succeeded'
+    ret['status'] = msgid.SUCCESS #'succeeded'
     return json_response(ret)
 
 def set_admin(request):
@@ -301,15 +302,15 @@ def set_admin(request):
     ret = {}
     session = get_session(request)
     if not session:
-        ret['status'] = 1001 #'please log in first'
+        ret['status'] = msgid.NOT_LOGIN #'please log in first'
         return json_response(ret)
     super_admin = User.objects.filter(name = session)[0]
     if super_admin.authority != 4:
-        ret['status'] = 1031 #'you don't have operation authority'
+        ret['status'] = msgid.NO_AUTHORITY #'you don't have operation authority'
         return json_response(ret)
 
     if not 'name' in content:
-        ret['status'] = 1002 #'user name can't be empty'
+        ret['status'] = msgid.NAME_EMPTY #'user name can't be empty'
         return json_response(ret)
 
     _name = content['name']
@@ -317,12 +318,12 @@ def set_admin(request):
     name_filter = User.objects.filter(name = _name)
 
     if len(name_filter) == 0:
-        ret['status'] = 1011 #'this name doesn't exist'
+        ret['status'] = msgid.NAME_NOT_EXIST #'this name doesn't exist'
         return json_response(ret)
 
     user = name_filter[0]
     user.authority = 3 #set admin
     user.save()
 
-    ret['status'] = 1000 #'succeeded'
+    ret['status'] = msgid.SUCCESS #'succeeded'
     return json_response(ret)
