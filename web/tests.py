@@ -79,7 +79,7 @@ class CustomSystemTestCase(TestCase):
         self.assertEqual(ret['status'], msgid.SUCCESS) #'succeeded'
         response = c.post('/api/register', {'name': 'sth2', 'password': 'abc', 'email': '123@233.com'})
         ret = json.loads(response.content)
-        self.assertEqual(ret['status'], 1010) #'you have already logged in'
+        self.assertEqual(ret['status'], msgid.ALREADY_LOGIN) #'you have already logged in'
 
     def test_login(self):
         c = Client()
@@ -102,12 +102,12 @@ class CustomSystemTestCase(TestCase):
         #test 'this name doesn\'t exist'
         response = c.post('/api/login', {'name': 'sth2', 'password': 'abc'})
         ret = json.loads(response.content)
-        self.assertEqual(ret['status'], 1011) #'this name doesn't exist'
+        self.assertEqual(ret['status'], msgid.NAME_NOT_EXIST) #'this name doesn't exist'
 
         #test 'wrong password'
         response = c.post('/api/login', {'name': 'sth', 'password': 'abcd'})
         ret = json.loads(response.content)
-        self.assertEqual(ret['status'], 1012) #'wrong password'
+        self.assertEqual(ret['status'], msgid.WRONG_PASSWORD) #'wrong password'
 
         #test login succeeded
         response = c.post('/api/login', {'name': 'sth', 'password': 'abc'})
@@ -117,7 +117,7 @@ class CustomSystemTestCase(TestCase):
         #test login twice
         response = c.post('/api/login', {'name': 'sth', 'password': 'abc'})
         ret = json.loads(response.content)
-        self.assertEqual(ret['status'], 1010) #'you have already logged in'
+        self.assertEqual(ret['status'], msgid.ALREADY_LOGIN) #'you have already logged in'
 
     def test_logout(self):
 
@@ -183,7 +183,7 @@ class CustomSystemTestCase(TestCase):
         #test empty new password
         response = c.post('/api/change_password_after_login', {})
         ret = json.loads(response.content)
-        self.assertEqual(ret['status'], 1013) #'new password can't be empty'
+        self.assertEqual(ret['status'], msgid.NEW_PASSWORD_EMPTY) #'new password can't be empty'
 
         #test new password is too long
         response = c.post('/api/change_password_after_login', {'new_password' : 'abcdefghijklmnopqrstuvwxyz'})
@@ -206,7 +206,7 @@ class CustomSystemTestCase(TestCase):
         #test name not exist
         response = c.post('/api/change_password_by_email', {'name': 'sthsth'})
         ret = json.loads(response.content)
-        self.assertEqual(ret['status'], 1011) #'this name doesn't exist'
+        self.assertEqual(ret['status'], msgid.NAME_NOT_EXIST) #'this name doesn't exist'
         
         #test send eamil
         response = c.post('/api/change_password_by_email', {'name': 'sth'})
@@ -235,17 +235,17 @@ class CustomSystemTestCase(TestCase):
         #test empty identifyingCode
         response = c.post('/api/change_password_by_identifyingCode', {'name': 'sth', 'new_password': 'newpw'})
         ret = json.loads(response.content)
-        self.assertEqual(ret['status'], 1014) #'identifying code can't be empty'
+        self.assertEqual(ret['status'], msgid.IDENTIFY_CODE_EMPTY) #'identifying code can't be empty'
 
         #test empty new_password
         response = c.post('/api/change_password_by_identifyingCode', {'name': 'sth', 'identifyingCode': identifyingCode})
         ret = json.loads(response.content)
-        self.assertEqual(ret['status'], 1013) #'new password can't be empty'
+        self.assertEqual(ret['status'], msgid.NEW_PASSWORD_EMPTY) #'new password can't be empty'
 
         #test name not exist
         response = c.post('/api/change_password_by_identifyingCode', {'name': 'sthsth', 'identifyingCode': identifyingCode, 'new_password': 'newpw'})
         ret = json.loads(response.content)
-        self.assertEqual(ret['status'], 1011) #'this name doesn't exist'
+        self.assertEqual(ret['status'], msgid.NAME_NOT_EXIST) #'this name doesn't exist'
 
         #test new password is too long
         response = c.post('/api/change_password_by_identifyingCode', {'name': 'sth', 'identifyingCode': identifyingCode, 'new_password': 'newpw' + 'abcdefghijklmnopqrstvwxyz'})
@@ -255,7 +255,7 @@ class CustomSystemTestCase(TestCase):
         #test wrong identifyingCode
         response = c.post('/api/change_password_by_identifyingCode', {'name': 'sth', 'identifyingCode': identifyingCode + '1', 'new_password': 'newpw'})
         ret = json.loads(response.content)
-        self.assertEqual(ret['status'], 1015) #'wrong identifying code'
+        self.assertEqual(ret['status'], msgid.WRONG_IDENTIFY_CODE) #'wrong identifying code'
 
         #test change password by identifyingCode
         response = c.post('/api/change_password_by_identifyingCode', {'name': 'sth', 'identifyingCode': identifyingCode, 'new_password': 'newpw'})
@@ -265,12 +265,12 @@ class CustomSystemTestCase(TestCase):
         #test wrong identifyingCode
         response = c.post('/api/change_password_by_identifyingCode', {'name': 'sth', 'identifyingCode': '', 'new_password': 'newpw'})
         ret = json.loads(response.content)
-        self.assertEqual(ret['status'], 1015) #'wrong identifying code'
+        self.assertEqual(ret['status'], msgid.WRONG_IDENTIFY_CODE) #'wrong identifying code'
 
         #test login after changing password
         response = c.post('/api/login', {'name': 'sth', 'password': 'abc'})
         ret = json.loads(response.content)
-        self.assertEqual(ret['status'], 1012) #'wrong password'
+        self.assertEqual(ret['status'], msgid.WRONG_PASSWORD) #'wrong password'
         response = c.post('/api/login', {'name': 'sth', 'password': 'newpw'})
         ret = json.loads(response.content)
         self.assertEqual(ret['status'], msgid.SUCCESS) #'succeeded'
@@ -278,7 +278,7 @@ class CustomSystemTestCase(TestCase):
         #test change password by old identifying code
         response = c.post('/api/change_password_by_identifyingCode', {'name': 'sth', 'identifyingCode': identifyingCode, 'new_password': 'newpw2'})
         ret = json.loads(response.content)
-        self.assertEqual(ret['status'], 1015) #'wrong identifying code'
+        self.assertEqual(ret['status'], msgid.WRONG_IDENTIFY_CODE) #'wrong identifying code'
 
     def test_get_current_user_info(self):
         c = Client()
@@ -441,7 +441,7 @@ class CustomSystemTestCase(TestCase):
         #test user name doesn't exist
         response = c.post('/api/set_admin', {'name': 'sth2'})
         ret = json.loads(response.content)
-        self.assertEqual(ret['status'], 1011) #'this name doesn't exist'
+        self.assertEqual(ret['status'], msgid.NAME_NOT_EXIST) #'this name doesn't exist'
 
         #test set admin
         response = c.post('/api/set_admin', {'name': 'sth'})
@@ -496,27 +496,27 @@ class LevelSystemTestCase(TestCase):
         #test level id and default level id empty in the same time
         response = c.post('/api/get_level_info')
         ret = json.loads(response.content)
-        self.assertEqual(ret['status'], 1016) #'level id and default level id can't be empty in the same time'
+        self.assertEqual(ret['status'], msgid.LEVEL_ID_AND_DEFAULT_LEVEL_ID_EMPTY) #'level id and default level id can't be empty in the same time'
 
         #test default level id not exists
         response = c.post('/api/get_level_info', {'default_level_id': 2147483647})
         ret = json.loads(response.content)
-        self.assertEqual(ret['status'], 1017) #'this level doesn't exist'
+        self.assertEqual(ret['status'], msgid.LEVEL_NOT_EXIST) #'this level doesn't exist'
 
         #test default level id is not Integer
         response = c.post('/api/get_level_info', {'default_level_id': 'a'})
         ret = json.loads(response.content)
-        self.assertEqual(ret['status'], 1018) #'the input default level id needs to be an Integer'
+        self.assertEqual(ret['status'], msgid.DEFAULT_LEVEL_ID_NOT_INT) #'the input default level id needs to be an Integer'
 
         #test default level id is too large
         response = c.post('/api/get_level_info', {'default_level_id': '-2147483649'})
         ret = json.loads(response.content)
-        self.assertEqual(ret['status'], 1018) #'the input default level id needs to be an Integer'
+        self.assertEqual(ret['status'], msgid.DEFAULT_LEVEL_ID_NOT_INT) #'the input default level id needs to be an Integer'
 
         #test default level id is too large
         response = c.post('/api/get_level_info', {'default_level_id': 2147483648})
         ret = json.loads(response.content)
-        self.assertEqual(ret['status'], 1018) #'the input default level id needs to be an Integer'
+        self.assertEqual(ret['status'], msgid.DEFAULT_LEVEL_ID_NOT_INT) #'the input default level id needs to be an Integer'
 
         '''#test get level info
         response = c.post('/api/get_level_info', {'default_level_id': 1})
@@ -586,22 +586,22 @@ class LevelSystemTestCase(TestCase):
         #test level id not exists
         response = c.post('/api/get_level_info', {'level_id': 2147483647})
         ret = json.loads(response.content)
-        self.assertEqual(ret['status'], 1017) #'this level doesn't exist'
+        self.assertEqual(ret['status'], msgid.LEVEL_NOT_EXIST) #'this level doesn't exist'
 
         #test level id is not Integer
         response = c.post('/api/get_level_info', {'level_id': 'a'})
         ret = json.loads(response.content)
-        self.assertEqual(ret['status'], 1019) #'the input level id needs to be an Integer'
+        self.assertEqual(ret['status'], msgid.LEVEL_ID_NOT_INT) #'the input level id needs to be an Integer'
 
         #test level id is too large
         response = c.post('/api/get_level_info', {'level_id': '-2147483649'})
         ret = json.loads(response.content)
-        self.assertEqual(ret['status'], 1019) #'the input level id needs to be an Integer'
+        self.assertEqual(ret['status'], msgid.LEVEL_ID_NOT_INT) #'the input level id needs to be an Integer'
 
         #test level id is too large
         response = c.post('/api/get_level_info', {'level_id': 2147483648})
         ret = json.loads(response.content)
-        self.assertEqual(ret['status'], 1019) #'the input level id needs to be an Integer'
+        self.assertEqual(ret['status'], msgid.LEVEL_ID_NOT_INT) #'the input level id needs to be an Integer'
 
         '''#test get level info
         response = c.post('/api/get_level_info', {'level_id': 2})
@@ -696,12 +696,12 @@ class LevelSystemTestCase(TestCase):
         #test default level id is not Integer
         response = c.post('/api/new_default_level', {'default_level_id': 'a', 'level_info': 'jsonStr'})
         ret = json.loads(response.content)
-        self.assertEqual(ret['status'], 1018) #'the input default level id needs to be an Integer'
+        self.assertEqual(ret['status'], msgid.DEFAULT_LEVEL_ID_NOT_INT) #'the input default level id needs to be an Integer'
 
         #test default level id is too large
         response = c.post('/api/new_default_level', {'default_level_id': 2147483648666, 'level_info': 'jsonStr'})
         ret = json.loads(response.content)
-        self.assertEqual(ret['status'], 1018) #'the input default level id needs to be an Integer'
+        self.assertEqual(ret['status'], msgid.DEFAULT_LEVEL_ID_NOT_INT) #'the input default level id needs to be an Integer'
 
         #test edit is not 0 or 1
         response = c.post('/api/new_default_level', {'default_level_id': 1, 'level_info': 'jsonStr', 'edit': 'a'})
@@ -752,7 +752,7 @@ class LevelSystemTestCase(TestCase):
         #test edit non-existent default level
         response = c.post('/api/new_default_level', {'default_level_id': 2, 'level_info': 'jsonStr2', 'edit': 1})
         ret = json.loads(response.content)
-        self.assertEqual(ret['status'], 1017) #'this level doesn't exist'
+        self.assertEqual(ret['status'], msgid.LEVEL_NOT_EXIST) #'this level doesn't exist'
 
     def test_new_usermade_level(self):
         c = Client()
@@ -849,17 +849,17 @@ class LevelSystemTestCase(TestCase):
         #test level id is not Integer
         response = c.post('/api/share_level', {'level_id': 'a', 'share': 1})
         ret = json.loads(response.content)
-        self.assertEqual(ret['status'], 1019) #'the input level id needs to be an Integer'
+        self.assertEqual(ret['status'], msgid.LEVEL_ID_NOT_INT) #'the input level id needs to be an Integer'
 
         #test level id is not Integer
         response = c.post('/api/share_level', {'level_id': 2147483648, 'share': 1})
         ret = json.loads(response.content)
-        self.assertEqual(ret['status'], 1019) #'the input level id needs to be an Integer'
+        self.assertEqual(ret['status'], msgid.LEVEL_ID_NOT_INT) #'the input level id needs to be an Integer'
 
         #test level doesn't exist
         response = c.post('/api/share_level', {'level_id': 1, 'share': 1})
         ret = json.loads(response.content)
-        self.assertEqual(ret['status'], 1017) #'this level doesn't exist'
+        self.assertEqual(ret['status'], msgid.LEVEL_NOT_EXIST) #'this level doesn't exist'
 
         level1 = Level.objects.create(info = 'level1', user_name = 'sth2', default_level_id = -1)
 
@@ -1131,17 +1131,17 @@ class SolutionSystemTestCase(TestCase):
         #test default level id is not Integer
         response = c.post('/api/new_std_solution', {'solution_info': 'jsonStr', 'default_level_id': 'a'})
         ret = json.loads(response.content)
-        self.assertEqual(ret['status'], 1018) #'the input default level id needs to be an Integer'
+        self.assertEqual(ret['status'], msgid.DEFAULT_LEVEL_ID_NOT_INT) #'the input default level id needs to be an Integer'
 
         #test default level id is not Integer
         response = c.post('/api/new_std_solution', {'solution_info': 'jsonStr', 'default_level_id': 2147483648})
         ret = json.loads(response.content)
-        self.assertEqual(ret['status'], 1018) #'the input default level id needs to be an Integer'
+        self.assertEqual(ret['status'], msgid.DEFAULT_LEVEL_ID_NOT_INT) #'the input default level id needs to be an Integer'
 
         #test default level doesn't exist
         response = c.post('/api/new_std_solution', {'solution_info': 'jsonStr', 'default_level_id': 1})
         ret = json.loads(response.content)
-        self.assertEqual(ret['status'], 1017) #'this level doesn't exist'
+        self.assertEqual(ret['status'], msgid.LEVEL_NOT_EXIST) #'this level doesn't exist'
 
         #test new default level
         response = c.post('/api/new_default_level', {'default_level_id': 1, 'level_info': 'jsonStr'})
@@ -1243,17 +1243,17 @@ class SolutionSystemTestCase(TestCase):
         #test level id is not Integer
         response = c.post('/api/new_solution', {'level_id': 'a', 'solution_info': 'jsonStr', 'score': 0})
         ret = json.loads(response.content)
-        self.assertEqual(ret['status'], 1019) #'the input level id needs to be an Integer'
+        self.assertEqual(ret['status'], msgid.LEVEL_ID_NOT_INT) #'the input level id needs to be an Integer'
 
         #test level id is too large
         response = c.post('/api/new_solution', {'level_id': 2147483648, 'solution_info': 'jsonStr', 'score': 0})
         ret = json.loads(response.content)
-        self.assertEqual(ret['status'], 1019) #'the input level id needs to be an Integer'
+        self.assertEqual(ret['status'], msgid.LEVEL_ID_NOT_INT) #'the input level id needs to be an Integer'
 
         #test level id not exists
         response = c.post('/api/new_solution', {'level_id': 1, 'solution_info': 'jsonStr', 'score': 0})
         ret = json.loads(response.content)
-        self.assertEqual(ret['status'], 1017) #'this level doesn't exist'
+        self.assertEqual(ret['status'], msgid.LEVEL_NOT_EXIST) #'this level doesn't exist'
 
         user = User.objects.filter(name = 'sth')[0]
         user.authority = 3
@@ -1636,17 +1636,17 @@ class SolutionSystemTestCase(TestCase):
         #test level id is not Integer
         response = c.post('/api/change_level_info', {'level_id': 'a'})
         ret = json.loads(response.content)
-        self.assertEqual(ret['status'], 1019) #'the input level id needs to be an Integer'
+        self.assertEqual(ret['status'], msgid.LEVEL_ID_NOT_INT) #'the input level id needs to be an Integer'
 
         #test level id is not Integer
         response = c.post('/api/change_level_info', {'level_id': 2147483648})
         ret = json.loads(response.content)
-        self.assertEqual(ret['status'], 1019) #'the input level id needs to be an Integer'
+        self.assertEqual(ret['status'], msgid.LEVEL_ID_NOT_INT) #'the input level id needs to be an Integer'
 
         #test level doesn't exist
         response = c.post('/api/change_level_info', {'level_id': 1})
         ret = json.loads(response.content)
-        self.assertEqual(ret['status'], 1017) #'this level doesn't exist'
+        self.assertEqual(ret['status'], msgid.LEVEL_NOT_EXIST) #'this level doesn't exist'
 
         level1 = Level.objects.create(info = 'level1', user_name = 'sth2', default_level_id = -1)
 

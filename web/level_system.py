@@ -43,11 +43,11 @@ def new_default_level(request):
         _id = int(content['default_level_id'])
     except ValueError,e :
         print e
-        ret['status'] = 1018 #'the input default level id needs to be an Integer'
+        ret['status'] = msgid.DEFAULT_LEVEL_ID_NOT_INT #'the input default level id needs to be an Integer'
         return json_response(ret)
 
     if not int_range(_id):
-            ret['status'] = 1018 #'the input default level id needs to be an Integer'
+            ret['status'] = msgid.DEFAULT_LEVEL_ID_NOT_INT #'the input default level id needs to be an Integer'
             return json_response(ret)
 
     change = False
@@ -75,7 +75,7 @@ def new_default_level(request):
         return json_response(ret)
 
     if change:
-        ret['status'] = 1017 #'this level doesn't exist'
+        ret['status'] = msgid.LEVEL_NOT_EXIST #'this level doesn't exist'
         return json_response(ret)
 
     _info = content['level_info']
@@ -92,7 +92,7 @@ def get_level_info(request):
     ret = {}
 
     if not (('level_id' in content) or ('default_level_id' in content)):
-        ret['status'] = 1016 #'level id and default level id can't be empty in the same time'
+        ret['status'] = msgid.LEVEL_ID_AND_DEFAULT_LEVEL_ID_EMPTY #'level id and default level id can't be empty in the same time'
         return json_response(ret)
 
     if 'default_level_id' in content:
@@ -101,16 +101,16 @@ def get_level_info(request):
             _default_level_id = int(content['default_level_id'])
         except ValueError,e :
             print e
-            ret['status'] = 1018 #'the input default level id needs to be an Integer'
+            ret['status'] = msgid.DEFAULT_LEVEL_ID_NOT_INT #'the input default level id needs to be an Integer'
             return json_response(ret)
 
         if not int_range(_default_level_id):
-            ret['status'] = 1018 #'the input default level id needs to be an Integer'
+            ret['status'] = msgid.DEFAULT_LEVEL_ID_NOT_INT #'the input default level id needs to be an Integer'
             return json_response(ret)
 
         default_level_id_filter = Level.objects.filter(default_level_id = _default_level_id)
         if len(default_level_id_filter) == 0:
-            ret['status'] = 1017 #'this level doesn't exist'
+            ret['status'] = msgid.LEVEL_NOT_EXIST #'this level doesn't exist'
             return json_response(ret)
         level = default_level_id_filter[0]
 
@@ -140,16 +140,16 @@ def get_level_info(request):
             _level_id = int(content['level_id'])
         except ValueError,e :
             print e
-            ret['status'] = 1019 #'the input level id needs to be an Integer'
+            ret['status'] = msgid.LEVEL_ID_NOT_INT #'the input level id needs to be an Integer'
             return json_response(ret)
 
         if not int_range(_level_id):
-            ret['status'] = 1019 #'the input level id needs to be an Integer'
+            ret['status'] = msgid.LEVEL_ID_NOT_INT #'the input level id needs to be an Integer'
             return json_response(ret)
 
         level_id_filter = Level.objects.filter(level_id = _level_id)
         if len(level_id_filter) == 0:
-            ret['status'] = 1017 #'this level doesn't exist'
+            ret['status'] = msgid.LEVEL_NOT_EXIST #'this level doesn't exist'
             return json_response(ret)
         level = level_id_filter[0]
 
@@ -246,16 +246,16 @@ def share_level(request):
         _level_id = int(content['level_id'])
     except ValueError,e :
         print e
-        ret['status'] = 1019 #'the input level id needs to be an Integer'
+        ret['status'] = msgid.LEVEL_ID_NOT_INT #'the input level id needs to be an Integer'
         return json_response(ret)
 
     if not int_range(_level_id):
-        ret['status'] = 1019 #'the input level id needs to be an Integer'
+        ret['status'] = msgid.LEVEL_ID_NOT_INT #'the input level id needs to be an Integer'
         return json_response(ret)
 
     level_id_filter = Level.objects.filter(level_id = _level_id)
     if len(level_id_filter) == 0:
-        ret['status'] = 1017 #'this level doesn't exist'
+        ret['status'] = msgid.LEVEL_NOT_EXIST #'this level doesn't exist'
         return json_response(ret)
 
     user = User.objects.filter(name = session)[0]
@@ -365,16 +365,16 @@ def change_level_info(request):
         _level_id = int(content['level_id'])
     except ValueError,e :
         print e
-        ret['status'] = 1019 #'the input level id needs to be an Integer'
+        ret['status'] = msgid.LEVEL_ID_NOT_INT #'the input level id needs to be an Integer'
         return json_response(ret)
 
     if not int_range(_level_id):
-        ret['status'] = 1019 #'the input level id needs to be an Integer'
+        ret['status'] = msgid.LEVEL_ID_NOT_INT #'the input level id needs to be an Integer'
         return json_response(ret)
 
     level_id_filter = Level.objects.filter(level_id = _level_id)
     if len(level_id_filter) == 0:
-        ret['status'] = 1017 #'this level doesn't exist'
+        ret['status'] = msgid.LEVEL_NOT_EXIST #'this level doesn't exist'
         return json_response(ret)
 
     user = User.objects.filter(name = session)[0]

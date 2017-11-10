@@ -36,7 +36,7 @@ def register(request):
 
     session = get_session(request)
     if (session != None):
-        ret['status'] = 1010 #'you have already logged in'
+        ret['status'] = msgid.ALREADY_LOGIN #'you have already logged in'
         return json_response(ret)
 
     if not 'name' in content:
@@ -90,7 +90,7 @@ def login(request):
 
     session = get_session(request)
     if (session != None):
-        ret['status'] = 1010 #'you have already logged in'
+        ret['status'] = msgid.ALREADY_LOGIN #'you have already logged in'
         return json_response(ret)
 
     if not 'name' in content:
@@ -107,12 +107,12 @@ def login(request):
     name_filter = User.objects.filter(name = _name)
 
     if len(name_filter) == 0:
-        ret['status'] = 1011 #'this name doesn't exist'
+        ret['status'] = msgid.NAME_NOT_EXIST #'this name doesn't exist'
         return json_response(ret)
 
     user = name_filter[0]
     if user.password != _password:
-        ret['status'] = 1012 #'wrong password'
+        ret['status'] = msgid.WRONG_PASSWORD #'wrong password'
         return json_response(ret)
 
     request.session['name'] = _name
@@ -138,7 +138,7 @@ def change_password_after_login(request):
         return json_response(ret)
 
     if not 'new_password' in content:
-        ret['status'] = 1013 #'new password can't be empty'
+        ret['status'] = msgid.NEW_PASSWORD_EMPTY #'new password can't be empty'
         return json_response(ret)
 
     _new_password = content['new_password']
@@ -163,7 +163,7 @@ def change_password_by_email(request):
     name_filter = User.objects.filter(name = username)
 
     if len(name_filter) == 0:
-        ret['status'] = 1011 #'this name doesn't exist'
+        ret['status'] = msgid.NAME_NOT_EXIST #'this name doesn't exist'
         return json_response(ret)
 
     user = name_filter[0]
@@ -193,12 +193,12 @@ def change_password_by_identifyingCode(request):
     _name = content['name']
 
     if not 'identifyingCode' in content:
-        ret['status'] = 1014 #'identifying code can't be empty'
+        ret['status'] = msgid.IDENTIFY_CODE_EMPTY #'identifying code can't be empty'
         return json_response(ret)
     _identifyCode = content['identifyingCode']
 
     if not 'new_password' in content:
-        ret['status'] = 1013 #'new password can't be empty'
+        ret['status'] = msgid.NEW_PASSWORD_EMPTY #'new password can't be empty'
         return json_response(ret)
     _new_password = content['new_password']
 
@@ -208,12 +208,12 @@ def change_password_by_identifyingCode(request):
 
     name_filter = User.objects.filter(name = _name)
     if len(name_filter) == 0:
-        ret['status'] = 1011 #'this name doesn't exist'
+        ret['status'] = msgid.NAME_NOT_EXIST #'this name doesn't exist'
         return json_response(ret)
 
     user = name_filter[0]
     if _identifyCode != user.identifyingCode or _identifyCode == "":
-        ret['status'] = 1015 #'wrong identifying code'
+        ret['status'] = msgid.WRONG_IDENTIFY_CODE #'wrong identifying code'
         return json_response(ret)
 
     user.password = _new_password
@@ -318,7 +318,7 @@ def set_admin(request):
     name_filter = User.objects.filter(name = _name)
 
     if len(name_filter) == 0:
-        ret['status'] = 1011 #'this name doesn't exist'
+        ret['status'] = msgid.NAME_NOT_EXIST #'this name doesn't exist'
         return json_response(ret)
 
     user = name_filter[0]
