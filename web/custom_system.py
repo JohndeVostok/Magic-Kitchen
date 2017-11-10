@@ -1,7 +1,7 @@
 from models import User
 from models import Level
 from models import Solution
-import error_id as errid
+import msg_id_const_value as msgid
 import json
 from django.http import HttpResponse 
 from send_email import email_thread
@@ -40,15 +40,15 @@ def register(request):
         return json_response(ret)
 
     if not 'name' in content:
-        ret['status'] = errid.NAME_EMPTY #'user name can't be empty'
+        ret['status'] = msgid.NAME_EMPTY #'user name can't be empty'
         return json_response(ret)
 
     if not 'password' in content:
-        ret['status'] = errid.PASSWORD_EMPTY #'password can't be empty'
+        ret['status'] = msgid.PASSWORD_EMPTY #'password can't be empty'
         return json_response(ret)
 
     if not 'email' in content:
-        ret['status'] = errid.EMAIL_EMPTY #'email can't be empty'
+        ret['status'] = msgid.EMAIL_EMPTY #'email can't be empty'
         return json_response(ret)
 
     _name = content['name']
@@ -56,29 +56,29 @@ def register(request):
     _password = content['password']
 
     if len(_name) >= 20:
-        ret['status'] = errid.NAME_TOO_LONG #'this name is too long'
+        ret['status'] = msgid.NAME_TOO_LONG #'this name is too long'
         return json_response(ret)
 
     if len(_password) >= 20:
-        ret['status'] = errid.PASSWORD_TOO_LONG #'this password is too long'
+        ret['status'] = msgid.PASSWORD_TOO_LONG #'this password is too long'
         return json_response(ret)
 
     if len(_email) >= 50:
-        ret['status'] = errid.EMAIL_TOO_LONG #'this email address is too long'
+        ret['status'] = msgid.EMAIL_TOO_LONG #'this email address is too long'
         return json_response(ret)
 
     name_filter = User.objects.filter(name = _name)
     if len(name_filter) >= 1:
-        ret['status'] = errid.NAME_EXIST #'this name already exists'
+        ret['status'] = msgid.NAME_EXIST #'this name already exists'
         return json_response(ret)
 
     email_filter = User.objects.filter(email = _email)
     if len(email_filter) >= 1:
-        ret['status'] = errid.EMAIL_EXIST #'this email address already exists'
+        ret['status'] = msgid.EMAIL_EXIST #'this email address already exists'
         return json_response(ret)
 
     User.objects.create(name = _name, password = _password, email = _email, solution_dict = json.dumps({}), authority = 1, vip_due_time = timezone.now())
-    ret['status'] = errid.SUCCESS #'succeeded'
+    ret['status'] = msgid.SUCCESS #'succeeded'
     return json_response(ret)
 
 def login(request):
@@ -94,11 +94,11 @@ def login(request):
         return json_response(ret)
 
     if not 'name' in content:
-        ret['status'] = errid.NAME_EMPTY #'user name can't be empty'
+        ret['status'] = msgid.NAME_EMPTY #'user name can't be empty'
         return json_response(ret)
 
     if not 'password' in content:
-        ret['status'] = errid.PASSWORD_EMPTY #'password can't be empty'
+        ret['status'] = msgid.PASSWORD_EMPTY #'password can't be empty'
         return json_response(ret)
 
     _name = content['name']
@@ -116,7 +116,7 @@ def login(request):
         return json_response(ret)
 
     request.session['name'] = _name
-    ret['status'] = errid.SUCCESS #'succeeded'
+    ret['status'] = msgid.SUCCESS #'succeeded'
     return json_response(ret)
 
 def logout(request):
@@ -124,7 +124,7 @@ def logout(request):
     session = get_session(request)
     if (session != None):
         del request.session['name']
-    ret['status'] = errid.SUCCESS #'succeeded'
+    ret['status'] = msgid.SUCCESS #'succeeded'
     return json_response(ret)
 
 def change_password_after_login(request):
@@ -134,7 +134,7 @@ def change_password_after_login(request):
 
     session = get_session(request)
     if (session == None):
-        ret['status'] = errid.NOT_LOGIN #'please log in first'
+        ret['status'] = msgid.NOT_LOGIN #'please log in first'
         return json_response(ret)
 
     if not 'new_password' in content:
@@ -143,11 +143,11 @@ def change_password_after_login(request):
 
     _new_password = content['new_password']
     if len(_new_password) >= 20:
-        ret['status'] = errid.PASSWORD_TOO_LONG #'this password is too long'
+        ret['status'] = msgid.PASSWORD_TOO_LONG #'this password is too long'
         return json_response(ret)
 
     change_password_to(session, _new_password)
-    ret['status'] = errid.SUCCESS #'succeeded'
+    ret['status'] = msgid.SUCCESS #'succeeded'
     return json_response(ret)
 
 def change_password_by_email(request):
@@ -156,7 +156,7 @@ def change_password_by_email(request):
     ret = {}
 
     if not 'name' in content:
-        ret['status'] = errid.NAME_EMPTY #'name can't be empty'
+        ret['status'] = msgid.NAME_EMPTY #'name can't be empty'
         return json_response(ret)
 
     username = content['name']
@@ -179,7 +179,7 @@ def change_password_by_email(request):
     ret['identifyingCode'] = identifyingCode
 
     #email_thread('Email From CodeCheF', 'This is the identifying code needed to change the password:\n' + identifyingCode, email).start()
-    ret['status'] = errid.SUCCESS #'succeeded'
+    ret['status'] = msgid.SUCCESS #'succeeded'
     return json_response(ret)
 
 def change_password_by_identifyingCode(request):
@@ -188,7 +188,7 @@ def change_password_by_identifyingCode(request):
     ret = {}
 
     if not 'name' in content:
-        ret['status'] = errid.NAME_EMPTY #'name can't be empty'
+        ret['status'] = msgid.NAME_EMPTY #'name can't be empty'
         return json_response(ret)
     _name = content['name']
 
@@ -203,7 +203,7 @@ def change_password_by_identifyingCode(request):
     _new_password = content['new_password']
 
     if len(_new_password) >= 20:
-        ret['status'] = errid.PASSWORD_TOO_LONG #'this password is too long'
+        ret['status'] = msgid.PASSWORD_TOO_LONG #'this password is too long'
         return json_response(ret)
 
     name_filter = User.objects.filter(name = _name)
@@ -220,7 +220,7 @@ def change_password_by_identifyingCode(request):
     user.identifyingCode = ""
     user.save()
 
-    ret['status'] = errid.SUCCESS #'succeeded'
+    ret['status'] = msgid.SUCCESS #'succeeded'
     return json_response(ret)
 
 def get_current_user_info(request):
@@ -230,7 +230,7 @@ def get_current_user_info(request):
 
     session = get_session(request)
     if not session:
-        ret['status'] = errid.NOT_LOGIN #'please log in first'
+        ret['status'] = msgid.NOT_LOGIN #'please log in first'
         return json_response(ret)
 
     name_filter = User.objects.filter(name = session)
@@ -238,7 +238,7 @@ def get_current_user_info(request):
     ret['user_name'] = session
     ret['email'] = user.email
     ret['solution_dict'] = user.solution_dict
-    ret['status'] = errid.SUCCESS #'succeeded'
+    ret['status'] = msgid.SUCCESS #'succeeded'
 
     level_filter = Level.objects.filter(user_name = session)
     created_level = []
@@ -265,7 +265,7 @@ def vip_charge(request):
     ret = {}
     session = get_session(request)
     if not session:
-        ret['status'] = errid.NOT_LOGIN #'please log in first'
+        ret['status'] = msgid.NOT_LOGIN #'please log in first'
         return json_response(ret)
 
     if not 'days' in content:
@@ -293,7 +293,7 @@ def vip_charge(request):
     user.vip_due_time = due_time + timedelta
     user.save()
 
-    ret['status'] = errid.SUCCESS #'succeeded'
+    ret['status'] = msgid.SUCCESS #'succeeded'
     return json_response(ret)
 
 def set_admin(request):
@@ -302,7 +302,7 @@ def set_admin(request):
     ret = {}
     session = get_session(request)
     if not session:
-        ret['status'] = errid.NOT_LOGIN #'please log in first'
+        ret['status'] = msgid.NOT_LOGIN #'please log in first'
         return json_response(ret)
     super_admin = User.objects.filter(name = session)[0]
     if super_admin.authority != 4:
@@ -310,7 +310,7 @@ def set_admin(request):
         return json_response(ret)
 
     if not 'name' in content:
-        ret['status'] = errid.NAME_EMPTY #'user name can't be empty'
+        ret['status'] = msgid.NAME_EMPTY #'user name can't be empty'
         return json_response(ret)
 
     _name = content['name']
@@ -325,5 +325,5 @@ def set_admin(request):
     user.authority = 3 #set admin
     user.save()
 
-    ret['status'] = errid.SUCCESS #'succeeded'
+    ret['status'] = msgid.SUCCESS #'succeeded'
     return json_response(ret)

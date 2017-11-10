@@ -2,7 +2,7 @@ from models import Level
 from models import User
 from models import Solution
 import json
-import error_id as errid
+import msg_id_const_value as msgid
 from django.http import HttpResponse
 from custom_system import refresh_vip_authority
 
@@ -24,7 +24,7 @@ def new_default_level(request):
 
     session = get_session(request)
     if not session:
-        ret['status'] = errid.NOT_LOGIN #'please log in first'
+        ret['status'] = msgid.NOT_LOGIN #'please log in first'
         return json_response(ret)
     user = User.objects.filter(name = session)[0]
     if user.authority < 3:
@@ -68,7 +68,7 @@ def new_default_level(request):
         if change:
             default_level_id_filter[0].info = content['level_info']
             default_level_id_filter[0].save()
-            ret['status'] = errid.SUCCESS #'succeeded'
+            ret['status'] = msgid.SUCCESS #'succeeded'
             ret['level_id'] = default_level_id_filter[0].level_id
             return json_response(ret)
         ret['status'] = 1022 #'this default level id already exists'
@@ -81,7 +81,7 @@ def new_default_level(request):
     _info = content['level_info']
     level = Level.objects.create(default_level_id = _id, info = _info, user_name = session)
 
-    ret['status'] = errid.SUCCESS #'succeeded'
+    ret['status'] = msgid.SUCCESS #'succeeded'
     ret['level_id'] = level.level_id
 
     return json_response(ret)
@@ -118,7 +118,7 @@ def get_level_info(request):
         if (_default_level_id > 5) or (not level.shared):
             session = get_session(request)
             if not session:
-                ret['status'] = errid.NOT_LOGIN #'please log in first'
+                ret['status'] = msgid.NOT_LOGIN #'please log in first'
                 return json_response(ret)
             user = User.objects.filter(name = session)[0]
             if not level.shared:
@@ -131,7 +131,7 @@ def get_level_info(request):
                     ret['status'] = 1031 #'you don't have operation authority'
                     return json_response(ret)
 
-        ret['status'] = errid.SUCCESS #'succeeded'
+        ret['status'] = msgid.SUCCESS #'succeeded'
         ret['level_info'] = default_level_id_filter[0].info #json
         ret['shared'] = default_level_id_filter[0].shared #bool
 
@@ -158,7 +158,7 @@ def get_level_info(request):
         if (_default_level_id > 5) or (not level.shared):
             session = get_session(request)
             if not session:
-                ret['status'] = errid.NOT_LOGIN #'please log in first'
+                ret['status'] = msgid.NOT_LOGIN #'please log in first'
                 return json_response(ret)
             user = User.objects.filter(name = session)[0]
             if not level.shared:
@@ -171,7 +171,7 @@ def get_level_info(request):
                     ret['status'] = 1031 #'you don't have operation authority'
                     return json_response(ret)
 
-        ret['status'] = errid.SUCCESS #'succeeded'
+        ret['status'] = msgid.SUCCESS #'succeeded'
         ret['level_info'] = level_id_filter[0].info #json
         ret['shared'] = level_id_filter[0].shared #bool
 
@@ -184,7 +184,7 @@ def new_usermade_level(request):
 
     session = get_session(request)
     if (session == None):
-        ret['status'] = errid.NOT_LOGIN #'please log in first'
+        ret['status'] = msgid.NOT_LOGIN #'please log in first'
         return json_response(ret)
 
 
@@ -208,7 +208,7 @@ def new_usermade_level(request):
     _info = content['level_info']
     level = Level.objects.create(default_level_id = -1, info = _info, user_name = session)
 
-    ret['status'] = errid.SUCCESS #'succeeded'
+    ret['status'] = msgid.SUCCESS #'succeeded'
     ret['level_id'] = level.level_id
 
     return json_response(ret)
@@ -219,7 +219,7 @@ def share_level(request):
 
     session = get_session(request)
     if (session == None):
-        ret['status'] = errid.NOT_LOGIN #'please log in first'
+        ret['status'] = msgid.NOT_LOGIN #'please log in first'
         return json_response(ret)
 
     if not 'level_id' in content:
@@ -267,7 +267,7 @@ def share_level(request):
         return json_response(ret)
     level.shared = (_shared == 1)
     level.save()
-    ret['status'] = errid.SUCCESS #'succeeded'
+    ret['status'] = msgid.SUCCESS #'succeeded'
     return json_response(ret)
 
 def get_all_level(request):
@@ -276,7 +276,7 @@ def get_all_level(request):
 
     session = get_session(request)
     if (session == None):
-        ret['status'] = errid.NOT_LOGIN #'please log in first'
+        ret['status'] = msgid.NOT_LOGIN #'please log in first'
         return json_response(ret)
 
     user = User.objects.filter(name = session)[0]
@@ -290,7 +290,7 @@ def get_all_level(request):
     for level in all_level:
         all_level_id.append(level.level_id)
     ret['all_level'] = json.dumps(all_level_id)
-    ret['status'] = errid.SUCCESS #'succeeded'
+    ret['status'] = msgid.SUCCESS #'succeeded'
     return json_response(ret)
 
 def get_all_shared_level(request):
@@ -302,13 +302,13 @@ def get_all_shared_level(request):
     for level in shared_level:
         shared_level_id.append(level.level_id)
     ret['all_shared_level'] = json.dumps(shared_level_id)
-    ret['status'] = errid.SUCCESS #'succeeded'
+    ret['status'] = msgid.SUCCESS #'succeeded'
     return json_response(ret)
 
 def get_all_default_level(request):
     content = request.POST
     ret = {}
-    ret['status'] = errid.SUCCESS #'succeeded'
+    ret['status'] = msgid.SUCCESS #'succeeded'
     all_default_level = Level.objects.exclude(default_level_id = -1).order_by('default_level_id')
 
     session = get_session(request)
@@ -354,7 +354,7 @@ def change_level_info(request):
 
     session = get_session(request)
     if (session == None):
-        ret['status'] = errid.NOT_LOGIN #'please log in first'
+        ret['status'] = msgid.NOT_LOGIN #'please log in first'
         return json_response(ret)
 
     if not 'level_id' in content:
@@ -402,5 +402,5 @@ def change_level_info(request):
         solution.score = 0 #pass or not pass is unknown
         solution.save()
 
-    ret['status'] = errid.SUCCESS #'succeeded'
+    ret['status'] = msgid.SUCCESS #'succeeded'
     return json_response(ret)
