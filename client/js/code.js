@@ -67,6 +67,7 @@ var code = function() {
 	};
 
     var setLock = function(state){
+		state = state || alwaysLock;
 		if (state) workspace.updateToolbox(disabledToolbox[0]);
 		else workspace.updateToolbox(enabledToolbox[0]);
         currentBlocks = workspace.getAllBlocks();
@@ -175,6 +176,12 @@ var code = function() {
 		Blockly.Xml.domToWorkspace(Blockly.Xml.textToDom(solution.solution), workspace);
 	}
 
+	var setAlwaysLock = function() {
+		alwaysLock = true;
+		setLock(true);
+		workspace.clearUndo();
+	}
+
 	// Blockly workspace
 	var workspace;
 
@@ -186,6 +193,8 @@ var code = function() {
 	var disabledToolbox;
 	var funcList;
 
+	var alwaysLock = false;
+
 	return {
 		doLoad: doLoad,
 		setBlockTypes: setBlockTypes,
@@ -195,6 +204,7 @@ var code = function() {
 		undo: undo,
 		redo: redo,
 		dumpSolution: dumpSolution,
-		loadSolution: loadSolution
+		loadSolution: loadSolution,
+		setAlwaysLock: setAlwaysLock
 	};
 }();

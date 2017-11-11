@@ -723,7 +723,7 @@ function Logic()
 		state.init();
 	};
 
-	this.loadLevel = function(levelId)
+	this.loadLevel = function(levelId, afterwards)
 	{
 		if (levelId == undefined)
 		{
@@ -737,6 +737,7 @@ function Logic()
 					{
 						user.setLevelId(levelId);
 						initLevel(JSON.parse(data["level_info"]));
+						if (afterwards != undefined) afterwards();
 					}
 					else alert(msg.getMessage(data["status"]));
 				});
@@ -749,19 +750,21 @@ function Logic()
 				{
 					user.setLevelId(levelId);
 					initLevel(JSON.parse(data["level_info"]));
+					if (afterwards != undefined) afterwards();
 				}
 				else alert(msg.getMessage(data["status"]));
 			}
 		);
 	};
 
-	this.loadSolution = function(solutionId){
+	this.loadSolution = function(solutionId, afterwards){
 		network.getSolutionInfo(
 			solutionId,
 			function(data){
 				if (data["status"] == 1000)
 				{
 					code.loadSolution(JSON.parse(data["solution_info"]));
+					if (afterwards != undefined) afterwards();
 				}
 				else alert(msg.getMessage(data["status"]));
 			}

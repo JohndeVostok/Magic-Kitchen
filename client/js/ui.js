@@ -518,11 +518,14 @@ var ui = function() {
 		}
 		else
 		{
-			logic.loadLevel(parseInt($("#defaultLevelIdSpan").text()));
-			if ($("#defaultSolutionIdSpan").text() != "")
-			{
-				logic.loadSolution(parseInt($("#defaultLevelIdSpan").text()));
-			}
+			logic.loadLevel(parseInt($("#defaultLevelIdSpan").text()), function(){
+				if ($("#defaultSolutionIdSpan").text() != "")
+				{
+					logic.loadSolution(parseInt($("#defaultLevelIdSpan").text()), function(){
+						code.setAlwaysLock();
+					});
+				}
+			});
 		}
 	};
 	
