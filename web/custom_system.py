@@ -62,6 +62,15 @@ def register(request):
         ret['status'] = msgid.NAME_TOO_LONG #'this name is too long'
         return json_response(ret)
 
+    numeric_only = True
+    for c in _name:
+        if (c > '9') or (c < '0'):
+            numeric_only = False
+            break
+    if numeric_only:
+        ret['status'] = msgid.NAME_NUMERIC_ONLY #'username cannot be numeric only'
+        return json_response(ret)
+
     if len(_password) >= 20:
         ret['status'] = msgid.PASSWORD_TOO_LONG #'this password is too long'
         return json_response(ret)
@@ -109,6 +118,15 @@ def login(request):
     _name = content['name']
     _password = pw2md5(content['password'])
 
+    numeric_only = True
+    for c in _name:
+        if (c > '9') or (c < '0'):
+            numeric_only = False
+            break
+    if numeric_only:
+        ret['status'] = msgid.NAME_NUMERIC_ONLY #'username cannot be numeric only'
+        return json_response(ret)
+
     name_filter = User.objects.filter(name = _name)
 
     if len(name_filter) == 0:
@@ -142,6 +160,15 @@ def change_password_after_login(request):
         ret['status'] = msgid.NOT_LOGIN #'please log in first'
         return json_response(ret)
 
+    numeric_only = True
+    for c in session:
+        if (c > '9') or (c < '0'):
+            numeric_only = False
+            break
+    if numeric_only:
+        ret['status'] = msgid.PHONE_LOGIN_USER_NO_PASSWORD #'mobile phone login user has no password'
+        return json_response(ret)
+
     if not 'new_password' in content:
         ret['status'] = msgid.NEW_PASSWORD_EMPTY #'new password can't be empty'
         return json_response(ret)
@@ -165,6 +192,16 @@ def change_password_by_email(request):
         return json_response(ret)
 
     username = content['name']
+
+    numeric_only = True
+    for c in username:
+        if (c > '9') or (c < '0'):
+            numeric_only = False
+            break
+    if numeric_only:
+        ret['status'] = msgid.NAME_NUMERIC_ONLY #'username cannot be numeric only'
+        return json_response(ret)
+
     name_filter = User.objects.filter(name = username)
 
     if len(name_filter) == 0:
@@ -196,6 +233,15 @@ def change_password_by_identifyingCode(request):
         ret['status'] = msgid.NAME_EMPTY #'name can't be empty'
         return json_response(ret)
     _name = content['name']
+
+    numeric_only = True
+    for c in _name:
+        if (c > '9') or (c < '0'):
+            numeric_only = False
+            break
+    if numeric_only:
+        ret['status'] = msgid.NAME_NUMERIC_ONLY #'username cannot be numeric only'
+        return json_response(ret)
 
     if not 'identifyingCode' in content:
         ret['status'] = msgid.IDENTIFY_CODE_EMPTY #'identifying code can't be empty'
