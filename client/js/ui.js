@@ -422,7 +422,34 @@ var ui = function() {
 					alert("分享失败： " + err);
 					return;
 				}
-				alert("shared");
+				alert("shared: " + 
+						window.location.host +
+						"/external_share_level?level_id=" + 
+						res["level_id"]);
+			});
+		});
+		$("#saveSolutionButton").click(function() {
+			// Init login modal.
+			logic.doSaveSolution(function(err, res) {
+				if (err != undefined) {
+					alert("解法保存失败： " + err);
+					return;
+				}
+			});
+		});
+		$("#shareSolutionButton").click(function() {
+			// Init login modal.
+			logic.doShareSolution(function(err, res) {
+				if (err != undefined) {
+					alert("解法分享失败： " + err);
+					return;
+				}
+				alert("shared: " + 
+						window.location.host +
+						"/external_share_level?level_id=" + 
+						res["level_id"] +
+						"&solution_id=" + 
+						res["solution_id"]);
 			});
 		});
 		$("#chooseLevelButton").click(function() {
@@ -486,8 +513,20 @@ var ui = function() {
 		// Grab & start a new level.
 		// The main loop is not present here, because the system event loop already does this.
 		if ($("#defaultLevelIdSpan").text() === "{{defaultLevelId}}")
+		{
 			logic.loadLevel();
-		else logic.loadLevel(parseInt($("#defaultLevelIdSpan").text()));
+		}
+		else
+		{
+			logic.loadLevel(parseInt($("#defaultLevelIdSpan").text()), function(){
+				if ($("#defaultSolutionIdSpan").text() != "")
+				{
+					logic.loadSolution(parseInt($("#defaultLevelIdSpan").text()), function(){
+						code.setAlwaysLock();
+					});
+				}
+			});
+		}
 	};
 	
 	var animationRunning = false;

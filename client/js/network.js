@@ -156,13 +156,12 @@ var network = function() {
 		);
 	};
 
-	var newSolution = function(level_id, solution_info, score, callback) {
+	var newSolution = function(level_id, solution_info, callback) {
 		postRequest(
 			"/api/new_solution",
 			{
 				"level_id": level_id,
 				"solution_info": solution_info,
-				"score": score
 			},
 			callback
 		);
@@ -219,6 +218,28 @@ var network = function() {
 		);
 	}
 
+	var shareSolution = function(solutionId, callback) {
+		postRequest(
+			"api/share_solution",
+			{
+				"solution_id": solutionId,
+				"share": 1
+			},
+			callback
+		);
+	}
+	
+	var unshareSolution = function(solutionId, callback) {
+		postRequest(
+			"api/share_solution",
+			{
+				"solution_id": solutionId,
+				"share": 0
+			},
+			callback
+		);
+	}
+
 	var getDefaultLevel = function(callback) {
 		postRequest(
 			"api/get_all_default_level",
@@ -231,6 +252,16 @@ var network = function() {
 		postRequest(
 			"api/get_all_shared_level",
 			{},
+			callback
+		);
+	}
+
+	var getSolutionInfo = function(solutionId, callback) {
+		postRequest(
+			"api/get_solution_info",
+			{
+				"solution_id": solutionId
+			},
 			callback
 		);
 	}
@@ -250,10 +281,13 @@ var network = function() {
 		newUsermadeLevel: newUsermadeLevel,
 		shareLevel: shareLevel,
 		unshareLevel: unshareLevel,
+		shareSolution: shareSolution,
+		unshareSolution: unshareSolution,
 		newSolution: newSolution,
 		getAllLevel: getAllLevel,
 		getSharedLevel: getSharedLevel,
 		getDefaultLevel: getDefaultLevel,
+		getSolutionInfo: getSolutionInfo,
 		vipCharge: vipCharge,
 		setAdmin: setAdmin
 	};

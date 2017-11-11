@@ -17,5 +17,6 @@ def static_file(request, path):
 
 def external_share_level(request):
 	content = request.GET
-	print(content)
-	return render(request, "codechef.html", {"defaultLevelId": content["level_id"]});
+	level_id = content["level_id"]
+	solution_id = content["solution_id"] if content.has_key("solution_id") else ""
+	return render(request, "codechef.html", {"defaultLevelId": level_id, "defaultSolutionId": solution_id});

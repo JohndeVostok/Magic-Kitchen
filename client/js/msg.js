@@ -65,6 +65,7 @@ function Msg()
 		3054: ["Invalid check password.", "两次输入密码不一致。"],
 
 		3101: ["You should save before share.", "你应该先保存再分享。"],
+		3102: ["Solutions must be saved before share.", "解法保存后才能分享。"],
 
 		7000: ["No such function.", "没有这个函数。"],
 

@@ -35,6 +35,7 @@ function Logic()
 		var username = "";
 		var content = "";
 		var levelId = 0;
+		var solutionId = 0;
 
 		this.status = function()
 		{
@@ -67,11 +68,22 @@ function Logic()
 		this.setLevelId = function(id)
 		{
 			levelId = id;
+			solutionId = 0;
 		};
 
 		this.getLevelId = function()
 		{
 			return levelId;
+		};
+
+		this.setSolutionId = function(id)
+		{
+			solutionId = id;
+		};
+
+		this.getSolutionId = function()
+		{
+			return solutionId;
 		};
 	}
 
@@ -711,7 +723,7 @@ function Logic()
 		state.init();
 	};
 
-	this.loadLevel = function(levelId)
+	this.loadLevel = function(levelId, afterwards)
 	{
 		if (levelId == undefined)
 		{
@@ -725,6 +737,7 @@ function Logic()
 					{
 						user.setLevelId(levelId);
 						initLevel(JSON.parse(data["level_info"]));
+						if (afterwards != undefined) afterwards();
 					}
 					else alert(msg.getMessage(data["status"]));
 				});
@@ -737,6 +750,21 @@ function Logic()
 				{
 					user.setLevelId(levelId);
 					initLevel(JSON.parse(data["level_info"]));
+					if (afterwards != undefined) afterwards();
+				}
+				else alert(msg.getMessage(data["status"]));
+			}
+		);
+	};
+
+	this.loadSolution = function(solutionId, afterwards){
+		network.getSolutionInfo(
+			solutionId,
+			function(data){
+				if (data["status"] == 1000)
+				{
+					code.loadSolution(JSON.parse(data["solution_info"]));
+					if (afterwards != undefined) afterwards();
 				}
 				else alert(msg.getMessage(data["status"]));
 			}
@@ -1322,7 +1350,51 @@ function Logic()
 			if (res.status == 1000)
 			{
 				callback(undefined, {
+					status: "succeeded",
+					level_id: id
+				});
+			}
+			else
+			{
+				callback(msg.getMessage(res.status), {status: "failed"});
+			}
+		});
+	}
+
+	this.doSaveSolution = function(callback)
+	{
+		var level_id = user.getLevelId();
+		var content = JSON.stringify(code.dumpSolution());
+		network.newSolution(level_id, content, function(res) {
+			if (res.status == 1000)
+			{
+				user.setSolutionId(res.solution_id);
+				alert(res.solution_id);
+				callback(undefined, {
 					status: "succeeded"
+				});
+			}
+			else
+			{
+				callback(msg.getMessage(res.status), {status: "failed"});
+			}
+		});
+	}
+
+	this.doShareSolution = function(callback)
+	{
+		var id = user.getSolutionId();
+		if (id == 0)
+		{
+			return callback(msg.getMessage(3102), {status: "failed"});
+		}
+		network.shareSolution(id, function(res) {
+			if (res.status == 1000)
+			{
+				callback(undefined, {
+					status: "succeeded",
+					level_id: user.getLevelId(),
+					solution_id: id
 				});
 			}
 			else
