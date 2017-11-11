@@ -27,7 +27,7 @@ def refresh_vip_authority(user):
         user.save()
 
 def pw2md5(pw):
-    return hashlib.md5(str(pw).encode('utf-8')).hexdigest()
+    return hashlib.md5(str("salted" + pw).encode('utf-8')).hexdigest()
 
 #this request need to be POST
 def register(request): 
