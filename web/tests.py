@@ -68,6 +68,11 @@ class CustomSystemTestCase(TestCase):
         ret = json.loads(response.content)
         self.assertEqual(ret['status'], msgid.NAME_TOO_LONG) #'this name is too long'
 
+        #test username numeric only
+        response = c.post('/api/register', {'name': '18653216789', 'password': 'abc', 'email': '123@111.com'})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], msgid.NAME_NUMERIC_ONLY) #'username cannot be numeric only'
+
         #test 'this password is too long'
         response = c.post('/api/register', {'name': 'sth2', 'password': 'abcdefghijklmnopqrstvwxyz', 'email': '123@111.com'})
         ret = json.loads(response.content)
@@ -103,6 +108,11 @@ class CustomSystemTestCase(TestCase):
         response = c.post('/api/login', {'name': 'sth'})
         ret = json.loads(response.content)
         self.assertEqual(ret['status'], msgid.PASSWORD_EMPTY) #'password can't be empty'
+
+        #test username numeric only
+        response = c.post('/api/login', {'name': '18543216789', 'password': 'abc'})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], msgid.NAME_NUMERIC_ONLY) #'username cannot be numeric only'
 
         #test 'this name doesn\'t exist'
         response = c.post('/api/login', {'name': 'sth2', 'password': 'abc'})
@@ -195,6 +205,18 @@ class CustomSystemTestCase(TestCase):
         ret = json.loads(response.content)
         self.assertEqual(ret['status'], msgid.PASSWORD_TOO_LONG) #'this password is too long'
 
+        #logout
+        response = c.post('/api/logout')
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], msgid.SUCCESS) #'succeeded'
+
+        '''mobile_user = User.objects.create(name = 'super_admin', password = pw2md5('pw'), email = 'email', solution_dict = json.dumps({}), authority = 1, vip_due_time = timezone.now())
+
+        #test mobile phone user has no password
+        response = c.post('/api/change_password_after_login', {'new_password' : 'newpw'})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], msgid.PHONE_LOGIN_USER_NO_PASSWORD) #'mobile phone login user has no password'''
+
     def test_change_password_by_email(self):
         c = Client()
 
@@ -207,6 +229,11 @@ class CustomSystemTestCase(TestCase):
         response = c.post('/api/change_password_by_email')
         ret = json.loads(response.content)
         self.assertEqual(ret['status'], msgid.NAME_EMPTY) #'name can't be empty'
+
+        #test username numeric only
+        response = c.post('/api/change_password_by_email', {'name': '18643216789'})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], msgid.NAME_NUMERIC_ONLY) #'username cannot be numeric only'
 
         #test name not exist
         response = c.post('/api/change_password_by_email', {'name': 'sthsth'})
@@ -236,6 +263,11 @@ class CustomSystemTestCase(TestCase):
         response = c.post('/api/change_password_by_identifyingCode', {'identifyingCode': identifyingCode, 'new_password': 'newpw'})
         ret = json.loads(response.content)
         self.assertEqual(ret['status'], msgid.NAME_EMPTY) #'name can't be empty'
+
+        #test username numeric only
+        response = c.post('/api/change_password_by_identifyingCode', {'name': '18643216789', 'identifyingCode': identifyingCode, 'new_password': 'newpw'})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], msgid.NAME_NUMERIC_ONLY) #'username cannot be numeric only'
 
         #test empty identifyingCode
         response = c.post('/api/change_password_by_identifyingCode', {'name': 'sth', 'new_password': 'newpw'})

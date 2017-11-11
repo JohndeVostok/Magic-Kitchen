@@ -15,6 +15,7 @@
             status = 1008
             status = 1009
             status = 1010
+            status = 1046
 
 ### Login
         POST('/api/login'), attributes: name = nameStr, password = passwordStr
@@ -25,6 +26,7 @@
             status = 1010
             status = 1011
             status = 1012
+            status = 1046
 
 ### Logout
         POST('/api/logout')
@@ -51,6 +53,7 @@
             status = 1000
             status = 1002
             status = 1011
+            status = 1046
 
         之后通过得到的验证码来修改密码。
         Post('/api/change_password_by_identifyingCode'), attributes: name = namestr, identifyingCode = identCodeStr, new_password = new_passwordstr
@@ -62,6 +65,7 @@
             status = 1013
             status = 1014
             status = 1015
+            status = 1046
 
 ### Get Current User Info
         Post('/api/get_current_user_info')
