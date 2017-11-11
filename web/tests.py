@@ -19,7 +19,7 @@ def set_vip(user):
 
 
 def pw2md5(pw):
-    return hashlib.md5(str(pw).encode('utf-8')).hexdigest()
+    return hashlib.md5(str("salted" + pw).encode('utf-8')).hexdigest()
 
 # Create your tests here.
 
