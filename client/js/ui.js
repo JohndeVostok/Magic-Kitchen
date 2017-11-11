@@ -485,7 +485,9 @@ var ui = function() {
 	var start = function() {
 		// Grab & start a new level.
 		// The main loop is not present here, because the system event loop already does this.
-		logic.loadLevel();
+		if ($("#defaultLevelIdSpan").text() === "{{defaultLevelId}}")
+			logic.loadLevel();
+		else logic.loadLevel(parseInt($("#defaultLevelIdSpan").text()));
 	};
 	
 	var animationRunning = false;
