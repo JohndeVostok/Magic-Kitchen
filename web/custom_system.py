@@ -7,6 +7,7 @@ from django.http import HttpResponse
 from send_email import email_thread
 import datetime
 from django.utils import timezone
+import hashlib
 
 def json_response(info):
     return HttpResponse(json.dumps(info), content_type="application/json")
@@ -17,7 +18,7 @@ def get_session(request):
 def change_password_to(_name, _password):
     name_filter = User.objects.filter(name = _name)
     user = name_filter[0]
-    user.password = _password
+    user.password = pw2md5(_password)
     user.save()
 
 def refresh_vip_authority(user):
@@ -25,6 +26,8 @@ def refresh_vip_authority(user):
         user.authority = 1
         user.save()
 
+def pw2md5(pw):
+    return hashlib.md5(str("salted" + pw).encode('utf-8')).hexdigest()
 
 #this request need to be POST
 def register(request): 
@@ -77,6 +80,8 @@ def register(request):
         ret['status'] = msgid.EMAIL_EXIST #'this email address already exists'
         return json_response(ret)
 
+    _password = pw2md5(_password)
+
     User.objects.create(name = _name, password = _password, email = _email, solution_dict = json.dumps({}), authority = 1, vip_due_time = timezone.now())
     ret['status'] = msgid.SUCCESS #'succeeded'
     return json_response(ret)
@@ -102,7 +107,7 @@ def login(request):
         return json_response(ret)
 
     _name = content['name']
-    _password = content['password']
+    _password = pw2md5(content['password'])
 
     name_filter = User.objects.filter(name = _name)
 
@@ -216,7 +221,7 @@ def change_password_by_identifyingCode(request):
         ret['status'] = msgid.WRONG_IDENTIFY_CODE #'wrong identifying code'
         return json_response(ret)
 
-    user.password = _new_password
+    user.password = pw2md5(_new_password)
     user.identifyingCode = ""
     user.save()
 

@@ -7,7 +7,7 @@ from django.db import models
 
 class User(models.Model):
     name = models.CharField(max_length = 20)
-    password = models.CharField(max_length = 20)
+    password = models.CharField(max_length = 40)
     email = models.CharField(max_length = 50)
     identifyingCode = models.CharField(max_length = 20, default = "")
     solution_dict = models.TextField() #jsonStr(stored dict{level_id : solution_id})

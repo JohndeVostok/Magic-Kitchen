@@ -22,6 +22,7 @@ $ sh run.sh
 Alternatively, you can run the server manually.
 ```bash
 $ python manage.py migrate  # run Django migration
+$ python manage.py shell < create_super_admin.py # create super admin
 $ python manage.py runserver 0.0.0.0:8000  # run Django server, listening at 0.0.0.0, port 8000
 ```
 

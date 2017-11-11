@@ -10,11 +10,16 @@ from models import Level
 from models import Solution
 import datetime
 from django.utils import timezone
+import hashlib
 
 def set_vip(user):
     user.authority = 2
     user.vip_due_time = timezone.now() + datetime.timedelta(days = 1)
     user.save()
+
+
+def pw2md5(pw):
+    return hashlib.md5(str(pw).encode('utf-8')).hexdigest()
 
 # Create your tests here.
 
@@ -178,7 +183,7 @@ class CustomSystemTestCase(TestCase):
         name_filter = User.objects.filter(email = '123@111.com')
         self.assertEqual(len(name_filter), 1)
         user = name_filter[0]
-        self.assertEqual(user.password, 'newpw')
+        self.assertEqual(user.password, pw2md5('newpw'))
 
         #test empty new password
         response = c.post('/api/change_password_after_login', {})
@@ -409,7 +414,7 @@ class CustomSystemTestCase(TestCase):
     def test_set_admin(self):
         c = Client()
 
-        super_admin = User.objects.create(name = 'super_admin', password = 'pw', email = 'email', solution_dict = json.dumps({}), authority = 1, vip_due_time = timezone.now())
+        super_admin = User.objects.create(name = 'super_admin', password = pw2md5('pw'), email = 'email', solution_dict = json.dumps({}), authority = 1, vip_due_time = timezone.now())
 
         #test set admin before login
         response = c.post('/api/set_admin')
