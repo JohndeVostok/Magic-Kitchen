@@ -62,6 +62,8 @@ var ui = function() {
 		N = config.mapHeight;
 		M = config.mapWidth;
 	};
+
+	var readOnly = false;
 	
 	// Map state
 	var map = [];
@@ -521,7 +523,8 @@ var ui = function() {
 			logic.loadLevel(parseInt($("#defaultLevelIdSpan").text()), function(){
 				if ($("#defaultSolutionIdSpan").text() != "")
 				{
-					logic.loadSolution(parseInt($("#defaultLevelIdSpan").text()), function(){
+					logic.loadSolution(parseInt($("#defaultSolutionIdSpan").text()), function(){
+						readOnly = true;
 						code.setAlwaysLock();
 					});
 				}
@@ -1216,12 +1219,7 @@ var ui = function() {
 	};
 
 	var finishLevel = function() {
-		animationQueue.push({
-			type: "alert",
-			args: {
-				text: "Finished."
-			}
-		});
+		if (!readOnly) $("#passLevelModal").modal();
 	};
 	
 	var unfinishLevel = function() {
