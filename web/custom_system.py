@@ -8,6 +8,7 @@ from send_email import email_thread
 import datetime
 from django.utils import timezone
 import hashlib
+from SUBMAIL_PYTHON_SDK_MAIL_AND_MESSAGE_WITH_ADDRESSBOOK.message_xsend_demo import send_message
 
 def json_response(info):
     return HttpResponse(json.dumps(info), content_type="application/json")
@@ -375,6 +376,54 @@ def set_admin(request):
     user = name_filter[0]
     user.authority = 3 #set admin
     user.save()
+
+    ret['status'] = msgid.SUCCESS #'succeeded'
+    return json_response(ret)
+
+def send_code_to_mobile_phone_user(request):
+    content = request.POST
+
+    ret = {}
+
+    session = get_session(request)
+    if (session != None):
+        ret['status'] = msgid.ALREADY_LOGIN #'you have already logged in'
+        return json_response(ret)
+
+    if not 'phone_number' in content:
+        ret['status'] = msgid.PHONE_NUMBER_EMPTY #'phone number can't be empty'
+        return json_response(ret)
+
+    _phone_number = content['phone_number']
+    numeric_only = True
+    for c in _phone_number:
+        if (c > '9') or (c < '0'):
+            numeric_only = False
+            break
+    if not numeric_only:
+        ret['status'] = msgid.PHONE_NUMBER_NUMERIC_ONLY #'phone number needs to be numeric only'
+        return json_response(ret)
+
+    if len(_phone_number) != 11:
+        ret['status'] = msgid.PHONE_NUMBER_LENGTH_WRONG #'the length of phone number needs to be 11'
+        return json_response(ret)
+
+    name_filter = User.objects.filter(name = _phone_number)
+    if len(name_filter) == 0:
+        user = User.objects.create(name = _phone_number, password = "no_password", email = "no_email", solution_dict = json.dumps({}), authority = 1, vip_due_time = timezone.now())
+    else:
+        user = name_filter[0]
+
+    # generate Identifying Code
+    from random import choice
+    import string
+    def GenNumberIdentifyingCode(length=6, chars=string.digits):
+        return ''.join([choice(chars) for i in range(length)])
+    identifyingCode = GenNumberIdentifyingCode(6)
+    user.identifyingCode = identifyingCode
+    user.save()
+
+    send_message(str(_phone_number), identifyingCode)
 
     ret['status'] = msgid.SUCCESS #'succeeded'
     return json_response(ret)
