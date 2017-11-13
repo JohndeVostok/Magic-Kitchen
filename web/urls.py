@@ -33,6 +33,7 @@ urlpatterns = [
 	# Sharing
 	url(r'^external_share_level$', views.external_share_level),
     url(r'^api/send_code_to_mobile_phone_user$', custom_system.send_code_to_mobile_phone_user),
+    url(r'^api.login_with_phone_number$', custom_system.login_with_phone_number),
     # Force to serve static files, which is not recommended by Django
     url(r'^(?P<path>.*)$', views.static_file),
 ]

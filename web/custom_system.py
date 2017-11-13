@@ -427,3 +427,55 @@ def send_code_to_mobile_phone_user(request):
 
     ret['status'] = msgid.SUCCESS #'succeeded'
     return json_response(ret)
+
+def login_with_phone_number(request):
+    content = request.POST
+
+    ret = {}
+
+    session = get_session(request)
+    if (session != None):
+        ret['status'] = msgid.ALREADY_LOGIN #'you have already logged in'
+        return json_response(ret)
+
+    if not 'phone_number' in content:
+        ret['status'] = msgid.PHONE_NUMBER_EMPTY #'phone number can't be empty'
+        return json_response(ret)
+
+    _phone_number = content['phone_number']
+    numeric_only = True
+    for c in _phone_number:
+        if (c > '9') or (c < '0'):
+            numeric_only = False
+            break
+    if not numeric_only:
+        ret['status'] = msgid.PHONE_NUMBER_NUMERIC_ONLY #'phone number needs to be numeric only'
+        return json_response(ret)
+
+    if len(_phone_number) != 11:
+        ret['status'] = msgid.PHONE_NUMBER_LENGTH_WRONG #'the length of phone number needs to be 11'
+        return json_response(ret)
+
+
+    if not 'identifyingCode' in content:
+        ret['status'] = msgid.IDENTIFY_CODE_EMPTY #'identifying code can't be empty'
+        return json_response(ret)
+    _identifyCode = content['identifyingCode']
+
+    name_filter = User.objects.filter(name = _phone_number)
+    #this user doesn't exist, means we didn't send an identifying code
+    if len(name_filter) == 0:
+        ret['status'] = msgid.WRONG_IDENTIFY_CODE #'wrong identifying code'
+        return json_response(ret)
+
+    user = name_filter[0]
+    if _identifyCode != user.identifyingCode or _identifyCode == "":
+        ret['status'] = msgid.WRONG_IDENTIFY_CODE #'wrong identifying code'
+        return json_response(ret)
+
+    user.identifyingCode = ""
+    user.save()
+
+    request.session['name'] = _phone_number
+    ret['status'] = msgid.SUCCESS #'succeeded'
+    return json_response(ret)
