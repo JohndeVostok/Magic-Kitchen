@@ -31,6 +31,64 @@ var config = {
 	
 	// Config for UI
 	UI: {
+		images: {
+			MAP_BACKGROUND: {
+				src: "/images/map/background.png",
+				width: 300,
+				height: 300,
+				x: 0,
+				y: 300,
+				len: 300
+			},
+			MAP_INPUT: {
+				src: "/images/map/obstacles/input.png",
+				width: 300,
+				height: 300,
+				x: 0,
+				y: 300,
+				len: 300
+			},
+			MAP_OUTPUT: {
+				src: "/images/map/obstacles/output.png",
+				width: 300,
+				height: 300,
+				x: 0,
+				y: 300,
+				len: 300
+			},
+			MAP_TABLE: {
+				src: "/images/map/obstacles/table.png",
+				width: 300,
+				height: 300,
+				x: 0,
+				y: 300,
+				len: 300
+			},
+			MAP_WALL: {
+				src: "/images/map/obstacles/wall.png",
+				width: 300,
+				height: 300,
+				x: 0,
+				y: 300,
+				len: 300
+			},
+			ITEM_MAGICPAPER: {
+				src: "/images/map/objects/magic_paper.png",
+				width: 300,
+				height: 300,
+				x: 0,
+				y: 300,
+				len: 300
+			},
+			ITEM_BANANA: {
+				src: "/images/map/objects/banana.png",
+				width: 300,
+				height: 300,
+				x: 0,
+				y: 300,
+				len: 300
+			}
+		},
 		map: {
 			images: {
 				0: "/images/map/background.png",
