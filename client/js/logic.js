@@ -1224,6 +1224,39 @@ function Logic()
 		});
 	};
 
+	this.doPhoneGetCode = function(phoneNumber, callback) {
+		network.sendCodeToMobilePhoneUser(phoneNumber, function(res){
+			if (res.status == 1000)
+			{
+				callback(undefined, {
+					status: "succeeded",
+				});
+			}
+			else
+			{
+				callback(msg.getMessage(res.status), {status: "failed"});
+			}
+		});
+	}
+
+	this.doPhoneLogin = function(username, identifyingCode, callback)
+	{
+		network.loginWithPhoneNumber(username, identifyingCode, function(res) {
+			if (res.status == 1000)
+			{
+				user.login(username);
+				callback(undefined, {
+					status: "succeeded",
+					username: username
+				});
+			}
+			else
+			{
+				callback(msg.getMessage(res.status), {status: "failed"});
+			}
+		});
+	};
+
 	// Do logout with network module
 	this.doLogout = function(callback)
 	{

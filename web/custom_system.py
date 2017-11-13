@@ -424,6 +424,7 @@ def send_code_to_mobile_phone_user(request):
     user.save()
 
     #send_message(str(_phone_number), identifyingCode)
+    print(_phone_number, identifyingCode)
 
     ret['status'] = msgid.SUCCESS #'succeeded'
     return json_response(ret)
@@ -457,10 +458,10 @@ def login_with_phone_number(request):
         return json_response(ret)
 
 
-    if not 'identifyingCode' in content:
+    if not 'identifying_code' in content:
         ret['status'] = msgid.IDENTIFY_CODE_EMPTY #'identifying code can't be empty'
         return json_response(ret)
-    _identifyCode = content['identifyingCode']
+    _identifyCode = content['identifying_code']
 
     name_filter = User.objects.filter(name = _phone_number)
     #this user doesn't exist, means we didn't send an identifying code

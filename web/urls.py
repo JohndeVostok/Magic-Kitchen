@@ -30,10 +30,10 @@ urlpatterns = [
     url(r'^api/new_std_solution$', solution_system.new_std_solution),
     url(r'^api/change_level_info$', level_system.change_level_info),
     url(r'^api/get_all_default_level$', level_system.get_all_default_level),
-	# Sharing
-	url(r'^external_share_level$', views.external_share_level),
     url(r'^api/send_code_to_mobile_phone_user$', custom_system.send_code_to_mobile_phone_user),
     url(r'^api/login_with_phone_number$', custom_system.login_with_phone_number),
+	# Sharing
+	url(r'^external_share_level$', views.external_share_level),
     # Force to serve static files, which is not recommended by Django
     url(r'^(?P<path>.*)$', views.static_file),
 ]

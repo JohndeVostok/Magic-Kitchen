@@ -321,7 +321,7 @@
             status = msgid.PHONE_NUMBER_LENGTH_WRONG
 
 ### Login With Phone Number
-        Post('/api/login_with_phone_number'), attributes: phone_number = number_str (numeric only, length = 11), identifyingCode = identCode_str
+        Post('/api/login_with_phone_number'), attributes: phone_number = number_str (numeric only, length = 11), identifying_code = identCode_str
 
         return json dict:
             status = msgid.SUCCESS

@@ -266,6 +266,27 @@ var network = function() {
 		);
 	}
 
+	var sendCodeToMobilePhoneUser = function(phoneNumber, callback) {
+		postRequest(
+			"api/send_code_to_mobile_phone_user",
+			{
+				"phone_number": phoneNumber
+			},
+			callback
+		);
+	}
+
+	var loginWithPhoneNumber = function(phoneNumber, identifyingCode, callback) {
+		postRequest(
+			"api/login_with_phone_number",
+			{
+				"phone_number": phoneNumber,
+				"identifying_code": identifyingCode
+			},
+			callback
+		);
+	}
+
 	return {
 		doLoad: doLoad,
 		register: register,
@@ -289,6 +310,8 @@ var network = function() {
 		getDefaultLevel: getDefaultLevel,
 		getSolutionInfo: getSolutionInfo,
 		vipCharge: vipCharge,
-		setAdmin: setAdmin
+		setAdmin: setAdmin,
+		sendCodeToMobilePhoneUser: sendCodeToMobilePhoneUser,
+		loginWithPhoneNumber: loginWithPhoneNumber
 	};
 }();
