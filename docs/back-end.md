@@ -43,6 +43,7 @@
             status = 1001
             status = 1008
             status = 1013
+            status = 1047
 
 
         二、忘记密码，通过邮箱找回
@@ -302,9 +303,19 @@
         若之前创建过超级管理员，则不会再次创建。
         等忙完手里的活，我再看一下有没有更好的（例如通过配置文件）创建自己model的超级管理员的方法。
 
-        return json dict
+        return json dict:
             status = 1000
             status = 1001
             status = 1002
             status = 1011
             status = 1031
+
+### Send Code To Mobile Phone User
+        Post('/api/send_code_to_mobile_phone_user'), attributes = phone_number = number_str (numeric only, length = 11)
+
+        return json dict:
+            status = msgid.SUCCESS
+            status = msgid.ALREADY_LOGIN
+            status = msgid.PHONE_NUMBER_EMPTY
+            status = msgid.PHONE_NUMBER_NUMERIC_ONLY
+            status = msgid.PHONE_NUMBER_LENGTH_WRONG

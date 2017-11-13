@@ -519,6 +519,57 @@ class CustomSystemTestCase(TestCase):
         ret = json.loads(response.content)
         self.assertEqual(ret['status'], msgid.NO_AUTHORITY) #'you don't have operation authority'
 
+    def test_send_code_to_mobile_phone_user(self):
+        c = Client()
+
+        #register
+        response = c.post('/api/register', {'name': 'sth', 'password': 'abc', 'email': '123@111.com'})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], msgid.SUCCESS) #'succeeded'
+
+        #login
+        response = c.post('/api/login', {'name': 'sth', 'password': 'abc'})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], msgid.SUCCESS) #'succeeded'
+
+        #test already login
+        response = c.post('/api/send_code_to_mobile_phone_user', {'name': 'sth', 'password': 'abc'})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], msgid.ALREADY_LOGIN) #'you have already logged in'
+
+        #logout
+        response = c.post('/api/logout')
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], msgid.SUCCESS) #'succeeded'
+
+        #test empty phone number
+        response = c.post('/api/send_code_to_mobile_phone_user')
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], msgid.PHONE_NUMBER_EMPTY) #'phone number can't be empty'
+
+        #test phone number numeric only
+        response = c.post('/api/send_code_to_mobile_phone_user', {'phone_number': '12357238abc'})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], msgid.PHONE_NUMBER_NUMERIC_ONLY) #'phone number needs to be numeric only'
+
+        #test phone number length wrong
+        response = c.post('/api/send_code_to_mobile_phone_user', {'phone_number': '0123456789'})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], msgid.PHONE_NUMBER_LENGTH_WRONG) #'phone number needs to be numeric only'
+
+        #test send code to new mobile phone user
+        response = c.post('/api/send_code_to_mobile_phone_user', {'phone_number': '18810238602'})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], msgid.SUCCESS) #'succeeded'
+        user = User.objects.filter(name = '18810238602')[0]
+        print ('identifying code = ', user.identifyingCode)
+
+        #test send code to existing mobile phone user
+        response = c.post('/api/send_code_to_mobile_phone_user', {'phone_number': '18810238602'})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], msgid.SUCCESS) #'succeeded'
+        user = User.objects.filter(name = '18810238602')[0]
+        print ('identifying code = ', user.identifyingCode)
 
 class LevelSystemTestCase(TestCase):
     def test_get_level_info(self):

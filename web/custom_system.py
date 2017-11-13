@@ -423,7 +423,7 @@ def send_code_to_mobile_phone_user(request):
     user.identifyingCode = identifyingCode
     user.save()
 
-    send_message(str(_phone_number), identifyingCode)
+    #send_message(str(_phone_number), identifyingCode)
 
     ret['status'] = msgid.SUCCESS #'succeeded'
     return json_response(ret)
