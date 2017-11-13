@@ -210,12 +210,22 @@ class CustomSystemTestCase(TestCase):
         ret = json.loads(response.content)
         self.assertEqual(ret['status'], msgid.SUCCESS) #'succeeded'
 
-        '''mobile_user = User.objects.create(name = 'super_admin', password = pw2md5('pw'), email = 'email', solution_dict = json.dumps({}), authority = 1, vip_due_time = timezone.now())
+        #test send code to new mobile phone user
+        response = c.post('/api/send_code_to_mobile_phone_user', {'phone_number': '18810238602'})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], msgid.SUCCESS) #'succeeded'
+        user = User.objects.filter(name = '18810238602')[0]
+        identifying_code = user.identifyingCode
+
+        #test login with phone number
+        response = c.post('/api/login_with_phone_number', {'phone_number': '18810238602', 'identifyingCode': identifying_code})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], msgid.SUCCESS) #'succeeded'
 
         #test mobile phone user has no password
         response = c.post('/api/change_password_after_login', {'new_password' : 'newpw'})
         ret = json.loads(response.content)
-        self.assertEqual(ret['status'], msgid.PHONE_LOGIN_USER_NO_PASSWORD) #'mobile phone login user has no password'''
+        self.assertEqual(ret['status'], msgid.PHONE_LOGIN_USER_NO_PASSWORD) #'mobile phone login user has no password'
 
     def test_change_password_by_email(self):
         c = Client()
