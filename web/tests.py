@@ -218,7 +218,7 @@ class CustomSystemTestCase(TestCase):
         identifying_code = user.identifyingCode
 
         #test login with phone number
-        response = c.post('/api/login_with_phone_number', {'phone_number': '18810238602', 'identifyingCode': identifying_code})
+        response = c.post('/api/login_with_phone_number', {'phone_number': '18810238602', 'identifying_code': identifying_code})
         ret = json.loads(response.content)
         self.assertEqual(ret['status'], msgid.SUCCESS) #'succeeded'
 

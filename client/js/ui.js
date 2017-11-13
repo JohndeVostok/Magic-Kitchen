@@ -275,11 +275,60 @@ var ui = function() {
 		
 		// For login function.
 		$("#loginButton").click(function() {
+			$("#loginMethodModal").modal();
+		});
+		$("#defaultLoginButton").click(function() {
+			$("#loginMethodModal").modal("hide");
 			// Init login modal.
 			$("#loginUsername").val("");
 			$("#loginPassword").val("");
 			
 			$("#loginModal").modal();
+		});
+		$("#phoneLoginButton").click(function() {
+			$("#loginMethodModal").modal("hide");
+			// Init login modal.
+			$("#loginPhoneNumber").val("");
+			$("#loginIdentifyingCode").val("");
+			
+			$("#phoneLoginModal").modal();
+		});
+		$("#phoneLoginGetCodeButton").click(function() {
+			$("#phoneLoginGetCodeButton").attr("disabled", "disabled");
+			logic.doPhoneGetCode($("#loginPhoneNumber").val(), function(err, res) {
+				$("#phoneLoginGetCodeButton").removeAttr("disabled");
+
+				if (err != undefined) {
+					alert("获取失败： " + err);
+					return;
+				}
+				else {
+					alert("已发送，请注意查收。");
+					return;
+				}
+			});
+		});
+		$("#phoneLoginConfirmButton").click(function() {
+			$("#phoneLoginConfirmButton").attr("disabled", "disabled");
+			
+			// Call logic login interface.
+			logic.doPhoneLogin($("#loginPhoneNumber").val(), $("#loginIdentifyingCode").val(), function(err, res) {
+				$("#phoneLoginConfirmButton").removeAttr("disabled");
+				
+				if (err != undefined) {
+					alert("登录失败： " + err);
+					$("#loginIdentifyingCode").val("");
+					return;
+				}
+				
+				// Login ok
+				$("#phoneLoginModal").modal("hide");
+				$("#loginButton").css("display", "none");
+				$("#logoutButton").css("display", "");
+				$("#registerButton").css("display", "none");
+				$("#usernameSpanText").text(res.username);
+				$("#usernameSpan").css("display", "");
+			});
 		});
 		$("#loginSubmitButton").click(function() {
 			$("#loginSubmitButton").attr("disabled", "disabled");
