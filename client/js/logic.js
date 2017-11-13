@@ -725,6 +725,28 @@ function Logic()
 
 	this.loadLevel = function(levelId, afterwards)
 	{
+		var compLevel = function(data) {
+			if (data["status"] == 1000)
+			{
+				user.setLevelId(levelId);
+				initLevel(JSON.parse(data["level_info"]));
+				network.getCurrentUserInfo(function(data){
+					if (data["status"] == 1000)
+					{
+						var solution_id = JSON.parse(data["solution_dict"])[levelId];
+						if (solution_id != undefined)
+						{
+							logic.loadSolution(solution_id, afterwards);
+						}
+					}
+					else
+					{
+						if (afterwards != undefined) afterwards();
+					}
+				});
+			}
+			else alert(msg.getMessage(data["status"]));
+		};
 		if (levelId == undefined)
 		{
 			if (config.useFakeLevel)
@@ -732,29 +754,10 @@ function Logic()
 			else
 			{
 				levelId = config.defaultOnlineLevelId;
-				network.getDefaultLevelInfo(levelId, function(data){
-					if (data["status"] == 1000)
-					{
-						user.setLevelId(levelId);
-						initLevel(JSON.parse(data["level_info"]));
-						if (afterwards != undefined) afterwards();
-					}
-					else alert(msg.getMessage(data["status"]));
-				});
+				network.getDefaultLevelInfo(levelId, compLevel);
 			}
 		}
-		else network.getLevelInfo(
-			levelId,
-			function(data){
-				if (data["status"] == 1000)
-				{
-					user.setLevelId(levelId);
-					initLevel(JSON.parse(data["level_info"]));
-					if (afterwards != undefined) afterwards();
-				}
-				else alert(msg.getMessage(data["status"]));
-			}
-		);
+		else network.getLevelInfo(levelId, compLevel);
 	};
 
 	this.loadSolution = function(solutionId, afterwards){
