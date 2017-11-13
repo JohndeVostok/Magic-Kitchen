@@ -311,7 +311,7 @@
             status = 1031
 
 ### Send Code To Mobile Phone User
-        Post('/api/send_code_to_mobile_phone_user'), attributes = phone_number = number_str (numeric only, length = 11)
+        Post('/api/send_code_to_mobile_phone_user'), attributes: phone_number = number_str (numeric only, length = 11)
 
         return json dict:
             status = msgid.SUCCESS
@@ -319,3 +319,15 @@
             status = msgid.PHONE_NUMBER_EMPTY
             status = msgid.PHONE_NUMBER_NUMERIC_ONLY
             status = msgid.PHONE_NUMBER_LENGTH_WRONG
+
+### Login With Phone Number
+        Post('/api/login_with_phone_number'), attributes: phone_number = number_str (numeric only, length = 11), identifyingCode = identCode_str
+
+        return json dict:
+            status = msgid.SUCCESS
+            status = msgid.ALREADY_LOGIN
+            status = msgid.PHONE_NUMBER_EMPTY
+            status = msgid.PHONE_NUMBER_NUMERIC_ONLY
+            status = msgid.PHONE_NUMBER_LENGTH_WRONG
+            status = msgid.IDENTIFY_CODE_EMPTY
+            status = msgid.WRONG_IDENTIFY_CODE

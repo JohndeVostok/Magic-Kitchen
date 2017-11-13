@@ -555,7 +555,7 @@ class CustomSystemTestCase(TestCase):
         #test phone number length wrong
         response = c.post('/api/send_code_to_mobile_phone_user', {'phone_number': '0123456789'})
         ret = json.loads(response.content)
-        self.assertEqual(ret['status'], msgid.PHONE_NUMBER_LENGTH_WRONG) #'phone number needs to be numeric only'
+        self.assertEqual(ret['status'], msgid.PHONE_NUMBER_LENGTH_WRONG) #'the length of phone number needs to be 11'
 
         #test send code to new mobile phone user
         response = c.post('/api/send_code_to_mobile_phone_user', {'phone_number': '18810238602'})
@@ -570,6 +570,91 @@ class CustomSystemTestCase(TestCase):
         self.assertEqual(ret['status'], msgid.SUCCESS) #'succeeded'
         user = User.objects.filter(name = '18810238602')[0]
         print ('identifying code = ', user.identifyingCode)
+
+    def test_login_with_phone_number(self):
+        c = Client()
+
+        #register
+        response = c.post('/api/register', {'name': 'sth', 'password': 'abc', 'email': '123@111.com'})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], msgid.SUCCESS) #'succeeded'
+
+        #login
+        response = c.post('/api/login', {'name': 'sth', 'password': 'abc'})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], msgid.SUCCESS) #'succeeded'
+
+        #test already login
+        response = c.post('/api/login_with_phone_number', {'name': 'sth', 'password': 'abc'})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], msgid.ALREADY_LOGIN) #'you have already logged in'
+
+        #logout
+        response = c.post('/api/logout')
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], msgid.SUCCESS) #'succeeded'
+
+        #test empty phone number
+        response = c.post('/api/login_with_phone_number')
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], msgid.PHONE_NUMBER_EMPTY) #'phone number can't be empty'
+
+        #test phone number numeric only
+        response = c.post('/api/login_with_phone_number', {'phone_number': '12357238abc'})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], msgid.PHONE_NUMBER_NUMERIC_ONLY) #'phone number needs to be numeric only'
+
+        #test phone number length wrong
+        response = c.post('/api/login_with_phone_number', {'phone_number': '0123456789'})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], msgid.PHONE_NUMBER_LENGTH_WRONG) #'the length of phone number needs to be 11'
+
+        #test empty identifying code
+        response = c.post('/api/login_with_phone_number', {'phone_number': '18810238602'})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], msgid.IDENTIFY_CODE_EMPTY) #'identifying code can't be empty'
+
+        #test user doesn't exist because never send an identifying code
+        response = c.post('/api/login_with_phone_number', {'phone_number': '18810238602', 'identifyingCode': '123456'})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], msgid.WRONG_IDENTIFY_CODE) #'wrong identifying code'
+
+        #test send code to new mobile phone user
+        response = c.post('/api/send_code_to_mobile_phone_user', {'phone_number': '18810238602'})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], msgid.SUCCESS) #'succeeded'
+        user = User.objects.filter(name = '18810238602')[0]
+        print ('identifying code = ', user.identifyingCode)
+        identifying_code = user.identifyingCode
+
+        #test wrong identifying code
+        response = c.post('/api/login_with_phone_number', {'phone_number': '18810238602', 'identifyingCode': '123456'})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], msgid.WRONG_IDENTIFY_CODE) #'wrong identifying code'
+
+        #test login with phone number
+        response = c.post('/api/login_with_phone_number', {'phone_number': '18810238602', 'identifyingCode': identifying_code})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], msgid.SUCCESS) #'succeeded'
+
+        #test get current user info
+        response = c.post('/api/get_current_user_info')
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], msgid.SUCCESS) #'succeeded'
+        self.assertEqual(ret['user_name'], '18810238602')
+        self.assertEqual(json.loads(ret['solution_dict']), {})
+        self.assertEqual(json.loads(ret['created_level']), [])
+        self.assertEqual(ret['next_default_level_id'], -1)
+
+        #logout
+        response = c.post('/api/logout')
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], msgid.SUCCESS) #'succeeded'
+
+        #test can't use an identifying code twice
+        response = c.post('/api/login_with_phone_number', {'phone_number': '18810238602', 'identifyingCode': identifying_code})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], msgid.WRONG_IDENTIFY_CODE) #'wrong identifying code'
 
 class LevelSystemTestCase(TestCase):
     def test_get_level_info(self):
