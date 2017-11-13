@@ -54,6 +54,11 @@ msg is a map for message between blocks.
         1043 the level need to be shared before sharing the solution    分享解法前需要分享对应关卡
         1044 you can't cancel share the level    你无法取消分享该关卡
         1045 you can't edit shared level    你无法编辑已经分享的关卡
+        1046 username cannot be numeric only    用户名不能只含数字
+        1047 mobile phone login user has no password    手机登录用户没有密码
+        1048 phone number can't be empty    手机号码不能为空
+        1049 phone number needs to be numeric only    手机号码只能包含数字
+        1050 the length of phone number needs to be 11    手机号码位数需要是11位
 
 	Functions for other blocks
 		class msg

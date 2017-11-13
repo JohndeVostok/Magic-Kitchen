@@ -15,6 +15,7 @@
             status = 1008
             status = 1009
             status = 1010
+            status = 1046
 
 ### Login
         POST('/api/login'), attributes: name = nameStr, password = passwordStr
@@ -25,6 +26,7 @@
             status = 1010
             status = 1011
             status = 1012
+            status = 1046
 
 ### Logout
         POST('/api/logout')
@@ -41,6 +43,7 @@
             status = 1001
             status = 1008
             status = 1013
+            status = 1047
 
 
         二、忘记密码，通过邮箱找回
@@ -51,6 +54,7 @@
             status = 1000
             status = 1002
             status = 1011
+            status = 1046
 
         之后通过得到的验证码来修改密码。
         Post('/api/change_password_by_identifyingCode'), attributes: name = namestr, identifyingCode = identCodeStr, new_password = new_passwordstr
@@ -62,6 +66,7 @@
             status = 1013
             status = 1014
             status = 1015
+            status = 1046
 
 ### Get Current User Info
         Post('/api/get_current_user_info')
@@ -298,9 +303,31 @@
         若之前创建过超级管理员，则不会再次创建。
         等忙完手里的活，我再看一下有没有更好的（例如通过配置文件）创建自己model的超级管理员的方法。
 
-        return json dict
+        return json dict:
             status = 1000
             status = 1001
             status = 1002
             status = 1011
             status = 1031
+
+### Send Code To Mobile Phone User
+        Post('/api/send_code_to_mobile_phone_user'), attributes: phone_number = number_str (numeric only, length = 11)
+
+        return json dict:
+            status = msgid.SUCCESS
+            status = msgid.ALREADY_LOGIN
+            status = msgid.PHONE_NUMBER_EMPTY
+            status = msgid.PHONE_NUMBER_NUMERIC_ONLY
+            status = msgid.PHONE_NUMBER_LENGTH_WRONG
+
+### Login With Phone Number
+        Post('/api/login_with_phone_number'), attributes: phone_number = number_str (numeric only, length = 11), identifyingCode = identCode_str
+
+        return json dict:
+            status = msgid.SUCCESS
+            status = msgid.ALREADY_LOGIN
+            status = msgid.PHONE_NUMBER_EMPTY
+            status = msgid.PHONE_NUMBER_NUMERIC_ONLY
+            status = msgid.PHONE_NUMBER_LENGTH_WRONG
+            status = msgid.IDENTIFY_CODE_EMPTY
+            status = msgid.WRONG_IDENTIFY_CODE
