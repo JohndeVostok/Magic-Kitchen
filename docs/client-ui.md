@@ -21,6 +21,28 @@
 * The UI module holds the main loop, so logic will be called each time the onscreen animation finishes.
 * All the interfaces of UI are asynchronous and will return immediately.
 
+#### Rendering Scheme
+
+* A brand-new rendering scheme
+* All the textures are images, and different images may have different sizes.
+* Each image has a 'fixed point' and a 'fixed length', i.e. a 'fixed segment' from (x0, y0) to (x0 + len0, y0).
+* When rendering some image to screen, the 'fixed segment' is mapped to some onscreen segment (x, y) - (x + len, y).
+* The aspect ratio of the image is keeped the same.
+* This scheme can handle any horizontal resizing/remapping/aligning.
+
+##### Rendering Scheme Implementations
+
+* The UI module implements this rendering scheme.
+* All the images are bottom-aligned.
+* For each image, its speicifications should be stored in config.
+
+##### Rendering Scheme Interfaces
+
+* The config file describes all the images.
+* `config.UI.images` is an object, which maps each image's name to its specifications.
+* For each image, `src` represents its relative URL, `width` and `height` represents its size, `x`, `y` and `len` represent its `fixed segment`.
+* See config for more details.
+
 #### Interfaces of UI module
 
 ```
