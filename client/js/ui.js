@@ -1,9 +1,9 @@
 var graphics;
 var ui = function() {
 	var doLoad = function() {
-		graphics.doLoad();
-		
 		loadStage();
+		
+		graphics.doLoad(stage);
 		
 		loadConfig();
 		initUI();
