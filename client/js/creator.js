@@ -1,12 +1,7 @@
-var main = function() {
+var creator = function() {
 	var doLoad = function() {
-		ui.doLoad();
-		code.doLoad();
-		logic.doLoad();
-		network.doLoad();
-		
-		// Start the main loop of UI.
-		ui.start();
+		ui.doLoadCreator();
+		ui.startCreator();
 	};
 	
 	return {

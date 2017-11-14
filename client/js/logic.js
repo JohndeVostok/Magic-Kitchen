@@ -170,6 +170,36 @@ function Logic()
 			ui.setOutput(output[0]);
 		}
 
+		this.initCreator = function()
+		{
+			this.init();
+		}
+
+		this.renderCreatorMap = function()
+		{
+			var mp = [];
+			for (let i = 0; i < map.length; i++)
+			{
+				if (map[i].isOpFloor)
+				{
+					switch (map[i].address)
+					{
+						case opFloor.length - 1:
+							mp[i] = 1;
+						break;
+						case opFloor.length - 2:
+							mp[i] = 2;
+						break;
+						default:
+							mp[i] = 3;
+						break;
+					}
+				}
+				else
+					mp[i] = 0;
+			}
+			ui.loadMap(mp);
+		}
 	//functions for play
 
 		var getFront = function()
@@ -722,6 +752,12 @@ function Logic()
 	{
 		state.init();
 	};
+
+	this.initCreator = function()
+	{
+		state.initCreator();
+		state.renderCreatorMap();
+	}
 
 	this.loadLevel = function(levelId, afterwards)
 	{
