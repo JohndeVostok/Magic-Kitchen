@@ -207,6 +207,14 @@ function Logic()
 			for (let i = 0; i < map.length; i++)
 				if (map[i].isOpFloor && map[i].address < opFloor.length - 2)
 					ui.setMapGridValue(i, map[i].address);
+			ui.clearItems();
+			for (let i = 0; i < itemList.length; i++)
+			{
+				var item = itemList[i];
+				ui.newItem(item.pos, item.type, undefined);
+				if (item.type == 1)
+					ui.setItemValue(item.pos, item.value);
+			}
 		}
 
 		this.refreshCreatorFloor = function()
@@ -246,7 +254,7 @@ function Logic()
 
 		this.newCreatorFloor = function(pos)
 		{
-			if (map[pos].isOpFloor == 1)
+			if (map[pos].isOpFloor)
 			{
 				if (map[pos].address < opFloor.length - 2)
 					return undefined;
@@ -255,6 +263,23 @@ function Logic()
 			opFloor.unshift(pos);
 			this.remarkCreator();
 			this.renderCreator();
+		}
+
+		this.netCreatorItem = function(item)
+		{
+			if (!map[item.pos].isOpFloor)
+				return undefined;
+			if (item.pos == opFloor[opFloor.length - 2])
+				return undefined;
+			if (item.pos == opFloor[opFloor.length - 1])
+				return undefined;
+			for (let i = 0; i < itemList.length; i++)
+				if (itemList[i].pos == item.pos)
+					return undefined;
+			itemList.push($.extend(true, {}, item));
+			ui.newItem(item.pos, item.type, undefined);
+			if (item.type == 1)
+				ui.setItemValue(item.pos, item.value);
 		}
 	//functions for play
 
