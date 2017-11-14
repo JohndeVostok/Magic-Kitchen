@@ -96,7 +96,6 @@ var graphics = function() {
 	
 	// setSpritePos sets the position transform of the sprite immediately.
 	var setSpritePos = function(sprite, pos) {
-		sprite.pos = copyPosition(pos);
 		setSpriteTransform(sprite, getTransform(sprite.size, pos));
 	};
 	
