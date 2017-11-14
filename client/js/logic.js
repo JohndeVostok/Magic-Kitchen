@@ -271,8 +271,8 @@ function Logic()
 				return undefined;
 			if (item.pos == opFloor[opFloor.length - 1])
 				return undefined;
-			map[pos].haveItem = 1;
-			map[pos].itemId = itemList.length;
+			map[item.pos].haveItem = 1;
+			map[item.pos].itemId = itemList.length;
 			itemList.push($.extend(true, {}, item));
 			ui.newItem(item.pos, item.type, undefined);
 			if (item.type == 1)
@@ -312,7 +312,16 @@ function Logic()
 			if (map[pos].isOpFloor)
 				opFloor.splice(map[pos].address, 1);
 			if (map[pos].haveItem)
+			{
+				console.log(map[pos]);
 				itemList.splice(map[pos].itemId, 1);
+			}
+			map[pos].isOpFloor = 0;
+			map[pos].address = 0;
+			map[pos].haveItem = 0;
+			map[pos].itemId = 0;
+			console.log(opFloor);
+			console.log(itemList);
 			this.refreshCreatorFloor();
 			this.renderCreator();
 		}
