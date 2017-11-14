@@ -228,12 +228,12 @@ function Logic()
 			if (opFloor[opFloor.length - 2] != -1)
 			{
 				map[opFloor[opFloor.length - 2]].isOpFloor = 1;
-				map[opFloor[opFloor.length - 2]].address = i;
+				map[opFloor[opFloor.length - 2]].address = opFloor.length - 2;
 			}
 			if (opFloor[opFloor.length - 1] != -1)
 			{
 				map[opFloor[opFloor.length - 1]].isOpFloor = 1;
-				map[opFloor[opFloor.length - 1]].address = i;
+				map[opFloor[opFloor.length - 1]].address = opFloor.length - 1;
 			}
 		}
 
@@ -255,11 +255,7 @@ function Logic()
 		this.newCreatorFloor = function(pos)
 		{
 			if (map[pos].isOpFloor)
-			{
-				if (map[pos].address < opFloor.length - 2)
-					return undefined;
-				opFloor[map[pos].address] = -1;
-			}
+				return undefined;
 			opFloor.unshift(pos);
 			this.remarkCreator();
 			this.renderCreator();
@@ -280,6 +276,15 @@ function Logic()
 			ui.newItem(item.pos, item.type, undefined);
 			if (item.type == 1)
 				ui.setItemValue(item.pos, item.value);
+		}
+
+		this.setInbox = function(pos)
+		{
+			if (map[pos].isOpFloor && map[pos].address < opFloor.length - 2)
+				return undefined;
+			opFloor[opFloor.length - 1] = pos;
+			this.refreshCreatorFloor();
+			this.renderCreator();
 		}
 	//functions for play
 
@@ -1329,12 +1334,33 @@ function Logic()
 		state.newCreatorItem(obj);
 	}
 
+	this.setInbox = function(pos)
+	{
+		state.setInbox(pos);
+	}
+
+	this.setOutbox = function(pos)
+	{
+		state.setOutbox(pos);
+	}
+
+	this.setInput = function(list)
+	{
+		state.setInput(list);
+	}
+
+	this.setOutout = function(list)
+	{
+		state.setOutput(list);
+	}
+
 	this.erase = function(pos)
 	{
 	}
 
 	this.dumpLevel = function()
 	{
+		return state.dumpLevel();
 	}
 
 
