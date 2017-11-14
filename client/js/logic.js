@@ -170,12 +170,17 @@ function Logic()
 			ui.setOutput(output[0]);
 		}
 
+	//Functions for creator.
+
 		this.initCreator = function()
 		{
-			this.init();
+			for (let i = 0; i < config.mapHeight; i++)
+				for (let j = 0; j < config.mapWidth; j++)
+					map[i * config.mapWidth + j] = {isOpFloor: 0, address: 0, haveItem: 0, itemId: 0};
+			opFloor = [-1, -1];
 		}
 
-		this.renderCreatorMap = function()
+		this.renderCreator = function()
 		{
 			var mp = [];
 			for (let i = 0; i < map.length; i++)
@@ -199,6 +204,27 @@ function Logic()
 					mp[i] = 0;
 			}
 			ui.loadMap(mp);
+		}
+
+		var sortInt = function (a, b)
+		{
+			return a - b;
+		}
+
+		var remarkCreator = function(pos)
+		{
+			
+		}
+
+		this.newCreatorFloor = function(pos)
+		{
+			if (map[pos].isOpFloor == 1)
+			{
+				if (map[pos].address < opFloor.length - 2)
+					return undefined;
+				opFloor[map[pos].address] = -1;
+			}
+			
 		}
 	//functions for play
 
@@ -1235,11 +1261,12 @@ function Logic()
 	this.initCreator = function()
 	{
 		state.initCreator();
-		state.renderCreatorMap();
+		state.renderCreator();
 	}
 
 	this.newFloor = function(pos)
 	{
+		state.newCreatorFloor(pos);
 	}
 
 	this.newItem = function(pos, obj)
@@ -1250,7 +1277,7 @@ function Logic()
 	{
 	}
 
-	this.dumpLevel
+	this.dumpLevel = function()
 	{
 	}
 
