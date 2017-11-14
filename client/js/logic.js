@@ -295,6 +295,11 @@ function Logic()
 			this.refreshCreatorFloor();
 			this.renderCreator();
 		}
+
+		this.setInput = function(list)
+		{
+			ui.setInput(list);
+		}
 	//functions for play
 
 		var getFront = function()
