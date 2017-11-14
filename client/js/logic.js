@@ -748,17 +748,6 @@ function Logic()
 	
 	// Load a level stored in levelInfo, which sets up the map and Blockly.
 	// Start a new level, may need grabbing it from server.
-	this.doLoad = function()
-	{
-		state.init();
-	};
-
-	this.initCreator = function()
-	{
-		state.initCreator();
-		state.renderCreatorMap();
-	}
-
 	this.loadLevel = function(levelId, afterwards)
 	{
 		var compLevel = function(data) {
@@ -1235,6 +1224,38 @@ function Logic()
 			break;
 		}
 	};
+
+// Functions for creator
+
+	this.doLoad = function()
+	{
+		state.init();
+	};
+
+	this.initCreator = function()
+	{
+		state.initCreator();
+		state.renderCreatorMap();
+	}
+
+	this.newFloor = function(pos)
+	{
+	}
+
+	this.newItem = function(pos, obj)
+	{
+	}
+
+	this.erase = function(pos)
+	{
+	}
+
+	this.dumpLevel
+	{
+	}
+
+
+// Functions for network
 
 	// Do login using network module
 	this.doLogin = function(username, password, callback)
