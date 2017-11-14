@@ -300,6 +300,11 @@ function Logic()
 		{
 			ui.setInput(list);
 		}
+
+		this.setOutput = function(list)
+		{
+			ui.setOutput(list);
+		}
 	//functions for play
 
 		var getFront = function()
