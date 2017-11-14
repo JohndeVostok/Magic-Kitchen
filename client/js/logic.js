@@ -280,9 +280,18 @@ function Logic()
 
 		this.setInbox = function(pos)
 		{
-			if (map[pos].isOpFloor && map[pos].address < opFloor.length - 2)
+			if (map[pos].isOpFloor && map[pos].address != opFloor.length - 1)
 				return undefined;
 			opFloor[opFloor.length - 1] = pos;
+			this.refreshCreatorFloor();
+			this.renderCreator();
+		}
+
+		this.setOutbox = function(pos)
+		{
+			if (map[pos].isOpFloor && map[pos].address != opFloor.length - 2)
+				return undefined;
+			opFloor[opFloor.length - 2] = pos;
 			this.refreshCreatorFloor();
 			this.renderCreator();
 		}
