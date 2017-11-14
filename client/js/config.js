@@ -31,24 +31,78 @@ var config = {
 	
 	// Config for UI
 	UI: {
+		images: {
+			MAP_BACKGROUND: {
+				src: "/images/map/background.png",
+				width: 300,
+				height: 300,
+				x: 0,
+				y: 300,
+				len: 300
+			},
+			MAP_INPUT: {
+				src: "/images/map/obstacles/input.png",
+				width: 300,
+				height: 300,
+				x: 0,
+				y: 300,
+				len: 300
+			},
+			MAP_OUTPUT: {
+				src: "/images/map/obstacles/output.png",
+				width: 300,
+				height: 300,
+				x: 0,
+				y: 300,
+				len: 300
+			},
+			MAP_TABLE: {
+				src: "/images/map/obstacles/table.png",
+				width: 300,
+				height: 300,
+				x: 0,
+				y: 300,
+				len: 300
+			},
+			MAP_WALL: {
+				src: "/images/map/obstacles/wall.png",
+				width: 300,
+				height: 300,
+				x: 0,
+				y: 300,
+				len: 300
+			},
+			ITEM_MAGICPAPER: {
+				src: "/images/map/objects/magic_paper.png",
+				width: 300,
+				height: 300,
+				x: 0,
+				y: 300,
+				len: 300
+			},
+			ITEM_BANANA: {
+				src: "/images/map/objects/banana.png",
+				width: 300,
+				height: 300,
+				x: 0,
+				y: 300,
+				len: 300
+			}
+		},
 		map: {
 			images: {
-				0: "/images/map/background.png",
-				1: "/images/map/obstacles/input.png",
-				2: "/images/map/obstacles/output.png",
-				3: "/images/map/obstacles/table.png",
-				4: "/images/map/obstacles/wall.png"
-			},
-			imageWidth: 300,
-			imageHeight: 300
+				0: "MAP_BACKGROUND",
+				1: "MAP_INPUT",
+				2: "MAP_OUTPUT",
+				3: "MAP_TABLE",
+				4: "MAP_WALL"
+			}
 		},
 		object: {
 			images: {
-				1: "/images/map/objects/magic_paper.png",
-				2: "/images/map/objects/banana.png"
-			},
-			imageWidth: 300,
-			imageHeight: 300
+				1: "ITEM_MAGICPAPER",
+				2: "ITEM_BANANA"
+			}
 		},
 		player: {
 			images: {
