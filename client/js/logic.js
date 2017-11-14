@@ -1368,7 +1368,7 @@ function Logic()
 		state.setInput(list);
 	}
 
-	this.setOutout = function(list)
+	this.setOutput = function(list)
 	{
 		state.setOutput(list);
 	}
