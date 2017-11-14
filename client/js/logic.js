@@ -265,7 +265,7 @@ function Logic()
 			this.renderCreator();
 		}
 
-		this.netCreatorItem = function(item)
+		this.newCreatorItem = function(item)
 		{
 			if (!map[item.pos].isOpFloor)
 				return undefined;
@@ -1324,8 +1324,9 @@ function Logic()
 		state.newCreatorFloor(pos);
 	}
 
-	this.newItem = function(pos, obj)
+	this.newItem = function(obj)
 	{
+		state.newCreatorItem(obj);
 	}
 
 	this.erase = function(pos)
