@@ -204,6 +204,29 @@ function Logic()
 					mp[i] = 0;
 			}
 			ui.loadMap(mp);
+			for (let i = 0; i < map.length; i++)
+				if (map[i].isOpFloor && map[i].address < opFloor.length - 2)
+					ui.setMapGridValue(i, map[i].address);
+		}
+
+		this.refreshCreatorFloor = function()
+		{
+			this.init();
+			for (let i = 0; i < opFloor.length - 2; i++)
+			{
+				map[opFloor[i]].isOpFloor = 1;
+				map[opFloor[i]].address = i;
+			}
+			if (opFloor[opFloor.length - 2] != -1)
+			{
+				map[opFloor[opFloor.length - 2]].isOpFloor = 1;
+				map[opFloor[opFloor.length - 2]].address = i;
+			}
+			if (opFloor[opFloor.length - 1] != -1)
+			{
+				map[opFloor[opFloor.length - 1]].isOpFloor = 1;
+				map[opFloor[opFloor.length - 1]].address = i;
+			}
 		}
 
 		var sortInt = function (a, b)
@@ -211,9 +234,14 @@ function Logic()
 			return a - b;
 		}
 
-		var remarkCreator = function(pos)
+		this.remarkCreator = function()
 		{
-			
+			var tmp1 = opFloor.pop();
+			var tmp2 = opFloor.pop();
+			opFloor.sort(sortInt);
+			opFloor.push(tmp2);
+			opFloor.push(tmp1);
+			this.refreshCreatorFloor();
 		}
 
 		this.newCreatorFloor = function(pos)
@@ -224,7 +252,9 @@ function Logic()
 					return undefined;
 				opFloor[map[pos].address] = -1;
 			}
-			
+			opFloor.unshift(pos);
+			this.remarkCreator();
+			this.renderCreator();
 		}
 	//functions for play
 
