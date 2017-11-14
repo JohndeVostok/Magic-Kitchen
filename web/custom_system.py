@@ -216,16 +216,16 @@ def change_password_by_email(request):
     import string
     def GenIdentifyingCode(length=8, chars=string.ascii_letters + string.digits):
         return ''.join([choice(chars) for i in range(length)])
-    identifyingCode = GenIdentifyingCode(8)
-    user.identifyingCode = identifyingCode
+    identifying_code = GenIdentifyingCode(8)
+    user.identifyingCode = identifying_code
     user.save()
-    ret['identifyingCode'] = identifyingCode
+    ret['identifying_code'] = identifying_code
 
-    email_thread('Email From CodeCheF', 'This is the identifying code needed to change the password:\n' + identifyingCode, email).start()
+    email_thread('Email From CodeCheF', 'This is the identifying code needed to change the password:\n' + identifying_code, email).start()
     ret['status'] = msgid.SUCCESS #'succeeded'
     return json_response(ret)
 
-def change_password_by_identifyingCode(request):
+def change_password_by_identifying_code(request):
     content = request.POST
 
     ret = {}
@@ -244,10 +244,10 @@ def change_password_by_identifyingCode(request):
         ret['status'] = msgid.NAME_NUMERIC_ONLY #'username cannot be numeric only'
         return json_response(ret)
 
-    if not 'identifyingCode' in content:
+    if not 'identifying_code' in content:
         ret['status'] = msgid.IDENTIFY_CODE_EMPTY #'identifying code can't be empty'
         return json_response(ret)
-    _identifyCode = content['identifyingCode']
+    _identifyCode = content['identifying_code']
 
     if not 'new_password' in content:
         ret['status'] = msgid.NEW_PASSWORD_EMPTY #'new password can't be empty'
@@ -419,12 +419,12 @@ def send_code_to_mobile_phone_user(request):
     import string
     def GenNumberIdentifyingCode(length=6, chars=string.digits):
         return ''.join([choice(chars) for i in range(length)])
-    identifyingCode = GenNumberIdentifyingCode(6)
-    user.identifyingCode = identifyingCode
+    identifying_code = GenNumberIdentifyingCode(6)
+    user.identifyingCode = identifying_code
     user.save()
 
-    #send_message(str(_phone_number), identifyingCode)
-    print(_phone_number, identifyingCode)
+    #send_message(str(_phone_number), identifying_code)
+    print(_phone_number, identifying_code)
 
     ret['status'] = msgid.SUCCESS #'succeeded'
     return json_response(ret)

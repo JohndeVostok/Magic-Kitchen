@@ -57,7 +57,7 @@
             status = 1046
 
         之后通过得到的验证码来修改密码。
-        Post('/api/change_password_by_identifyingCode'), attributes: name = namestr, identifyingCode = identCodeStr, new_password = new_passwordstr
+        Post('/api/change_password_by_identifying_code'), attributes: name = namestr, identifying_code = identCodeStr, new_password = new_passwordstr
         return json dict:
             status = 1000
             status = 1002

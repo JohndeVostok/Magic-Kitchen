@@ -255,7 +255,7 @@ class CustomSystemTestCase(TestCase):
         ret = json.loads(response.content)
         self.assertEqual(ret['status'], msgid.SUCCESS) #'succeeded'
 
-    def test_change_password_by_identifyingCode(self):
+    def test_change_password_by_identifying_code(self):
         c = Client()
 
         #register
@@ -267,50 +267,50 @@ class CustomSystemTestCase(TestCase):
         response = c.post('/api/change_password_by_email', {'name': 'sth'})
         ret = json.loads(response.content)
         self.assertEqual(ret['status'], msgid.SUCCESS) #'succeeded'
-        identifyingCode = ret['identifyingCode']
+        identifying_code = ret['identifying_code']
 
         #test empty name
-        response = c.post('/api/change_password_by_identifyingCode', {'identifyingCode': identifyingCode, 'new_password': 'newpw'})
+        response = c.post('/api/change_password_by_identifying_code', {'identifying_code': identifying_code, 'new_password': 'newpw'})
         ret = json.loads(response.content)
         self.assertEqual(ret['status'], msgid.NAME_EMPTY) #'name can't be empty'
 
         #test username numeric only
-        response = c.post('/api/change_password_by_identifyingCode', {'name': '18643216789', 'identifyingCode': identifyingCode, 'new_password': 'newpw'})
+        response = c.post('/api/change_password_by_identifying_code', {'name': '18643216789', 'identifying_code': identifying_code, 'new_password': 'newpw'})
         ret = json.loads(response.content)
         self.assertEqual(ret['status'], msgid.NAME_NUMERIC_ONLY) #'username cannot be numeric only'
 
-        #test empty identifyingCode
-        response = c.post('/api/change_password_by_identifyingCode', {'name': 'sth', 'new_password': 'newpw'})
+        #test empty identifying_code
+        response = c.post('/api/change_password_by_identifying_code', {'name': 'sth', 'new_password': 'newpw'})
         ret = json.loads(response.content)
         self.assertEqual(ret['status'], msgid.IDENTIFY_CODE_EMPTY) #'identifying code can't be empty'
 
         #test empty new_password
-        response = c.post('/api/change_password_by_identifyingCode', {'name': 'sth', 'identifyingCode': identifyingCode})
+        response = c.post('/api/change_password_by_identifying_code', {'name': 'sth', 'identifying_code': identifying_code})
         ret = json.loads(response.content)
         self.assertEqual(ret['status'], msgid.NEW_PASSWORD_EMPTY) #'new password can't be empty'
 
         #test name not exist
-        response = c.post('/api/change_password_by_identifyingCode', {'name': 'sthsth', 'identifyingCode': identifyingCode, 'new_password': 'newpw'})
+        response = c.post('/api/change_password_by_identifying_code', {'name': 'sthsth', 'identifying_code': identifying_code, 'new_password': 'newpw'})
         ret = json.loads(response.content)
         self.assertEqual(ret['status'], msgid.NAME_NOT_EXIST) #'this name doesn't exist'
 
         #test new password is too long
-        response = c.post('/api/change_password_by_identifyingCode', {'name': 'sth', 'identifyingCode': identifyingCode, 'new_password': 'newpw' + 'abcdefghijklmnopqrstvwxyz'})
+        response = c.post('/api/change_password_by_identifying_code', {'name': 'sth', 'identifying_code': identifying_code, 'new_password': 'newpw' + 'abcdefghijklmnopqrstvwxyz'})
         ret = json.loads(response.content)
         self.assertEqual(ret['status'], msgid.PASSWORD_TOO_LONG) #'this password is too long'
 
-        #test wrong identifyingCode
-        response = c.post('/api/change_password_by_identifyingCode', {'name': 'sth', 'identifyingCode': identifyingCode + '1', 'new_password': 'newpw'})
+        #test wrong identifying_code
+        response = c.post('/api/change_password_by_identifying_code', {'name': 'sth', 'identifying_code': identifying_code + '1', 'new_password': 'newpw'})
         ret = json.loads(response.content)
         self.assertEqual(ret['status'], msgid.WRONG_IDENTIFY_CODE) #'wrong identifying code'
 
-        #test change password by identifyingCode
-        response = c.post('/api/change_password_by_identifyingCode', {'name': 'sth', 'identifyingCode': identifyingCode, 'new_password': 'newpw'})
+        #test change password by identifying_code
+        response = c.post('/api/change_password_by_identifying_code', {'name': 'sth', 'identifying_code': identifying_code, 'new_password': 'newpw'})
         ret = json.loads(response.content)
         self.assertEqual(ret['status'], msgid.SUCCESS) #'succeeded'
 
-        #test wrong identifyingCode
-        response = c.post('/api/change_password_by_identifyingCode', {'name': 'sth', 'identifyingCode': '', 'new_password': 'newpw'})
+        #test wrong identifying_code
+        response = c.post('/api/change_password_by_identifying_code', {'name': 'sth', 'identifying_code': '', 'new_password': 'newpw'})
         ret = json.loads(response.content)
         self.assertEqual(ret['status'], msgid.WRONG_IDENTIFY_CODE) #'wrong identifying code'
 
@@ -323,7 +323,7 @@ class CustomSystemTestCase(TestCase):
         self.assertEqual(ret['status'], msgid.SUCCESS) #'succeeded'
 
         #test change password by old identifying code
-        response = c.post('/api/change_password_by_identifyingCode', {'name': 'sth', 'identifyingCode': identifyingCode, 'new_password': 'newpw2'})
+        response = c.post('/api/change_password_by_identifying_code', {'name': 'sth', 'identifying_code': identifying_code, 'new_password': 'newpw2'})
         ret = json.loads(response.content)
         self.assertEqual(ret['status'], msgid.WRONG_IDENTIFY_CODE) #'wrong identifying code'
 
@@ -625,7 +625,7 @@ class CustomSystemTestCase(TestCase):
         self.assertEqual(ret['status'], msgid.IDENTIFY_CODE_EMPTY) #'identifying code can't be empty'
 
         #test user doesn't exist because never send an identifying code
-        response = c.post('/api/login_with_phone_number', {'phone_number': '18810238602', 'identifyingCode': '123456'})
+        response = c.post('/api/login_with_phone_number', {'phone_number': '18810238602', 'identifying_code': '123456'})
         ret = json.loads(response.content)
         self.assertEqual(ret['status'], msgid.WRONG_IDENTIFY_CODE) #'wrong identifying code'
 
@@ -638,12 +638,12 @@ class CustomSystemTestCase(TestCase):
         identifying_code = user.identifyingCode
 
         #test wrong identifying code
-        response = c.post('/api/login_with_phone_number', {'phone_number': '18810238602', 'identifyingCode': '123456'})
+        response = c.post('/api/login_with_phone_number', {'phone_number': '18810238602', 'identifying_code': '123456'})
         ret = json.loads(response.content)
         self.assertEqual(ret['status'], msgid.WRONG_IDENTIFY_CODE) #'wrong identifying code'
 
         #test login with phone number
-        response = c.post('/api/login_with_phone_number', {'phone_number': '18810238602', 'identifyingCode': identifying_code})
+        response = c.post('/api/login_with_phone_number', {'phone_number': '18810238602', 'identifying_code': identifying_code})
         ret = json.loads(response.content)
         self.assertEqual(ret['status'], msgid.SUCCESS) #'succeeded'
 
@@ -662,7 +662,7 @@ class CustomSystemTestCase(TestCase):
         self.assertEqual(ret['status'], msgid.SUCCESS) #'succeeded'
 
         #test can't use an identifying code twice
-        response = c.post('/api/login_with_phone_number', {'phone_number': '18810238602', 'identifyingCode': identifying_code})
+        response = c.post('/api/login_with_phone_number', {'phone_number': '18810238602', 'identifying_code': identifying_code})
         ret = json.loads(response.content)
         self.assertEqual(ret['status'], msgid.WRONG_IDENTIFY_CODE) #'wrong identifying code'
 
