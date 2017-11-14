@@ -174,6 +174,7 @@ var code = function() {
 	var loadSolution = function(solution) {
 		workspace.clear();
 		Blockly.Xml.domToWorkspace(Blockly.Xml.textToDom(solution.solution), workspace);
+		setLock(false);
 	}
 
 	var setAlwaysLock = function() {
