@@ -265,13 +265,14 @@ function Logic()
 		{
 			if (!map[item.pos].isOpFloor)
 				return undefined;
+			if (map[item.pos].haveItem)
+				return undefined;
 			if (item.pos == opFloor[opFloor.length - 2])
 				return undefined;
 			if (item.pos == opFloor[opFloor.length - 1])
 				return undefined;
-			for (let i = 0; i < itemList.length; i++)
-				if (itemList[i].pos == item.pos)
-					return undefined;
+			map[pos].haveItem = 1;
+			map[pos].itemId = itemList.length;
 			itemList.push($.extend(true, {}, item));
 			ui.newItem(item.pos, item.type, undefined);
 			if (item.type == 1)
@@ -304,6 +305,16 @@ function Logic()
 		this.setOutput = function(list)
 		{
 			ui.setOutput(list);
+		}
+
+		this.eraseCreator = function(pos)
+		{
+			if (map[pos].isOpFloor)
+				opFloor.splice(map[pos].address, 1);
+			if (map[pos].haveItem)
+				itemList.splice(map[pos].itemId, 1);
+			this.refreshCreatorFloor();
+			this.renderCreator();
 		}
 	//functions for play
 
@@ -1375,6 +1386,7 @@ function Logic()
 
 	this.erase = function(pos)
 	{
+		state.eraseCreator(pos);
 	}
 
 	this.dumpLevel = function()
