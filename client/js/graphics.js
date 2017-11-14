@@ -7,7 +7,11 @@ var graphics = function() {
 	};
 	
 	// newSpriteSheet returns a sprite sheet which can be used for later rendering.
+	// The parameter image can be an image of a string representing the name of an image.
 	var newSpriteSheet = function(image) {
+		if (typeof(image) == "string") {
+			image = config.UI.images[image];
+		}
 		var ss = new createjs.SpriteSheet({
 			frames: {
 				width: image.width,
@@ -36,7 +40,7 @@ var graphics = function() {
 			sprite: sprite,
 			size: sheet.size
 		}
-		setSpriteTransform(ret.size, NullPos);
+		setSpritePos(ret, NullPos);
 		stage.addChild(sprite);
 		return ret;
 	};
@@ -48,7 +52,7 @@ var graphics = function() {
 			sprite: sprite,
 			size: size
 		}
-		setSpriteTransform(ret.size, NullPos);
+		setSpritePos(ret, NullPos);
 		stage.addChild(sprite);
 		return ret;
 	};
@@ -93,7 +97,7 @@ var graphics = function() {
 	// setSpritePos sets the position transform of the sprite immediately.
 	var setSpritePos = function(sprite, pos) {
 		sprite.pos = copyPosition(pos);
-		setSpriteTransform(getTransform(sprite.size, pos));
+		setSpriteTransform(sprite, getTransform(sprite.size, pos));
 	};
 	
 	var getSpriteTransformToPos = function(sprite, pos) {
