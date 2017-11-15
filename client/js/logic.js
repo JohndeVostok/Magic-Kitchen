@@ -219,6 +219,7 @@ function Logic()
 
 		this.refreshCreator = function()
 		{
+			this.init();
 			for (let i = 0; i < opFloor.length - 2; i++)
 			{
 				map[opFloor[i]].isOpFloor = 1;
@@ -315,7 +316,12 @@ function Logic()
 		this.eraseCreator = function(pos)
 		{
 			if (map[pos].isOpFloor)
-				opFloor.splice(map[pos].address, 1);
+			{
+				if (map[pos].address < opFloor.length - 2)
+					opFloor.splice(map[pos].address, 1);
+				else
+					opFloor[map[pos].address] = -1;
+			}
 			if (map[pos].haveItem)
 				itemList.splice(map[pos].itemId, 1);
 			map[pos].isOpFloor = 0;
@@ -326,10 +332,6 @@ function Logic()
 			this.renderCreator();
 		}
 
-		this.test = function()
-		{
-			console.log(itemList);
-		}
 	//functions for play
 
 		var getFront = function()
@@ -1406,11 +1408,6 @@ function Logic()
 	this.dumpLevel = function()
 	{
 		return state.dumpLevel();
-	}
-
-	this.test = function()
-	{
-		state.test();
 	}
 
 // Functions for network

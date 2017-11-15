@@ -1,6 +1,6 @@
 var creator = function() {
 	var doLoad = function() {
-		ui.doLoadCreator();
+		ui.doLoad();
 		ui.startCreator();
 	};
 	

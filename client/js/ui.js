@@ -12,6 +12,7 @@ var ui = function() {
 	
 	var doLoadCreator = function() {
 		loadStage();
+		graphics.doLoad(stage);
 		loadConfig();
 		initUI();
 		initUIControls();
