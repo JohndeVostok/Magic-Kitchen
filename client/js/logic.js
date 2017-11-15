@@ -217,9 +217,8 @@ function Logic()
 			}
 		}
 
-		this.refreshCreatorFloor = function()
+		this.refreshCreator = function()
 		{
-			this.init();
 			for (let i = 0; i < opFloor.length - 2; i++)
 			{
 				map[opFloor[i]].isOpFloor = 1;
@@ -235,6 +234,12 @@ function Logic()
 				map[opFloor[opFloor.length - 1]].isOpFloor = 1;
 				map[opFloor[opFloor.length - 1]].address = opFloor.length - 1;
 			}
+
+			for (let i = 0; i < itemList.length; i++)
+			{
+				map[itemList[i].pos].haveItem = 1;
+				map[itemList[i].pos].itemId = i;
+			}
 		}
 
 		var sortInt = function (a, b)
@@ -249,7 +254,7 @@ function Logic()
 			opFloor.sort(sortInt);
 			opFloor.push(tmp2);
 			opFloor.push(tmp1);
-			this.refreshCreatorFloor();
+			this.refreshCreator();
 		}
 
 		this.newCreatorFloor = function(pos)
@@ -284,7 +289,7 @@ function Logic()
 			if (map[pos].isOpFloor && map[pos].address != opFloor.length - 1)
 				return undefined;
 			opFloor[opFloor.length - 1] = pos;
-			this.refreshCreatorFloor();
+			this.refreshCreator();
 			this.renderCreator();
 		}
 
@@ -293,7 +298,7 @@ function Logic()
 			if (map[pos].isOpFloor && map[pos].address != opFloor.length - 2)
 				return undefined;
 			opFloor[opFloor.length - 2] = pos;
-			this.refreshCreatorFloor();
+			this.refreshCreator();
 			this.renderCreator();
 		}
 
@@ -312,18 +317,18 @@ function Logic()
 			if (map[pos].isOpFloor)
 				opFloor.splice(map[pos].address, 1);
 			if (map[pos].haveItem)
-			{
-				console.log(map[pos]);
 				itemList.splice(map[pos].itemId, 1);
-			}
 			map[pos].isOpFloor = 0;
 			map[pos].address = 0;
 			map[pos].haveItem = 0;
 			map[pos].itemId = 0;
-			console.log(opFloor);
-			console.log(itemList);
-			this.refreshCreatorFloor();
+			this.refreshCreator();
 			this.renderCreator();
+		}
+
+		this.test = function()
+		{
+			console.log(itemList);
 		}
 	//functions for play
 
@@ -1403,6 +1408,10 @@ function Logic()
 		return state.dumpLevel();
 	}
 
+	this.test = function()
+	{
+		state.test();
+	}
 
 // Functions for network
 
