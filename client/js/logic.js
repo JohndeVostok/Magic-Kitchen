@@ -305,11 +305,13 @@ function Logic()
 
 		this.setInput = function(list)
 		{
+			input[0] = $.extend(true, [], list);
 			ui.setInput(list);
 		}
 
 		this.setOutput = function(list)
 		{
+			output[0] = $.extend(true, [], list);
 			ui.setOutput(list);
 		}
 
@@ -330,6 +332,19 @@ function Logic()
 			map[pos].itemId = 0;
 			this.refreshCreator();
 			this.renderCreator();
+		}
+
+		this.dumpLevel = function()
+		{
+			level = {
+				blockTypes: [21, 22, 23, 24, 25, 26, 31, 32, 41, 42, 43, 11],
+				playerInfo: {pos: 7, dir: 0},
+				opFloor: opFloor,
+				input: input,
+				output: output,
+				itemList: itemList
+			}
+			return JSON.stringify(level)
 		}
 
 	//functions for play
@@ -1570,7 +1585,7 @@ function Logic()
 
 	this.doSaveLevel = function(callback)
 	{
-		var content = user.getContent();
+		var content = this.dumpLevel();
 		network.newUsermadeLevel(content, function(res) {
 			if (res.status == 1000)
 			{
