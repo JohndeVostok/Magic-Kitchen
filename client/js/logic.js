@@ -305,11 +305,13 @@ function Logic()
 
 		this.setInput = function(list)
 		{
+			input[0] = $.extend(true, [], list);
 			ui.setInput(list);
 		}
 
 		this.setOutput = function(list)
 		{
+			output[0] = $.extend(true, [], list);
 			ui.setOutput(list);
 		}
 
