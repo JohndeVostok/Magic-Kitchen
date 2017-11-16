@@ -342,7 +342,7 @@ function Logic()
 				output: output,
 				itemList: itemList
 			}
-			return JSON.stringify(level);
+			return JSON.stringify(level)
 		}
 
 	//functions for play
@@ -1583,7 +1583,7 @@ function Logic()
 
 	this.doSaveLevel = function(callback)
 	{
-		var content = user.getContent();
+		var content = this.dumpLevel();
 		network.newUsermadeLevel(content, function(res) {
 			if (res.status == 1000)
 			{
