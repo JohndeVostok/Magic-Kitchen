@@ -98,7 +98,7 @@
             status = 1000
                 level_info = json_info_str
                 shared = shared_bool
-
+                block_num = block_num_int(-2 means not default level, -1 means default level have no std solution)
             status = 1001
             status = 1016
             status = 1017

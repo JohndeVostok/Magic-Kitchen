@@ -131,6 +131,14 @@ def get_level_info(request):
                     ret['status'] = msgid.NO_AUTHORITY #'you don't have operation authority'
                     return json_response(ret)
 
+        if level.std_solution_id == -1:
+            ret['block_num'] = -1
+        else:
+            std_solution = Solution.objects.filter(solution_id = level.std_solution_id)[0]
+            _info = json.loads(std_solution.info)
+            std_block_num = _info['block_num']
+            ret['block_num'] = std_block_num
+
         ret['status'] = msgid.SUCCESS #'succeeded'
         ret['level_info'] = default_level_id_filter[0].info #json
         ret['shared'] = default_level_id_filter[0].shared #bool
@@ -170,6 +178,18 @@ def get_level_info(request):
                 if user.authority < 2:
                     ret['status'] = msgid.NO_AUTHORITY #'you don't have operation authority'
                     return json_response(ret)
+
+        if level.default_level_id == -1:
+            ret['block_num'] = -2
+        else:
+            if level.std_solution_id == -1:
+                ret['block_num'] = -1
+            else:
+                std_solution = Solution.objects.filter(solution_id = level.std_solution_id)[0]
+                _info = json.loads(std_solution.info)
+                std_block_num = _info['block_num']
+                ret['block_num'] = std_block_num
+
 
         ret['status'] = msgid.SUCCESS #'succeeded'
         ret['level_info'] = level_id_filter[0].info #json
