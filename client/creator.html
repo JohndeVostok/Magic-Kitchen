@@ -82,23 +82,30 @@
 				</td>
 				<td class="col-xs-6">
 					<div style="height: 150px; width: 550px">
-						<div id="gameObjective" style="height: 50px; width: 550px">
+						<div id="gameObjective" style="display:none">
 							<h4>
 								<button class="btn btn-primary" id="newLevelButton">
-									<span class="glyphicon glyphicon-pencil"> 创建 </span>
-								</button>
-								<button class="btn btn-primary" id="saveLevelButton">
-									<span class="glyphicon glyphicon-star"> 保存 </span>
-								</button>
-								<button class="btn btn-primary" id="shareLevelButton">
-									<span class="glyphicon glyphicon-star"> 分享 </span>
+									<span class="glyphicon glyphicon-pencil"> 关卡编辑器 </span>
 								</button>
 								<button class="btn btn-primary" id="chooseLevelButton">
 									<span class="glyphicon glyphicon-star"> 选关 </span>
 								</button>
 							</h4>
 						</div>
-						<div id="gameControls" style="height: 150px; width: 550px">
+						<div id="gameCreator" style="height: 50px; width: 550px">
+							<h4>
+								<button class="btn btn-primary" id="saveLevelButton">
+									<span class="glyphicon glyphicon-star"> 保存 </span>
+								</button>
+								<button class="btn btn-primary" id="shareLevelButton">
+									<span class="glyphicon glyphicon-star"> 分享 </span>
+								</button>
+								<button class="btn btn-primary" id="returnMainButton">
+									<span class="glyphicon glyphicon-chevron-left"> 返回 </span>
+								</button>
+							</h4>
+						</div>
+						<div id="gameControls" style="display:none">
 							<h4>
 								<button class="btn btn-primary" id="buttonUndo">
 									<span class="glyphicon glyphicon-chevron-left"> 撤销 </span>
@@ -124,7 +131,7 @@
 							</h4>
 						</div>
 					</div>
-					<div id="blocklyDiv" style="height: 550px; width: 550px;"></div>
+					<div id="blocklyDiv" style="display:none"></div>
 				</td>
 			</tr>
 		</table>

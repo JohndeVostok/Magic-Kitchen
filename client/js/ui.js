@@ -425,8 +425,15 @@ var ui = function() {
 
 		$("#newLevelButton").click(function() {
 			// Init login modal.
-			$("#newLevelContent").val(logic.getUserContent);
-			$("#newLevelModal").modal();
+			// $("#newLevelContent").val(logic.getUserContent);
+			// $("#newLevelModal").modal();
+			window.location.href = "creator.html";
+		});
+		$("#returnMainButton").click(function() {
+			// Init login modal.
+			// $("#newLevelContent").val(logic.getUserContent);
+			// $("#newLevelModal").modal();
+			window.location.href = "codechef.html";
 		});
 		$("#newLevelSubmitButton").click(function() {
 			$("#newLevelSubmitButton").attr("disabled", "disabled");
