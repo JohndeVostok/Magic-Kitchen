@@ -170,6 +170,168 @@ function Logic()
 			ui.setOutput(output[0]);
 		}
 
+	//Functions for creator.
+
+		this.initCreator = function()
+		{
+			for (let i = 0; i < config.mapHeight; i++)
+				for (let j = 0; j < config.mapWidth; j++)
+					map[i * config.mapWidth + j] = {isOpFloor: 0, address: 0, haveItem: 0, itemId: 0};
+			opFloor = [-1, -1];
+		}
+
+		this.renderCreator = function()
+		{
+			var mp = [];
+			for (let i = 0; i < map.length; i++)
+			{
+				if (map[i].isOpFloor)
+				{
+					switch (map[i].address)
+					{
+						case opFloor.length - 1:
+							mp[i] = 1;
+						break;
+						case opFloor.length - 2:
+							mp[i] = 2;
+						break;
+						default:
+							mp[i] = 3;
+						break;
+					}
+				}
+				else
+					mp[i] = 0;
+			}
+			ui.loadMap(mp);
+			for (let i = 0; i < map.length; i++)
+				if (map[i].isOpFloor && map[i].address < opFloor.length - 2)
+					ui.setMapGridValue(i, map[i].address);
+			ui.clearItems();
+			for (let i = 0; i < itemList.length; i++)
+			{
+				var item = itemList[i];
+				ui.newItem(item.pos, item.type, undefined);
+				if (item.type == 1)
+					ui.setItemValue(item.pos, item.value);
+			}
+		}
+
+		this.refreshCreator = function()
+		{
+			this.init();
+			for (let i = 0; i < opFloor.length - 2; i++)
+			{
+				map[opFloor[i]].isOpFloor = 1;
+				map[opFloor[i]].address = i;
+			}
+			if (opFloor[opFloor.length - 2] != -1)
+			{
+				map[opFloor[opFloor.length - 2]].isOpFloor = 1;
+				map[opFloor[opFloor.length - 2]].address = opFloor.length - 2;
+			}
+			if (opFloor[opFloor.length - 1] != -1)
+			{
+				map[opFloor[opFloor.length - 1]].isOpFloor = 1;
+				map[opFloor[opFloor.length - 1]].address = opFloor.length - 1;
+			}
+
+			for (let i = 0; i < itemList.length; i++)
+			{
+				map[itemList[i].pos].haveItem = 1;
+				map[itemList[i].pos].itemId = i;
+			}
+		}
+
+		var sortInt = function (a, b)
+		{
+			return a - b;
+		}
+
+		this.remarkCreator = function()
+		{
+			var tmp1 = opFloor.pop();
+			var tmp2 = opFloor.pop();
+			opFloor.sort(sortInt);
+			opFloor.push(tmp2);
+			opFloor.push(tmp1);
+			this.refreshCreator();
+		}
+
+		this.newCreatorFloor = function(pos)
+		{
+			if (map[pos].isOpFloor)
+				return undefined;
+			opFloor.unshift(pos);
+			this.remarkCreator();
+			this.renderCreator();
+		}
+
+		this.newCreatorItem = function(item)
+		{
+			if (!map[item.pos].isOpFloor)
+				return undefined;
+			if (map[item.pos].haveItem)
+				return undefined;
+			if (item.pos == opFloor[opFloor.length - 2])
+				return undefined;
+			if (item.pos == opFloor[opFloor.length - 1])
+				return undefined;
+			map[item.pos].haveItem = 1;
+			map[item.pos].itemId = itemList.length;
+			itemList.push($.extend(true, {}, item));
+			ui.newItem(item.pos, item.type, undefined);
+			if (item.type == 1)
+				ui.setItemValue(item.pos, item.value);
+		}
+
+		this.setInbox = function(pos)
+		{
+			if (map[pos].isOpFloor && map[pos].address != opFloor.length - 1)
+				return undefined;
+			opFloor[opFloor.length - 1] = pos;
+			this.refreshCreator();
+			this.renderCreator();
+		}
+
+		this.setOutbox = function(pos)
+		{
+			if (map[pos].isOpFloor && map[pos].address != opFloor.length - 2)
+				return undefined;
+			opFloor[opFloor.length - 2] = pos;
+			this.refreshCreator();
+			this.renderCreator();
+		}
+
+		this.setInput = function(list)
+		{
+			ui.setInput(list);
+		}
+
+		this.setOutput = function(list)
+		{
+			ui.setOutput(list);
+		}
+
+		this.eraseCreator = function(pos)
+		{
+			if (map[pos].isOpFloor)
+			{
+				if (map[pos].address < opFloor.length - 2)
+					opFloor.splice(map[pos].address, 1);
+				else
+					opFloor[map[pos].address] = -1;
+			}
+			if (map[pos].haveItem)
+				itemList.splice(map[pos].itemId, 1);
+			map[pos].isOpFloor = 0;
+			map[pos].address = 0;
+			map[pos].haveItem = 0;
+			map[pos].itemId = 0;
+			this.refreshCreator();
+			this.renderCreator();
+		}
+
 	//functions for play
 
 		var getFront = function()
@@ -718,11 +880,6 @@ function Logic()
 	
 	// Load a level stored in levelInfo, which sets up the map and Blockly.
 	// Start a new level, may need grabbing it from server.
-	this.doLoad = function()
-	{
-		state.init();
-	};
-
 	this.loadLevel = function(levelId, afterwards)
 	{
 		var compLevel = function(data) {
@@ -1199,6 +1356,61 @@ function Logic()
 			break;
 		}
 	};
+
+// Functions for creator
+
+	this.doLoad = function()
+	{
+		state.init();
+	};
+
+	this.initCreator = function()
+	{
+		state.initCreator();
+		state.renderCreator();
+	}
+
+	this.newFloor = function(pos)
+	{
+		state.newCreatorFloor(pos);
+	}
+
+	this.newItem = function(obj)
+	{
+		state.newCreatorItem(obj);
+	}
+
+	this.setInbox = function(pos)
+	{
+		state.setInbox(pos);
+	}
+
+	this.setOutbox = function(pos)
+	{
+		state.setOutbox(pos);
+	}
+
+	this.setInput = function(list)
+	{
+		state.setInput(list);
+	}
+
+	this.setOutput = function(list)
+	{
+		state.setOutput(list);
+	}
+
+	this.erase = function(pos)
+	{
+		state.eraseCreator(pos);
+	}
+
+	this.dumpLevel = function()
+	{
+		return state.dumpLevel();
+	}
+
+// Functions for network
 
 	// Do login using network module
 	this.doLogin = function(username, password, callback)

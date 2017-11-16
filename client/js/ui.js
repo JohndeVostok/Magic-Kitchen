@@ -10,6 +10,13 @@ var ui = function() {
 		initUIControls();
 	};
 	
+	var doLoadCreator = function() {
+		loadStage();
+		graphics.doLoad(stage);
+		loadConfig();
+		initUI();
+		initUIControls();
+	};
 	// CreateJS stage
 	var stage;
 	
@@ -270,6 +277,7 @@ var ui = function() {
 			$("#loginIdentifyingCode").val("");
 			
 			$("#phoneLoginModal").modal();
+
 		});
 		$("#phoneLoginGetCodeButton").click(function() {
 			$("#phoneLoginGetCodeButton").attr("disabled", "disabled");
@@ -538,6 +546,11 @@ var ui = function() {
 		});
 	};
 	
+	var startCreator = function()
+	{
+		logic.initCreator();
+	}
+
 	var start = function() {
 		// Grab & start a new level.
 		// The main loop is not present here, because the system event loop already does this.
@@ -1235,7 +1248,9 @@ var ui = function() {
 	
 	return {
 		doLoad: doLoad,
+		doLoadCreator: doLoadCreator,
 		start: start,
+		startCreator: startCreator,
 		loadMap: loadMap,
 		loadUserInfo: loadUserInfo,
 		loadBlockInfo: loadBlockInfo,
