@@ -734,10 +734,30 @@ class LevelSystemTestCase(TestCase):
         response = c.post('/api/get_level_info', {'default_level_id': 2})
         ret = json.loads(response.content)
         self.assertEqual(ret['status'], msgid.SUCCESS) #'succeeded'
+        self.assertEqual(ret['block_num'], -1)
 
         level = Level.objects.filter(default_level_id = 2)[0]
         level.shared = False
         level.save()
+
+        user = User.objects.filter(name = 'sth')[0]
+        user.authority = 3
+        user.save()
+
+        #new std solution
+        response = c.post('/api/new_std_solution', {'solution_info': json.dumps({'block_num': 6}), 'default_level_id': 2, 'edit': 1})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], msgid.SUCCESS) #'succeeded'
+
+        #test get shared level info, the user is admin
+        response = c.post('/api/get_level_info', {'default_level_id': 2})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], msgid.SUCCESS) #'succeeded'
+        self.assertEqual(ret['block_num'], 6)
+
+        user = User.objects.filter(name = 'sth')[0]
+        user.authority = 1
+        user.save()
 
         #test get unshared level info, the user is the auther
         response = c.post('/api/get_level_info', {'default_level_id': 1})
@@ -814,10 +834,36 @@ class LevelSystemTestCase(TestCase):
         response = c.post('/api/get_level_info', {'level_id': 4})
         ret = json.loads(response.content)
         self.assertEqual(ret['status'], msgid.SUCCESS) #'succeeded'
+        self.assertEqual(ret['block_num'], 6)
 
         level = Level.objects.filter(default_level_id = 2)[0]
         level.shared = False
         level.save()
+
+        user = User.objects.filter(name = 'sth')[0]
+        user.authority = 3
+        user.save()
+
+        #new std solution
+        response = c.post('/api/new_std_solution', {'solution_info': json.dumps({'block_num': 4}), 'default_level_id': 2, 'edit': 1})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], msgid.SUCCESS) #'succeeded'
+
+        #test get shared level info, the user is admin
+        response = c.post('/api/get_level_info', {'level_id': 4})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], msgid.SUCCESS) #'succeeded'
+        self.assertEqual(ret['block_num'], 4)
+
+        #test get shared level info, the user is admin
+        response = c.post('/api/get_level_info', {'level_id': 2})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], msgid.SUCCESS) #'succeeded'
+        self.assertEqual(ret['block_num'], -2)
+
+        user = User.objects.filter(name = 'sth')[0]
+        user.authority = 1
+        user.save()
 
         #test get unshared level info, the user is the auther
         response = c.post('/api/get_level_info', {'default_level_id': 1})
