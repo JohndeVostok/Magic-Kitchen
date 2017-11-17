@@ -85,6 +85,12 @@ function Msg()
 		9000: ["Network timeout.", "网络请求超时。"]
 	}
 	var language = 0;
+	var msgId = {};
+
+	for (id in content)
+	{
+		msgId[content[id][0]] = id;
+	}
 
 	this.changeLanguage = function(lang)
 	{
@@ -100,6 +106,11 @@ function Msg()
 				language = 0;
 			break;
 		}
+	};
+
+	this.getMsgId = function(message0)
+	{
+		return msgId[message0];
 	};
 
 	this.getMessage = function(msgId)
