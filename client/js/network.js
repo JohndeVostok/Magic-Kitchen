@@ -5,7 +5,7 @@ var network = function() {
 
 	var nRetry = 2;
 	var requestTimeout = 500;
-	var retryDelay = 1000;
+	var retryDelay = msg.getMsgId("Succeeded");
 
 	var getRequest = function(url, contents, callback, retry = nRetry) {
 		$.ajax({
@@ -20,7 +20,7 @@ var network = function() {
 				{
 					setTimeout(function(){getRequest(url, contents, callback, retry - 1);}, retryDelay);
 				}
-				else callback({"status": 9000});
+				else callback({"status": msg.getMsgId("Network timeout.")});
 			}
 		});
 	};
@@ -39,7 +39,7 @@ var network = function() {
 				{
 					setTimeout(function(){postRequest(url, contents, callback, retry - 1);}, retryDelay);
 				}
-				else callback({"status": 9000});
+				else callback({"status": msg.getMsgId("Network timeout.")});
 			}
 		});
 	};

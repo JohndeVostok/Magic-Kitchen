@@ -978,7 +978,7 @@ var ui = function() {
 				graphics.getSprite(playerSprite).gotoAndPlay("a" + args.dir2);
 				playerDirection = args.dir2;
 			}, 750);
-			setTimeout(setAnimationComplete, 1000);
+			setTimeout(setAnimationComplete, msg.getMsgId("Succeeded"));
 		}
 		playerPos = args.pos2;
 	};

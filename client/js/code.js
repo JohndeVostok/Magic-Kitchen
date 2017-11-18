@@ -102,7 +102,7 @@ var code = function() {
 			case 43:
 				if (funcList[op.op] == undefined)
 				{
-					logic.step({typeId: 43, op: 7000});
+					logic.step({typeId: 43, op: msg.getMsgId("No such function.")});
 				}
 				calledLogic = true;
 			break;
