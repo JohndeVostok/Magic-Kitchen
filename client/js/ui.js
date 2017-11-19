@@ -1236,7 +1236,14 @@ var ui = function() {
 	};
 
 	var finishLevel = function() {
-		if (!readOnly) $("#passLevelModal").modal();
+		if (!readOnly)
+		{
+			starEvaluationRes = logic.doStarEvaluation();
+			$("#starEvaluationUsedNum").text(starEvaluationRes["used_num"]);
+			$("#starEvaluationBestNum").text(starEvaluationRes["best_num"]);
+			$("#starEvaluationResult").text(starEvaluationRes["result"]);
+			$("#passLevelModal").modal();
+		}
 	};
 	
 	var unfinishLevel = function() {
