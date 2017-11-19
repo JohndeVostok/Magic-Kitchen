@@ -8,11 +8,11 @@ function Logic()
 	function Validator()
 	{
 		var flag = 0;
-		var msgId = 3000;
+		var msgId = msg.getMsgId("ERROR");
 		this.init = function()
 		{
 			flag = 0;
-			msgId = 3000;
+			msgId = msg.getMsgId("ERROR");
 		};
 		this.invalid = function(id)
 		{
@@ -418,13 +418,13 @@ function Logic()
 		{
 			if (x < 0 || x >= config.mapWidth || y < 0 || y >= config.mapHeight)
 			{
-				validator.invalid(3001);
+				validator.invalid(msg.getMsgId("Target is out of map."));
 				return undefined;
 			}
 			var pos = y * config.mapWidth + x;
 			if (map[pos].isOpFloor)
 			{
-				validator.invalid(3002);
+				validator.invalid(msg.getMsgId("Target is an operation floor."));
 				return undefined;
 			}
 		};
@@ -445,13 +445,13 @@ function Logic()
 		{
 			if (player.haveItem)
 			{
-				validator.invalid(3012);
+				validator.invalid(msg.getMsgId("I have something in my hand."));
 				return 0;
 			}
 
 			if (!map[pos].isOpFloor)
 			{
-				validator.invalid(3011);
+				validator.invalid(msg.getMsgId("Target is not an operation floor."));
 				return 0;
 			}
 
@@ -462,10 +462,10 @@ function Logic()
 					if (input[0].length)
 						return 1;
 					else
-						validator.invalid(3014);
+						validator.invalid(msg.getMsgId("Inbox is empty."));
 				}
 				else
-					validator.invalid(3013);
+					validator.invalid(msg.getMsgId("There is notiong there to load."));
 				return 0;
 			}
 			return 1;
@@ -475,19 +475,19 @@ function Logic()
 		{
 			if (!player.haveItem)
 			{
-				validator.invalid(3015);
+				validator.invalid(msg.getMsgId("I have nothing in my hand."));
 				return 0;
 			}
 
 			if (!map[pos].isOpFloor)
 			{
-				validator.invalid(3011);
+				validator.invalid(msg.getMsgId("Target is not an operation floor."));
 				return 0;
 			}
 
 			if (map[pos].haveItem)
 			{
-				validator.invalid(3016);
+				validator.invalid(msg.getMsgId("There is something there."));
 				return 0;
 			}
 
@@ -495,19 +495,19 @@ function Logic()
 			{
 				if (output[0].length == 0)
 				{
-					validator.invalid(3018);
+					validator.invalid(msg.getMsgId("It's not what we want."));
 					return 0;
 				}
 				if (!itemEqual(itemList[player.itemId], output[0][0]))
 				{
-					validator.invalid(3018);
+					validator.invalid(msg.getMsgId("It's not what we want."));
 					return 0;
 				}
 			}
 
 			if (map[pos].address == opFloor.length - 1)
 			{
-				validator.invalid(3017);
+				validator.invalid(msg.getMsgId("I can't store it there."));
 				return 0;
 			}
 			return 1;
@@ -517,24 +517,24 @@ function Logic()
 		{
 			if (player.haveItem && itemList[player.itemId].type != 1)
 			{
-				validator.invalid(3021);
+				validator.invalid(msg.getMsgId("I can't load with this in my hand."));
 				return 0;
 			}
 
 			if (!map[pos].isOpFloor)
 			{
-				validator.invalid(3011);
+				validator.invalid(msg.getMsgId("Target is not an operation floor."));
 				return 0;
 			}
 
 			if (!map[pos].haveItem)
 			{
-				validator.invalid(3022);
+				validator.invalid(msg.getMsgId("I can't load from here."));
 				return 0;
 			}
 			if (itemList[map[pos].itemId].type != 1)
 			{
-				validator.invalid(3022);
+				validator.invalid(msg.getMsgId("I can't load from here."));
 				return 0;
 			}
 			return 1;
@@ -544,19 +544,19 @@ function Logic()
 		{
 			if (!player.haveItem || itemList[player.itemId].type != 1)
 			{
-				validator.invalid(3023);
+				validator.invalid(msg.getMsgId("I can't store here."));
 				return 0;
 			}
 
 			if (!map[pos].isOpFloor)
 			{
-				validator.invalid(3011);
+				validator.invalid(msg.getMsgId("Target is not an operation floor."));
 				return 0;
 			}
 
 			if (map[pos].haveItem && itemList[map[pos].itemId].type != 1)
 			{
-				validator.invalid(3024);
+				validator.invalid(msg.getMsgId("I can't store an item."));
 				return 0;
 			}
 			return 1;
@@ -566,19 +566,19 @@ function Logic()
 		{
 			if (!player.haveItem || itemList[player.itemId].type != 1)
 			{
-				validator.invalid(3023);
+				validator.invalid(msg.getMsgId("I can't store here."));
 				return 0;
 			}
 
 			if (!map[pos].isOpFloor)
 			{
-				validator.invalid(3011);
+				validator.invalid(msg.getMsgId("Target is not an operation floor."));
 				return 0;
 			}
 
 			if (!map[pos].haveItem || itemList[map[pos].itemId].type != 1)
 			{
-				validator.invalid(3025);
+				validator.invalid(msg.getMsgId("I can't calc an item."));
 				return 0;
 			}
 			return 1;
@@ -593,7 +593,7 @@ function Logic()
 		{
 			if (this.checkAddress(address) != 1)
 			{
-				validator.invalid(3003);
+				validator.invalid(msg.getMsgId("Invalid address."));
 				return undefined;
 			}
 			return $.extend(true, {}, map[opFloor[address]], {pos: opFloor[address]});
@@ -710,12 +710,12 @@ function Logic()
 			var q = player.pos;
 			if (p == -1)
 			{
-				validator.invalid(3001);
+				validator.invalid(msg.getMsgId("Target is out of map."));
 				return undefined;
 			}
 			if (map[getFront()].isOpFloor)
 			{
-				validator.invalid(3002);
+				validator.invalid(msg.getMsgId("Target is an operation floor."));
 				return undefined;
 			}
 			player.pos = getFront();
@@ -734,7 +734,7 @@ function Logic()
 			var p = getFront();
 			if (p == -1)
 			{
-				validator.invalid(3001);
+				validator.invalid(msg.getMsgId("Target is out of map."));
 				return undefined;
 			}
 			if (!this.checkLoad(p))
@@ -767,7 +767,7 @@ function Logic()
 			var p = getFront();
 			if (p == -1)
 			{
-				validator.invalid(3001);
+				validator.invalid(msg.getMsgId("Target is out of map."));
 				return undefined;
 			}
 			if (!this.checkStore(p))
@@ -898,12 +898,12 @@ function Logic()
 	this.loadLevel = function(levelId, afterwards)
 	{
 		var compLevel = function(data) {
-			if (data["status"] == 1000)
+			if (data["status"] == msg.getMsgId("Succeeded"))
 			{
 				user.setLevelId(levelId);
 				initLevel(JSON.parse(data["level_info"]));
 				network.getCurrentUserInfo(function(data){
-					if (data["status"] == 1000)
+					if (data["status"] == msg.getMsgId("Succeeded"))
 					{
 						var solution_id = JSON.parse(data["solution_dict"])[levelId];
 						if (solution_id != undefined)
@@ -936,7 +936,7 @@ function Logic()
 		network.getSolutionInfo(
 			solutionId,
 			function(data){
-				if (data["status"] == 1000)
+				if (data["status"] == msg.getMsgId("Succeeded"))
 				{
 					code.loadSolution(JSON.parse(data["solution_info"]));
 					if (afterwards != undefined) afterwards();
@@ -1432,14 +1432,14 @@ function Logic()
 	{
 		if (username == "")
 		{
-			return callback(msg.getMessage(3051), {status: "failed"});
+			return callback(msg.getMessage(msg.getMsgId("Username can't be empty.")), {status: "failed"});
 		}
 		if (password == "")
 		{
-			return callback(msg.getMessage(3052), {status: "failed"});
+			return callback(msg.getMessage(msg.getMsgId("Password can't be empty.")), {status: "failed"});
 		}
 		network.login(username, password, function(res) {
-			if (res.status == 1000)
+			if (res.status == msg.getMsgId("Succeeded"))
 			{
 				user.login(username);
 				callback(undefined, {
@@ -1456,7 +1456,7 @@ function Logic()
 
 	this.doPhoneGetCode = function(phoneNumber, callback) {
 		network.sendCodeToMobilePhoneUser(phoneNumber, function(res){
-			if (res.status == 1000)
+			if (res.status == msg.getMsgId("Succeeded"))
 			{
 				callback(undefined, {
 					status: "succeeded",
@@ -1472,7 +1472,7 @@ function Logic()
 	this.doPhoneLogin = function(username, identifyingCode, callback)
 	{
 		network.loginWithPhoneNumber(username, identifyingCode, function(res) {
-			if (res.status == 1000)
+			if (res.status == msg.getMsgId("Succeeded"))
 			{
 				user.login(username);
 				callback(undefined, {
@@ -1492,7 +1492,7 @@ function Logic()
 	{
 		user.logout();
 		network.logout(function(res) {
-			if (res.status == 1000)
+			if (res.status == msg.getMsgId("Succeeded"))
 			{
 				callback(undefined, {
 					status: "succeeded"
@@ -1510,22 +1510,22 @@ function Logic()
 	{
 		if (username == "")
 		{
-			return callback(msg.getMessage(3051), {status: "failed"});
+			return callback(msg.getMessage(msg.getMsgId("Username can't be empty.")), {status: "failed"});
 		}
 		if (email == "")
 		{
-			return callback(msg.getMessage(3053), {status: "failed"});
+			return callback(msg.getMessage(msg.getMsgId("Email can't be empty.")), {status: "failed"});
 		}
 		if (password == "")
 		{
-			return callback(msg.getMessage(3052), {status: "failed"});
+			return callback(msg.getMessage(msg.getMsgId("Password can't be empty.")), {status: "failed"});
 		}
 		if (password != password2)
 		{
-			return callback(msg.getMessage(3054), {status: "failed"});
+			return callback(msg.getMessage(msg.getMsgId("Invalid check password.")), {status: "failed"});
 		}
 		network.register(username, password, email, function(res) {
-			if (res.status == 1000)
+			if (res.status == msg.getMsgId("Succeeded"))
 			{
 				callback(undefined, {
 					status: "succeeded"
@@ -1543,14 +1543,14 @@ function Logic()
 	{
 		if (newPassword == "")
 		{
-			return callback(msg.getMessage(3052), {status: "failed"});
+			return callback(msg.getMessage(msg.getMsgId("Password can't be empty.")), {status: "failed"});
 		}
 		if (newPassword != newPassword2)
 		{
-			return callback(msg.getMessage(3054), {status: "failed"});
+			return callback(msg.getMessage(msg.getMsgId("Invalid check password.")), {status: "failed"});
 		}
 		network.changePasswordAfterLogin(newPassword, function(res) {
-			if (res.status == 1000)
+			if (res.status == msg.getMsgId("Succeeded"))
 			{
 				callback(undefined, {
 					status: "succeeded"
@@ -1587,7 +1587,7 @@ function Logic()
 	{
 		var content = this.dumpLevel();
 		network.newUsermadeLevel(content, function(res) {
-			if (res.status == 1000)
+			if (res.status == msg.getMsgId("Succeeded"))
 			{
 				user.setLevelId(res.level_id);
 				alert(res.level_id);
@@ -1607,10 +1607,10 @@ function Logic()
 		var id = user.getLevelId();
 		if (id == 0)
 		{
-			return callback(msg.getMessage(3101), {status: "failed"});
+			return callback(msg.getMessage(msg.getMsgId("You should save before share.")), {status: "failed"});
 		}
 		network.shareLevel(id, function(res) {
-			if (res.status == 1000)
+			if (res.status == msg.getMsgId("Succeeded"))
 			{
 				callback(undefined, {
 					status: "succeeded",
@@ -1629,7 +1629,7 @@ function Logic()
 		var level_id = user.getLevelId();
 		var content = JSON.stringify(code.dumpSolution());
 		network.newSolution(level_id, content, function(res) {
-			if (res.status == 1000)
+			if (res.status == msg.getMsgId("Succeeded"))
 			{
 				user.setSolutionId(res.solution_id);
 				alert(res.solution_id);
@@ -1649,10 +1649,10 @@ function Logic()
 		var id = user.getSolutionId();
 		if (id == 0)
 		{
-			return callback(msg.getMessage(3102), {status: "failed"});
+			return callback(msg.getMessage(msg.getMsgId("Solutions must be saved before share.")), {status: "failed"});
 		}
 		network.shareSolution(id, function(res) {
-			if (res.status == 1000)
+			if (res.status == msg.getMsgId("Succeeded"))
 			{
 				callback(undefined, {
 					status: "succeeded",
@@ -1670,7 +1670,7 @@ function Logic()
 	this.doGetSharedLevel = function(callback)
 	{
 		network.getSharedLevel(function(res) {
-			if (res.status == 1000)
+			if (res.status == msg.getMsgId("Succeeded"))
 			{
 				callback(undefined, {
 					status: "succeeded",
@@ -1687,7 +1687,7 @@ function Logic()
 	this.doGetSharedLevel = function(callback)
 	{
 		network.getSharedLevel(function(res) {
-			if (res.status == 1000)
+			if (res.status == msg.getMsgId("Succeeded"))
 			{
 				callback(undefined, {
 					status: "succeeded",
@@ -1704,7 +1704,7 @@ function Logic()
 	var getDefaultLevelList = function(list, callback)
 	{
 		network.getDefaultLevel(function(res) {
-			if (res.status == 1000)
+			if (res.status == msg.getMsgId("Succeeded"))
 			{
 				var ans = $.extend(true, {}, list, {defaultLevelList: JSON.parse(res.level)});
 				callback(undefined, ans);
@@ -1719,7 +1719,7 @@ function Logic()
 	var getSharedLevelList = function(list, callback)
 	{
 		network.getSharedLevel(function(res) {
-			if (res.status == 1000)
+			if (res.status == msg.getMsgId("Succeeded"))
 			{
 				var ans = $.extend(true, {}, list, {sharedLevelList: JSON.parse(res.all_shared_level)});
 				getDefaultLevelList(ans, callback);
