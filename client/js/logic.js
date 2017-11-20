@@ -87,6 +87,28 @@ function Logic()
 		{
 			return solutionId;
 		};
+
+		this.clearInput = function()
+		{
+			inputBuf = [];
+		}
+
+		this.pushInput = function(index)
+		{
+			if (!isNaN(index))
+				inputBuf.push({type: 1, value: parseInt(index)});
+		}
+
+		this.popInput = function()
+		{
+			if (inputBuf.length > 0)
+				inputBuf.pop();
+		}
+
+		this.getInput = function()
+		{
+			return $.extend(true, [], inputBuf);
+		}
 	}
 
 	var user = new User();
@@ -1386,6 +1408,7 @@ function Logic()
 	{
 		state.initCreator();
 		state.renderCreator();
+		user.clearInput();
 	}
 
 	this.newFloor = function(pos)
@@ -1421,6 +1444,24 @@ function Logic()
 	this.erase = function(pos)
 	{
 		state.eraseCreator(pos);
+	}
+
+	this.pushInput = function(index)
+	{
+		user.pushInput(index);
+		this.setInput(user.getInput());
+	}
+
+	this.popInput = function()
+	{
+		user.popInput();
+		this.setInput(user.getInput());
+	}
+
+	this.clearInput = function()
+	{
+		user.clearInput();
+		this.setInput(user.getInput());
 	}
 
 	this.dumpLevel = function()

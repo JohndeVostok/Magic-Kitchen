@@ -551,6 +551,11 @@ var ui = function() {
 				}
 			});
 		});
+
+
+		$("#buttonPushInput").click(function() {
+			logic.pushInput($("#textPushInput").val());
+		});
 	};
 	
 	var startCreator = function()
