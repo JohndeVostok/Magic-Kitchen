@@ -614,6 +614,21 @@ var ui = function() {
 					logic.erase(pos);
 			}
 		});
+		$("#buttonSetItem").click(function() {
+			var index1 = $("#textSetItemPos").val();
+			var index2 = $("#textSetItemValue").val();
+			var pos = 0;
+			var value = 0;
+			if (index1 == "" || isNaN(index1))
+				return undefined;
+			if (index2 == "" || isNaN(index2))
+				return undefined;
+			pos = parseInt(index1);
+			value = parseInt(index2);
+			if (pos < 0 || pos >= config.mapWidth * config.mapHeight)
+				return undefined;
+			logic.newItem({type: 1, pos: pos, value: value});
+		});
 		
 	};
 	
