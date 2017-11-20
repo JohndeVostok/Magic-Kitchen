@@ -562,6 +562,59 @@ var ui = function() {
 		$("#buttonClearInput").click(function() {
 			logic.clearInput();
 		});
+
+		$("#buttonPushOutput").click(function() {
+			logic.pushOutput($("#textPushOutput").val());
+		});
+		$("#buttonPopOutput").click(function() {
+			logic.popOutput();
+		});
+		$("#buttonClearOutput").click(function() {
+			logic.clearOutput();
+		});
+
+		$("#buttonSetFloor").click(function() {
+			var index = $("#textSetFloor").val();
+			var pos = 0;
+			if (index != "" && !isNaN(index))
+			{
+				pos = parseInt(index);
+				console.log(pos);
+				if (0 <= pos && pos < config.mapWidth * config.mapHeight)
+					logic.newFloor(pos);
+			}
+		});
+		$("#buttonSetInbox").click(function() {
+			var index = $("#textSetInbox").val();
+			var pos = 0;
+			if (index != "" && !isNaN(index))
+			{
+				pos = parseInt(index);
+				if (0 <= pos && pos < config.mapWidth * config.mapHeight)
+					logic.setInbox(pos);
+			}
+		});
+		$("#buttonSetOutbox").click(function() {
+			var index = $("#textSetOutbox").val();
+			var pos = 0;
+			if (index != "" && !isNaN(index))
+			{
+				pos = parseInt(index);
+				if (0 <= pos && pos < config.mapWidth * config.mapHeight)
+					logic.setOutbox(pos);
+			}
+		});
+		$("#buttonErase").click(function() {
+			var index = $("#textErase").val();
+			var pos = 0;
+			if (index != "" && !isNaN(index))
+			{
+				pos = parseInt(index);
+				if (0 <= pos && pos < config.mapWidth * config.mapHeight)
+					logic.erase(pos);
+			}
+		});
+		
 	};
 	
 	var startCreator = function()
