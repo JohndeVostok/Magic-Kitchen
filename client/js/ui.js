@@ -555,6 +555,7 @@ var ui = function() {
 
 		$("#buttonPushInput").click(function() {
 			logic.pushInput($("#textPushInput").val());
+			$("#textPushInput").val("");
 		});
 		$("#buttonPopInput").click(function() {
 			logic.popInput();
@@ -565,6 +566,7 @@ var ui = function() {
 
 		$("#buttonPushOutput").click(function() {
 			logic.pushOutput($("#textPushOutput").val());
+			$("#textPushOutput").val("");
 		});
 		$("#buttonPopOutput").click(function() {
 			logic.popOutput();
@@ -583,6 +585,7 @@ var ui = function() {
 				if (0 <= pos && pos < config.mapWidth * config.mapHeight)
 					logic.newFloor(pos);
 			}
+			$("#textSetFloor").val("");
 		});
 		$("#buttonSetInbox").click(function() {
 			var index = $("#textSetInbox").val();
@@ -593,6 +596,7 @@ var ui = function() {
 				if (0 <= pos && pos < config.mapWidth * config.mapHeight)
 					logic.setInbox(pos);
 			}
+			$("#textSetInbox").val("");
 		});
 		$("#buttonSetOutbox").click(function() {
 			var index = $("#textSetOutbox").val();
@@ -603,6 +607,7 @@ var ui = function() {
 				if (0 <= pos && pos < config.mapWidth * config.mapHeight)
 					logic.setOutbox(pos);
 			}
+			$("#textSetOutbox").val("");
 		});
 		$("#buttonErase").click(function() {
 			var index = $("#textErase").val();
@@ -613,6 +618,7 @@ var ui = function() {
 				if (0 <= pos && pos < config.mapWidth * config.mapHeight)
 					logic.erase(pos);
 			}
+			$("#textErase").val("");
 		});
 		$("#buttonSetItem").click(function() {
 			var index1 = $("#textSetItemPos").val();
@@ -628,6 +634,8 @@ var ui = function() {
 			if (pos < 0 || pos >= config.mapWidth * config.mapHeight)
 				return undefined;
 			logic.newItem({type: 1, pos: pos, value: value});
+			$("#textSetItemPos").val("");
+			$("#textSetItemValue").val("");
 		});
 		
 	};

@@ -1480,10 +1480,10 @@ function Logic()
 		this.setInput(user.getInput());
 	}
 
-	this.clearOutput = function()
+	this.clearInput = function()
 	{
-		user.clearOutput();
-		this.setOutput(user.getOutput());
+		user.clearInput();
+		this.setInput(user.getInput());
 	}
 
 	this.pushOutput = function(index)
