@@ -891,7 +891,7 @@ function Logic()
 	
 	var state = new State();
 	var levelInfo;
-
+	var bestBlockNum;
 	
 	// Load a level stored in levelInfo, which sets up the map and Blockly.
 	// Start a new level, may need grabbing it from server.
@@ -902,6 +902,7 @@ function Logic()
 			{
 				user.setLevelId(levelId);
 				initLevel(JSON.parse(data["level_info"]));
+				bestBlockNum = data["block_num"];
 				network.getCurrentUserInfo(function(data){
 					if (data["status"] == msg.getMsgId("Succeeded"))
 					{
@@ -1734,6 +1735,21 @@ function Logic()
 	this.doGetLevelList = function(callback)
 	{
 		getSharedLevelList({}, callback);
+	}
+
+	this.doStarEvaluation = function()
+	{
+		var usedNum = code.dumpSolution()["block_num"];
+		var bestNum = bestBlockNum;
+		var star;
+		if (bestBlockNum < 0) {
+			star = 4;
+			bestNum = "-";
+		}
+		else if (usedNum <= bestBlockNum) star = 3;
+		else if (usedNum <= bestBlockNum * 2) star = 2;
+		else star = 1;
+		return {used_num: usedNum, best_num: bestNum, result: star};
 	}
 }
 
