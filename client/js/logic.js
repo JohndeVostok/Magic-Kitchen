@@ -36,6 +36,8 @@ function Logic()
 		var content = "";
 		var levelId = 0;
 		var solutionId = 0;
+		var inputBuf = [];
+		var outputBuf = [];
 
 		this.status = function()
 		{
