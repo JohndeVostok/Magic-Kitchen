@@ -95,7 +95,7 @@ function Logic()
 
 		this.pushInput = function(index)
 		{
-			if (!isNaN(index))
+			if (index != "" && !isNaN(index))
 				inputBuf.push({type: 1, value: parseInt(index)});
 		}
 

@@ -556,6 +556,12 @@ var ui = function() {
 		$("#buttonPushInput").click(function() {
 			logic.pushInput($("#textPushInput").val());
 		});
+		$("#buttonPopInput").click(function() {
+			logic.popInput();
+		});
+		$("#buttonClearInput").click(function() {
+			logic.clearInput();
+		});
 	};
 	
 	var startCreator = function()
