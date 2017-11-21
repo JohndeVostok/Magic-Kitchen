@@ -452,7 +452,9 @@ var ui = function() {
 		});
 		$("#saveLevelButton").click(function() {
 			// Init login modal.
+			$("#saveLevelButton").attr("disabled", "disabled");
 			logic.doSaveLevel(function(err, res) {
+				$("#saveLevelButton").removeAttr("disabled");
 				if (err != undefined) {
 					alert("保存失败： " + err);
 					return;
@@ -461,7 +463,9 @@ var ui = function() {
 		});
 		$("#shareLevelButton").click(function() {
 			// Init login modal.
+			$("#shareLevelButton").attr("disabled", "disabled");
 			logic.doShareLevel(function(err, res) {
+				$("#shareLevelButton").removeAttr("disabled");
 				if (err != undefined) {
 					alert("分享失败： " + err);
 					return;
@@ -474,7 +478,9 @@ var ui = function() {
 		});
 		$("#saveSolutionButton").click(function() {
 			// Init login modal.
+			$("#saveSolutionButton").attr("disabled", "disabled");
 			logic.doSaveSolution(function(err, res) {
+				$("#saveSolutionButton").removeAttr("disabled");
 				if (err != undefined) {
 					alert("解法保存失败： " + err);
 					return;
@@ -483,7 +489,9 @@ var ui = function() {
 		});
 		$("#shareSolutionButton").click(function() {
 			// Init login modal.
+			$("#shareSolutionButton").attr("disabled", "disabled");
 			logic.doShareSolution(function(err, res) {
+				$("#shareSolutionButton").removeAttr("disabled");
 				if (err != undefined) {
 					alert("解法分享失败： " + err);
 					return;
@@ -551,6 +559,93 @@ var ui = function() {
 				}
 			});
 		});
+
+
+		$("#buttonPushInput").click(function() {
+			logic.pushInput($("#textPushInput").val());
+			$("#textPushInput").val("");
+		});
+		$("#buttonPopInput").click(function() {
+			logic.popInput();
+		});
+		$("#buttonClearInput").click(function() {
+			logic.clearInput();
+		});
+
+		$("#buttonPushOutput").click(function() {
+			logic.pushOutput($("#textPushOutput").val());
+			$("#textPushOutput").val("");
+		});
+		$("#buttonPopOutput").click(function() {
+			logic.popOutput();
+		});
+		$("#buttonClearOutput").click(function() {
+			logic.clearOutput();
+		});
+
+		$("#buttonSetFloor").click(function() {
+			var index = $("#textSetFloor").val();
+			var pos = 0;
+			if (index != "" && !isNaN(index))
+			{
+				pos = parseInt(index);
+				console.log(pos);
+				if (0 <= pos && pos < config.mapWidth * config.mapHeight)
+					logic.newFloor(pos);
+			}
+			$("#textSetFloor").val("");
+		});
+		$("#buttonSetInbox").click(function() {
+			var index = $("#textSetInbox").val();
+			var pos = 0;
+			if (index != "" && !isNaN(index))
+			{
+				pos = parseInt(index);
+				if (0 <= pos && pos < config.mapWidth * config.mapHeight)
+					logic.setInbox(pos);
+			}
+			$("#textSetInbox").val("");
+		});
+		$("#buttonSetOutbox").click(function() {
+			var index = $("#textSetOutbox").val();
+			var pos = 0;
+			if (index != "" && !isNaN(index))
+			{
+				pos = parseInt(index);
+				if (0 <= pos && pos < config.mapWidth * config.mapHeight)
+					logic.setOutbox(pos);
+			}
+			$("#textSetOutbox").val("");
+		});
+		$("#buttonErase").click(function() {
+			var index = $("#textErase").val();
+			var pos = 0;
+			if (index != "" && !isNaN(index))
+			{
+				pos = parseInt(index);
+				if (0 <= pos && pos < config.mapWidth * config.mapHeight)
+					logic.erase(pos);
+			}
+			$("#textErase").val("");
+		});
+		$("#buttonSetItem").click(function() {
+			var index1 = $("#textSetItemPos").val();
+			var index2 = $("#textSetItemValue").val();
+			var pos = 0;
+			var value = 0;
+			if (index1 == "" || isNaN(index1))
+				return undefined;
+			if (index2 == "" || isNaN(index2))
+				return undefined;
+			pos = parseInt(index1);
+			value = parseInt(index2);
+			if (pos < 0 || pos >= config.mapWidth * config.mapHeight)
+				return undefined;
+			logic.newItem({type: 1, pos: pos, value: value});
+			$("#textSetItemPos").val("");
+			$("#textSetItemValue").val("");
+		});
+		
 	};
 	
 	var startCreator = function()

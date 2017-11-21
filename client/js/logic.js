@@ -36,6 +36,8 @@ function Logic()
 		var content = "";
 		var levelId = 0;
 		var solutionId = 0;
+		var inputBuf = [];
+		var outputBuf = [];
 
 		this.status = function()
 		{
@@ -85,6 +87,50 @@ function Logic()
 		{
 			return solutionId;
 		};
+
+		this.clearInput = function()
+		{
+			inputBuf = [];
+		}
+
+		this.pushInput = function(index)
+		{
+			if (index != "" && !isNaN(index))
+				inputBuf.push({type: 1, value: parseInt(index)});
+		}
+
+		this.popInput = function()
+		{
+			if (inputBuf.length > 0)
+				inputBuf.pop();
+		}
+
+		this.getInput = function()
+		{
+			return $.extend(true, [], inputBuf);
+		}
+
+		this.clearOutput = function()
+		{
+			outputBuf = [];
+		}
+
+		this.pushOutput = function(index)
+		{
+			if (index != "" && !isNaN(index))
+				outputBuf.push({type: 1, value: parseInt(index)});
+		}
+
+		this.popOutput = function()
+		{
+			if (outputBuf.length > 0)
+				outputBuf.pop();
+		}
+
+		this.getOutput = function()
+		{
+			return $.extend(true, [], outputBuf);
+		}
 	}
 
 	var user = new User();
@@ -1384,6 +1430,7 @@ function Logic()
 	{
 		state.initCreator();
 		state.renderCreator();
+		user.clearInput();
 	}
 
 	this.newFloor = function(pos)
@@ -1419,6 +1466,42 @@ function Logic()
 	this.erase = function(pos)
 	{
 		state.eraseCreator(pos);
+	}
+
+	this.pushInput = function(index)
+	{
+		user.pushInput(index);
+		this.setInput(user.getInput());
+	}
+
+	this.popInput = function()
+	{
+		user.popInput();
+		this.setInput(user.getInput());
+	}
+
+	this.clearInput = function()
+	{
+		user.clearInput();
+		this.setInput(user.getInput());
+	}
+
+	this.pushOutput = function(index)
+	{
+		user.pushOutput(index);
+		this.setOutput(user.getOutput());
+	}
+
+	this.popOutput = function()
+	{
+		user.popOutput();
+		this.setOutput(user.getOutput());
+	}
+
+	this.clearOutput = function()
+	{
+		user.clearOutput();
+		this.setOutput(user.getOutput());
 	}
 
 	this.dumpLevel = function()
