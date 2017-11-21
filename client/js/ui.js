@@ -256,7 +256,17 @@ var ui = function() {
 	var initUIControls = function() {
 		// TODO: Use "get user info" API to resolve this issue. (#50)
 		// Force logout to prevent "you have already logged in" bug.
-		logic.doLogout(function() {});
+		network.getCurrentUserInfo(function(res) {
+			if (res.status == 1000)
+			{
+				$("#loginButton").css("display", "none");
+				$("#changePasswordButton").css("display", "");
+				$("#logoutButton").css("display", "");
+				$("#registerButton").css("display", "none");
+				$("#usernameSpanText").text(res.user_name);
+				$("#usernameSpan").css("display", "");
+			}
+		});
 		
 		// For login function.
 		$("#loginButton").click(function() {
