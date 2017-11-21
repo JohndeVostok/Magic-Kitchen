@@ -1,0 +1,9 @@
+{
+	"blockTypes":[1,2,7,8],
+	"playerInfo":{"pos":7,"dir":0},
+	"opFloor":[1,2,3,4,5,6,0],
+	"input":[[]],
+	"output":[[{"type":2}]],
+	"itemList":[{"type":2,"pos":1}],
+	"description":"欢迎来到魔法厨房，小精灵已经饿了，请拿起桌子上的蛋糕，送给出口的精灵。"
+}
