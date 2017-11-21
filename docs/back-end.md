@@ -170,6 +170,7 @@
 ### Get All Shared Level
         Post('/api/get_all_shared_level')
         不需要登录即可调用此API。
+        返回所有的非默认关卡中被分享的部分。
 
         return json dict:
             status = 1000
