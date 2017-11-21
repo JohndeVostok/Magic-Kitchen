@@ -474,6 +474,10 @@ var ui = function() {
 			$("#textSetItemPos").val("");
 			$("#textSetItemValue").val("");
 		});
+		$("#buttonSetDescription").click(function() {
+			var index = $("#textSetDescription").val();
+			logic.setDescription(index);
+		});
 		
 	};
 	

@@ -142,6 +142,7 @@ function Logic()
 		var opFloor = [];
 		var input = [], output = [];
 		var map = [];
+		var description = "";
 
 		this.init = function()
 		{
@@ -361,6 +362,12 @@ function Logic()
 			ui.setOutput(list);
 		}
 
+		this.setDescription = function(index)
+		{
+			description = index;
+			//TODO set ui.description
+		}
+
 		this.eraseCreator = function(pos)
 		{
 			if (map[pos].isOpFloor)
@@ -380,6 +387,11 @@ function Logic()
 			this.renderCreator();
 		}
 
+		this.test = function()
+		{
+			return description;
+		}
+
 		this.dumpLevel = function()
 		{
 			level = {
@@ -388,7 +400,8 @@ function Logic()
 				opFloor: opFloor,
 				input: input,
 				output: output,
-				itemList: itemList
+				itemList: itemList,
+				description: description
 			}
 			return JSON.stringify(level)
 		}
@@ -1504,9 +1517,19 @@ function Logic()
 		this.setOutput(user.getOutput());
 	}
 
+	this.setDescription = function(index)
+	{
+		state.setDescription(index);
+	}
+
 	this.dumpLevel = function()
 	{
 		return state.dumpLevel();
+	}
+
+	this.test = function()
+	{
+		return state.test();
 	}
 
 // Functions for network

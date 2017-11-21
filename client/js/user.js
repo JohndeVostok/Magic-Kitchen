@@ -9,6 +9,7 @@ var user = function() {
 					$("#changePasswordButton").css("display", "");
 				}
 				$("#logoutButton").css("display", "");
+				$("#payVipButton").css("display", "");
 				$("#registerButton").css("display", "none");
 				$("#usernameSpanText").text(res.user_name);
 				$("#usernameSpan").css("display", "");
@@ -68,6 +69,7 @@ var user = function() {
 				$("#phoneLoginModal").modal("hide");
 				$("#loginButton").css("display", "none");
 				$("#logoutButton").css("display", "");
+				$("#payVipButton").css("display", "");
 				$("#registerButton").css("display", "none");
 				$("#usernameSpanText").text(res.username);
 				$("#usernameSpan").css("display", "");
@@ -91,6 +93,7 @@ var user = function() {
 				$("#loginButton").css("display", "none");
 				$("#changePasswordButton").css("display", "");
 				$("#logoutButton").css("display", "");
+				$("#payVipButton").css("display", "");
 				$("#registerButton").css("display", "none");
 				$("#usernameSpanText").text(res.username);
 				$("#usernameSpan").css("display", "");
@@ -112,6 +115,7 @@ var user = function() {
 				
 				// Logout ok
 				$("#logoutButton").css("display", "none");
+				$("#payVipButton").css("display", "none");
 				$("#changePasswordButton").css("display", "none");
 				$("#loginButton").css("display", "");
 				$("#registerButton").css("display", "");
@@ -179,6 +183,9 @@ var user = function() {
 			});
 		});
 
+		$("#payVipButton").click(function() {
+			$("#payVipModal").modal();
+		});
 
 		$("#newLevelButton").click(function() {
 			// Init login modal.
