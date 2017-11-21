@@ -27,7 +27,8 @@ class IndexTestCase(TestCase):
     def test_index_page(self):
         c = Client()
         response = c.get("/")
-        self.assertRedirects(response, "/codechef.html")
+        #self.assertRedirects(response, "/codechef.html")
+        self.assertRedirects(response, "/index.html")
 
 class CustomSystemTestCase(TestCase):
     def test_register(self):
@@ -221,7 +222,20 @@ class CustomSystemTestCase(TestCase):
         response = c.post('/api/login_with_phone_number', {'phone_number': '18810238602', 'identifying_code': identifying_code})
         ret = json.loads(response.content)
         self.assertEqual(ret['status'], msgid.SUCCESS) #'succeeded'
+        response = c.post('/api/get_current_user_info')
+        ret = json.loads(response.content)
+        self.assertEqual(ret['is_mobile_phone_user'], 1)
+        self.assertEqual(ret['is_VIP'], 0)
 
+        #test vip charge
+        response = c.post('/api/vip_charge', {'days': '30'})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], msgid.SUCCESS) #'succeeded'
+        response = c.post('/api/get_current_user_info')
+        ret = json.loads(response.content)
+        self.assertEqual(ret['is_mobile_phone_user'], 1)
+        self.assertEqual(ret['is_VIP'], 1)
+                
         #test mobile phone user has no password
         response = c.post('/api/change_password_after_login', {'new_password' : 'newpw'})
         ret = json.loads(response.content)
@@ -363,6 +377,8 @@ class CustomSystemTestCase(TestCase):
         ret = json.loads(response.content)
         self.assertEqual(ret['status'], msgid.SUCCESS) #'succeeded'
         self.assertEqual(ret['next_default_level_id'], 123)
+        self.assertEqual(ret['is_VIP'], 1)
+        self.assertEqual(ret['is_mobile_phone_user'], 0)
 
         solution1 = Solution.objects.create(user_name = 'abc', level_id = level1.level_id, info = json.dumps({'block_num': 6}), score = 3)
         solution2 = Solution.objects.create(user_name = 'abc', level_id = level2.level_id, info = json.dumps({'block_num': 6}), score = 3)
@@ -385,6 +401,8 @@ class CustomSystemTestCase(TestCase):
         self.assertEqual(json.loads(ret['solution_dict']), {'2' : 3})
         self.assertEqual(json.loads(ret['created_level']), [1, 2])
         self.assertEqual(ret['next_default_level_id'], 233)
+        self.assertEqual(ret['is_VIP'], 1)
+        self.assertEqual(ret['is_mobile_phone_user'], 0)
 
         #test new solution
         response = c.post('/api/new_solution', {'level_id': 1, 'solution_info': json.dumps({'block_num': 6})})
@@ -407,6 +425,8 @@ class CustomSystemTestCase(TestCase):
         self.assertEqual(json.loads(ret['solution_dict']), {'1' : 4, '2' : 3})
         self.assertEqual(json.loads(ret['created_level']), [1, 2, 4])
         self.assertEqual(ret['next_default_level_id'], -1)
+        self.assertEqual(ret['is_VIP'], 1)
+        self.assertEqual(ret['is_mobile_phone_user'], 0)
 
     def test_vip_charge(self):
         c = Client()

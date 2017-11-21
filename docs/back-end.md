@@ -81,6 +81,8 @@
                 solution_dict = solution_dict_jsonStr 
                 created_level = created_level_id_list_jsonStr
                 next_default_level_id = id_Int #返回已创建的默认关卡中default_level_id最小的未通过的关卡，不保证有权限玩（如已经玩完所有非vip关卡，会返回第一个vip关卡）。如已完成所有关卡，则返回-1。
+                is_mobile_phone_user = int (1 means is mobile phone user, 0 means is not mobile phone user)
+                is_VIP = int (1 means is VIP, 0 means is not VIP)
 
             status = 1001
 
