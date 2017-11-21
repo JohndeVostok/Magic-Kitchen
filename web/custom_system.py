@@ -221,7 +221,7 @@ def change_password_by_email(request):
     user.save()
     ret['identifying_code'] = identifying_code
 
-    #email_thread('Email From CodeCheF', 'This is the identifying code needed to change the password:\n' + identifying_code, email).start()
+    email_thread('Email From CodeCheF', 'This is the identifying code needed to change the password:\n' + identifying_code, email).start()
     ret['status'] = msgid.SUCCESS #'succeeded'
     return json_response(ret)
 
