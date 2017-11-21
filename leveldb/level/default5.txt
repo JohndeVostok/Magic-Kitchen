@@ -1,0 +1,1 @@
+{"blockTypes":[21,22,23,24,25,26,31,32,41,42,43,11],"playerInfo":{"pos":7,"dir":0},"opFloor":[1,2,3,4,5,6,0],"input":[[{"type":1,"value":1}]],"output":[[{"type":1,"value":1},{"type":1,"value":2},{"type":1,"value":3},{"type":1,"value":4},{"type":1,"value":5}]],"itemList":[],"description":"小精灵们找到了新的食物(玩具)魔法纸片，主角可以尝试使用魔法纸片进行各种令人窒息的操作了。"}

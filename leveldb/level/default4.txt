@@ -1,0 +1,9 @@
+{
+	"blockTypes":[9, 10, 31, 32],
+	"playerInfo":{"pos":7,"dir":0},
+	"opFloor":[24,6,0],
+	"input":[[{"type":1,"value":1}]],
+	"output":[[{"type":1,"value":1},{"type":1,"value":1}]],
+	"itemList":[{"type":1,"pos":24,"value":1}],
+	"description":"机制的主角发现，每个桌子上都有一个地址，我们只要知道地址就知道要去哪里了，也出现了新操作。请你把这两个蛋糕都送给小精灵。"
+}
