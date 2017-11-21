@@ -419,7 +419,6 @@ var ui = function() {
 			if (index != "" && !isNaN(index))
 			{
 				pos = parseInt(index);
-				console.log(pos);
 				if (0 <= pos && pos < config.mapWidth * config.mapHeight)
 					logic.newFloor(pos);
 			}
