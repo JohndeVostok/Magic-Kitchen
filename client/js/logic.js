@@ -1843,6 +1843,22 @@ function Logic()
 		getSharedLevelList({}, callback);
 	}
 
+	this.doPayVip = function(callback)
+	{
+		network.pay(function(res) {
+			if (res.status == msg.getMsgId("Succeeded"))
+			{
+				callback(undefined, {
+					status: "succeeded",
+				});
+			}
+			else
+			{
+				callback(msg.getMessage(res.status), {status: "failed"});
+			}
+		});
+	};
+
 	this.doStarEvaluation = function()
 	{
 		var usedNum = code.dumpSolution()["block_num"];

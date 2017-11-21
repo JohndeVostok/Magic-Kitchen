@@ -187,6 +187,22 @@ var user = function() {
 			$("#payVipModal").modal();
 		});
 
+		$("#payVipSubmitButton").click(function() {
+			$("#payVipSubmitButton").attr("disabled", "disabled");
+			
+			logic.doPayVip(function(err, res) {
+				$("#payVipSubmitButton").removeAttr("disabled");
+				
+				if (err != undefined) {
+					alert("付费失败： " + err);
+					return;
+				}
+				alert("付费成功！");
+				$("#payVipModal").modal("hide");
+			});
+		});
+
+
 		$("#newLevelButton").click(function() {
 			// Init login modal.
 			// $("#newLevelContent").val(logic.getUserContent);

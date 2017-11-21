@@ -287,6 +287,16 @@ var network = function() {
 		);
 	}
 
+	var pay = function(callback) {
+		postRequest(
+			"api/vip_charge",
+			{
+				days: 1
+			},
+			callback
+		);
+	}
+
 	return {
 		doLoad: doLoad,
 		register: register,
@@ -312,6 +322,7 @@ var network = function() {
 		vipCharge: vipCharge,
 		setAdmin: setAdmin,
 		sendCodeToMobilePhoneUser: sendCodeToMobilePhoneUser,
-		loginWithPhoneNumber: loginWithPhoneNumber
+		loginWithPhoneNumber: loginWithPhoneNumber,
+		pay: pay
 	};
 }();

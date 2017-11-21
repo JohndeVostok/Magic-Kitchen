@@ -370,11 +370,18 @@ var ui = function() {
 				var but = "";
 				for (let i = 0; i < defaultList.length; i++)
 				{
+					var levelicon = "";
+					if (defaultList[i].status == 0) levelicon = 'class="glyphicon glyphicon-remove"';
+					if (defaultList[i].status == 1) levelicon = 'class="glyphicon glyphicon-lock"';
+					if (defaultList[i].status == 2) levelicon = 'class="glyphicon glyphicon-ok"';
+				
 					var btn = '<button type="button" class="btn btn-primary" id="'
 							+ 'chooseDefaultLevelButtonId' + i
 							+ '" value = "'
 							+ defaultList[i].default_level_id
-							+ '"><span>'
+							+ '"><span'
+							+ levelicon
+							+ '>'
 							+ defaultList[i].default_level_id
 							+ '</span></button>&nbsp&nbsp';
 					$("#chooseDefaultLevelDiv").append(btn);
