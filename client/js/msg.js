@@ -52,6 +52,7 @@ function Msg()
 		1048: ["Phone number can't be empty.", "手机号码不能为空"],
 		1049: ["Phone number needs to be numeric only.", "手机号码只能包含数字"],
 		1050: ["The length of phone number needs to be 11.", "手机号码位数需要是11位"],
+		1051: ["If you want to play the VIP level, please recharge VIP first.", "充值会员才能玩会员关卡"],
 
 		3000: ["ERROR", "ERROR"],
 		3001: ["Target is out of map.", "目标超出地图边界。"],

@@ -127,8 +127,9 @@ def get_level_info(request):
                     return json_response(ret)    
             if _default_level_id > 5:
                 refresh_vip_authority(user)
+                user = User.objects.filter(name = session)[0]
                 if user.authority < 2:
-                    ret['status'] = msgid.NO_AUTHORITY #'you don't have operation authority'
+                    ret['status'] = msgid.NOT_VIP #'if you want to play the VIP level, please recharge VIP first'
                     return json_response(ret)
 
         if level.std_solution_id == -1:
@@ -176,8 +177,9 @@ def get_level_info(request):
                     return json_response(ret)
             if (_default_level_id > 5):
                 refresh_vip_authority(user)
+                user = User.objects.filter(name = session)[0]
                 if user.authority < 2:
-                    ret['status'] = msgid.NO_AUTHORITY #'you don't have operation authority'
+                    ret['status'] = msgid.NOT_VIP #'if you want to play the VIP level, please recharge VIP first'
                     return json_response(ret)
 
         if level.default_level_id == -1:
@@ -219,6 +221,7 @@ def new_usermade_level(request):
     user = User.objects.filter(name = session)[0]
     if (user.authority < 3):
         refresh_vip_authority(user)
+        user = User.objects.filter(name = session)[0]
         level_filter = Level.objects.filter(user_name = session)
         if (len(level_filter) >= MAX_USER_CREATED_LEVEL_NUM) and (user.authority == 1):
             ret['status'] = msgid.CANT_CREATE_MORE_LEVEL #'you can't create more level'

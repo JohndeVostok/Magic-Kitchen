@@ -547,7 +547,7 @@ class CustomSystemTestCase(TestCase):
         #test get level info
         response = c.post('/api/get_level_info', {'default_level_id': 6})
         ret = json.loads(response.content)
-        self.assertEqual(ret['status'], msgid.NO_AUTHORITY) #'you don't have operation authority'
+        self.assertEqual(ret['status'], msgid.NOT_VIP) #'you don't have operation authority'
 
     def test_send_code_to_mobile_phone_user(self):
         c = Client()
@@ -788,7 +788,7 @@ class LevelSystemTestCase(TestCase):
         #test get vip level info without vip authority
         response = c.post('/api/get_level_info', {'default_level_id': 6})
         ret = json.loads(response.content)
-        self.assertEqual(ret['status'], msgid.NO_AUTHORITY) #'you don't have operation authority'
+        self.assertEqual(ret['status'], msgid.NOT_VIP) #'you don't have operation authority'
 
         user = User.objects.filter(name = 'sth')[0]
         set_vip(user)
@@ -893,7 +893,7 @@ class LevelSystemTestCase(TestCase):
         #test get vip level info without vip authority
         response = c.post('/api/get_level_info', {'level_id': vip_level.level_id})
         ret = json.loads(response.content)
-        self.assertEqual(ret['status'], msgid.NO_AUTHORITY) #'you don't have operation authority'
+        self.assertEqual(ret['status'], msgid.NOT_VIP) #'you don't have operation authority'
 
         user = User.objects.filter(name = 'sth')[0]
         set_vip(user)

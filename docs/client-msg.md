@@ -59,6 +59,7 @@ msg is a map for message between blocks.
         1048 phone number can't be empty    手机号码不能为空
         1049 phone number needs to be numeric only    手机号码只能包含数字
         1050 the length of phone number needs to be 11    手机号码位数需要是11位
+        1051 if you want to play the VIP level, please recharge VIP first    充值会员才能玩会员关卡
 
 	Functions for other blocks
 		class msg
