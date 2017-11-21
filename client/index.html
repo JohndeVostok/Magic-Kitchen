@@ -14,34 +14,17 @@
 
 <!-- Latest compiled and minified JavaScript -->
 <script src="libs/js/bootstrap.min.js"></script>
-
-<script src="libs/js/blockly_compressed.js"></script>
-<script src="libs/js/blocks_compressed.js"></script>
-<script src="libs/js/javascript_compressed.js"></script>
-<script src="libs/js/acorn_interpreter.js"></script>
-<script src="msg/js/zh-hans.js"></script>
-
-<script src="libs/js/createjs-2015.11.26.min.js"></script>
+<script src="js/msg.js"></script>
+<script src="js/network.js"></script>
+<script src="js/logic.js"></script>
+<script src="js/user.js"></script>
 
 <link rel="stylesheet" type="text/css" href="css/main.css" />
 <link rel="stylesheet" href="css/non-responsive.css" type="text/css" /> 
 
-<script src="js/config.js"></script>
-<script src="js/blocks.js"></script>
-<script src="js/msg.js"></script>
-<script src="js/user.js"></script>
-<script src="js/debug.js"></script>
-<script src="js/main.js"></script>
-<script src="js/graphics.js"></script>
-<script src="js/ui.js"></script>
-<script src="js/code.js"></script>
-<script src="js/logic.js"></script>
-<script src="js/network.js"></script>
 </head>
 
-<body onload="setTimeout(main.doLoad, 100);">
-<span id="defaultLevelIdSpan", style="display:none">{{defaultLevelId}}</span>
-<span id="defaultSolutionIdSpan", style="display:none">{{defaultSolutionId}}</span>
+<body onload="setTimeout(user.initButtons, 100);">
 <div id="mainDiv" class="container">
 	<div class="row">
 		<div class="col-xs-6">
@@ -75,66 +58,20 @@
 			</button>
 		</div>
 	</div>
-	<div class="row">
-		<table class="table table-borderless">
-			<tr>
-				<td class="col-xs-6">
-					<canvas id="gameCanvas" width="550" height="700"></canvas>
-				</td>
-				<td class="col-xs-6">
-					<div style="height: 150px; width: 550px">
-						<div id="gameObjective" style="height: 50px; width: 550px">
-							<h4>
-								<button class="btn btn-primary" id="newLevelButton">
-									<span class="glyphicon glyphicon-pencil"> 关卡编辑器 </span>
-								</button>
-								<button class="btn btn-primary" id="chooseLevelButton">
-									<span class="glyphicon glyphicon-star"> 选关 </span>
-								</button>
-							</h4>
-						</div>
-						<div id="gameCreator" style="display:none">
-							<h4>
-								<button class="btn btn-primary" id="saveLevelButton">
-									<span class="glyphicon glyphicon-star"> 保存 </span>
-								</button>
-								<button class="btn btn-primary" id="shareLevelButton">
-									<span class="glyphicon glyphicon-star"> 分享 </span>
-								</button>
-							</h4>
-						</div>
-						<div id="gameControls" style="height: 150px; width: 550px">
-							<h4>
-								<button class="btn btn-primary" id="buttonUndo">
-									<span class="glyphicon glyphicon-chevron-left"> 撤销 </span>
-								</button>
-								<button class="btn btn-primary" id="buttonRedo" disabled>
-									<span class="glyphicon glyphicon-chevron-right"> 重复 </span>
-								</button>
-								<button class="btn btn-primary" id="buttonCompile">
-									<span class="glyphicon glyphicon-off"> 编译 </span>
-								</button>
-								<button class="btn btn-primary" id="buttonRun" disabled>
-									<span class="glyphicon glyphicon-play"> 运行 </span>
-								</button>
-								<button class="btn btn-warning" id="buttonPause" style="display:none;">
-									<span class="glyphicon glyphicon-pause"> 暂停 </span>
-								</button>
-								<button class="btn btn-primary" id="buttonStep" disabled>
-									<span class="glyphicon glyphicon-step-forward"> 单步 </span>
-								</button>
-								<button class="btn btn-primary" id="buttonStop" disabled>
-									<span class="glyphicon glyphicon-remove"> 中止 </span>
-								</button>
-							</h4>
-						</div>
-					</div>
-					<div id="blocklyDiv" style="height: 550px; width: 550px;"></div>
-				</td>
-			</tr>
-		</table>
+	<div class="row" style="text-align:center;padding-top:200px;">
+		<h4>
+			<button class="btn btn-primary" id="autoLevelButton" onclick="window.location.href = 'codechef.html'">
+				<span class="glyphicon glyphicon-user"> 开始游戏 </span>
+			</button>
+		</h4>
 	</div>
-	
+	<div class="row" style="text-align:center;padding-top:20px;">
+		<h4>
+			<button class="btn btn-primary" id="newLevelButton" onclick="window.location.href = 'creator.html'">
+				<span class="glyphicon glyphicon-pencil"> 关卡编辑器 </span>
+			</button>
+		</h4>
+	</div>
 </div>
 
 <div class="modal fade" id="loginModal" tabindex="-1" role="dialog">
@@ -334,68 +271,6 @@
 	</div>
 </div>
 
-<div class="modal fade" id="newLevelModal" tabindex="-1" role="dialog">
-	<div class="modal-dialog" role="document">
-		<div class="modal-content">
-			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal">
-					<span aria-hidden="true"> &times; </span>
-				</button>
-				<h4 class="modal-title">
-					创建你自己的关卡
-				</h4>
-			</div>
-			<div class="modal-body">
-				<form action="javascript:void(0);">
-					<div class="form-group">
-						<label for="newLevelContent" class="control-label">
-							<span class="glyphicon glyphicon-pencil" />
-							<span> 关卡： </span>
-						</label>
-						<textarea class="form-control" id="newLevelContent" style="height: 300px">
-						</textarea>
-					</div>
-				</form>
-			</div>
-			<div class="modal-footer">
-				<button type="button" class="btn btn-primary" id="newLevelSubmitButton">
-					<span class="glyphicon glyphicon-ok" />
-					<span> 确定 </span>
-				</button>
-				<button type="button" class="btn btn-default" data-dismiss="modal">
-					<span class="glyphicon glyphicon-remove" />
-					<span> 取消 </span>
-				</button>
-			</div>
-		</div>
-	</div>
-</div>
-
-<div class="modal fade" id="chooseLevelModal" tabindex="-1" role="dialog">
-	<div class="modal-dialog" role="document">
-		<div class="modal-content">
-			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal">
-					<span aria-hidden="true"> &times; </span>
-				</button>
-				<h4 class="modal-title">
-					选择你想要的关卡
-				</h4>
-			</div>
-			<div class="modal-body" id="chooseDefaultLevelDiv">
-			</div>
-			<div class="modal-body" id="chooseSharedLevelDiv">
-			</div>
-			<div class="modal-footer">
-				<button type="button" class="btn btn-default" data-dismiss="modal">
-					<span class="glyphicon glyphicon-remove" />
-					<span> 取消 </span>
-				</button>
-			</div>
-		</div>
-	</div>
-</div>
-
 <div class="modal fade" id="loginMethodModal" tabindex="-1" role="dialog">
 	<div class="modal-dialog" role="document">
 		<div class="modal-content">
@@ -414,49 +289,6 @@
 					</button>
 					<button class="btn btn-primary" id="phoneLoginButton">
 						<span class="glyphicon glyphicon-star"> 手机验证码登陆 </span>
-					</button>
-				</h4>
-			</div>
-			<div class="modal-footer">
-				<button type="button" class="btn btn-default" data-dismiss="modal">
-					<span class="glyphicon glyphicon-remove" />
-					<span> 返回界面 </span>
-				</button>
-			</div>
-		</div>
-	</div>
-</div>
-
-<div class="modal fade" id="passLevelModal" tabindex="-1" role="dialog">
-	<div class="modal-dialog" role="document">
-		<div class="modal-content">
-			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal">
-					<span aria-hidden="true"> &times; </span>
-				</button>
-				<h4 class="modal-title">
-					恭喜通关
-				</h4>
-			</div>
-			<div class="modal-body" id="starEvaluatorDiv">
-				<h4>
-					使用块数：
-					<span id="starEvaluationUsedNum"></span>
-					<br/>
-					最优块数：
-					<span id="starEvaluationBestNum"></span>
-					<br/>
-					星级评定：
-					<span id="starEvaluationResult"></span>
-				</h4>
-			</div>
-			<div class="modal-body" id="dealSolutionDiv">
-				<h4>
-					<button class="btn btn-primary" id="saveSolutionButton">
-						<span class="glyphicon glyphicon-star"> 保存本解法 </span>
-					</button>
-					<button class="btn btn-primary" id="shareSolutionButton">
-						<span class="glyphicon glyphicon-star"> 分享本解法 </span>
 					</button>
 				</h4>
 			</div>
