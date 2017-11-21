@@ -129,6 +129,13 @@ var ui = function() {
 		// Init animation queue.
 		animationQueue = [];
 		
+		// Clear alert masks (if exists).
+		clearAlert();
+		// Add alert listener.
+		stage.addEventListener("click", function(event) {
+			clearAlert();
+		});
+		
 		// Init items.
 		// Use clear items animation.
 		// Animation queue must be initialized before this.
@@ -195,6 +202,7 @@ var ui = function() {
 			code.redo();
 		});
 		$("#buttonCompile").click(function() {
+			clearAlert();
 			logic.start();
 			$("#buttonUndo").attr("disabled", true);
 			$("#buttonRedo").attr("disabled", true);
@@ -999,9 +1007,54 @@ var ui = function() {
 		setTimeout(setAnimationComplete, 0);
 	};
 	
+	// For alert function.
+	var alertMask = undefined;
+	var alertTextBackground = undefined;
+	var alertText = undefined;
+	
+	var clearAlert = function() {
+		if (alertMask != undefined) {
+			stage.removeChild(alertMask);
+			stage.removeChild(alertTextBackground);
+			stage.removeChild(alertText);
+			alertMask = undefined;
+			alertTextBackground = undefined;
+			alertText = undefined;
+			setTimeout(setAnimationComplete, 0);
+		}
+	};
+	
+	var setupAlert = function(text) {
+		var maskGraphics = new createjs.Graphics().beginFill("#000000").drawCircle(0, 0, 1e9);
+		alertMask = stage.addChild(new createjs.Shape()).set({graphics: maskGraphics, x: 0, y: 0, alpha: 0.1});
+		
+		const TextWidth = 300;
+		const TextHeight = 150;
+		const StageWidth = 550;
+		const StageHeight = 700;
+		var textbgGraphics = new createjs.Graphics().beginFill("#ffffff")
+			.drawRoundRect(
+				0, 0,
+				TextWidth, TextHeight,
+				20, 20, 20, 20
+			);
+		alertTextBackground = stage.addChild(new createjs.Shape()).set({
+			graphics: textbgGraphics,
+			x: (StageWidth - TextWidth) / 2,
+			y: (StageHeight - TextHeight) / 2,
+			alpha: 0.85
+		});
+		
+		alertText = stage.addChild(new createjs.Text(text, "20px Arial", "#660077"));
+		alertText.textAlign = "center";
+		alertText.lineWidth = TextWidth;
+		alertText.lineHeight = TextHeight;
+		alertText.x = StageWidth / 2;
+		alertText.y = (StageHeight - 20) / 2;
+	};
+	
 	var runAlert = function(args) {
-		alert(args.text);
-		setTimeout(setAnimationComplete, 0);
+		setupAlert(args.text);
 	};
 	
 	// Below are animation functions, i.e. functions that register animations for later rendering.
