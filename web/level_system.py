@@ -320,7 +320,8 @@ def get_all_shared_level(request):
     shared_level = Level.objects.filter(shared = True)
     shared_level_id = []
     for level in shared_level:
-        shared_level_id.append(level.level_id)
+        if level.default_level_id == -1:
+            shared_level_id.append(level.level_id)
     ret['all_shared_level'] = json.dumps(shared_level_id)
     ret['status'] = msgid.SUCCESS #'succeeded'
     return json_response(ret)
