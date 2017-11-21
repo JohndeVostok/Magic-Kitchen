@@ -1247,7 +1247,7 @@ class LevelSystemTestCase(TestCase):
         response = c.post('/api/get_all_shared_level')
         ret = json.loads(response.content)
         self.assertEqual(ret['status'], msgid.SUCCESS) #'succeeded'
-        self.assertEqual(json.loads(ret['all_shared_level']), [1, 2])
+        self.assertEqual(json.loads(ret['all_shared_level']), [1])
 
         level2 = Level.objects.filter(level_id = 2)[0]
         level2.shared = False
