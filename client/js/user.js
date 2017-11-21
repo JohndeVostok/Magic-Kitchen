@@ -4,7 +4,10 @@ var user = function() {
 			if (res.status == 1000)
 			{
 				$("#loginButton").css("display", "none");
-				$("#changePasswordButton").css("display", "");
+				if (res.is_mobile_phone_user == "0")
+				{
+					$("#changePasswordButton").css("display", "");
+				}
 				$("#logoutButton").css("display", "");
 				$("#registerButton").css("display", "none");
 				$("#usernameSpanText").text(res.user_name);
