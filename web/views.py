@@ -9,7 +9,7 @@ from django.conf import settings
 # Create your views here.
 
 def index(request):
-    return redirect('codechef.html')
+    return redirect('index.html')
 
 @ensure_csrf_cookie
 def static_file(request, path):
