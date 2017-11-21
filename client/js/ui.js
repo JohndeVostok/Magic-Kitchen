@@ -281,6 +281,11 @@ var ui = function() {
 			});
 		});
 		$("#saveLevelButton").click(function() {
+			if (!logic.checkCreator())
+			{
+				alert("关卡不合法");
+				return;
+			}
 			// Init login modal.
 			$("#saveLevelButton").attr("disabled", "disabled");
 			logic.doSaveLevel(function(err, res) {
@@ -359,7 +364,7 @@ var ui = function() {
 					$(btn).click(function() {
 						var targetLevelId = $(this).attr("value");
 						if (isNaN(targetLevelId)) alert("请输入正确的关卡编号");
-						else logic.loadLevel(parseInt(targetLevelId));
+						else logic.loadSharedLevel(parseInt(targetLevelId));
 						resetGameButtons();
 						$("#chooseLevelModal").modal("hide");
 					});
@@ -370,11 +375,18 @@ var ui = function() {
 				var but = "";
 				for (let i = 0; i < defaultList.length; i++)
 				{
+					var levelicon = "";
+					if (defaultList[i].status == 0) levelicon = 'class="glyphicon glyphicon-remove"';
+					if (defaultList[i].status == 1) levelicon = 'class="glyphicon glyphicon-lock"';
+					if (defaultList[i].status == 2) levelicon = 'class="glyphicon glyphicon-ok"';
+				
 					var btn = '<button type="button" class="btn btn-primary" id="'
 							+ 'chooseDefaultLevelButtonId' + i
 							+ '" value = "'
 							+ defaultList[i].default_level_id
-							+ '"><span>'
+							+ '"><span '
+							+ levelicon
+							+ '>'
 							+ defaultList[i].default_level_id
 							+ '</span></button>&nbsp&nbsp';
 					$("#chooseDefaultLevelDiv").append(btn);
@@ -382,7 +394,7 @@ var ui = function() {
 					$(btn).click(function() {
 						var targetLevelId = $(this).attr("value");
 						if (isNaN(targetLevelId)) alert("请输入正确的关卡编号");
-						else logic.loadLevel(parseInt(targetLevelId));
+						else logic.loadDefaultLevel(parseInt(targetLevelId));
 						resetGameButtons();
 						$("#chooseLevelModal").modal("hide");
 					});
@@ -419,7 +431,6 @@ var ui = function() {
 			if (index != "" && !isNaN(index))
 			{
 				pos = parseInt(index);
-				console.log(pos);
 				if (0 <= pos && pos < config.mapWidth * config.mapHeight)
 					logic.newFloor(pos);
 			}
@@ -474,6 +485,10 @@ var ui = function() {
 			logic.newItem({type: 1, pos: pos, value: value});
 			$("#textSetItemPos").val("");
 			$("#textSetItemValue").val("");
+		});
+		$("#buttonSetDescription").click(function() {
+			var index = $("#textSetDescription").val();
+			logic.setDescription(index);
 		});
 		
 	};

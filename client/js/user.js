@@ -9,6 +9,7 @@ var user = function() {
 					$("#changePasswordButton").css("display", "");
 				}
 				$("#logoutButton").css("display", "");
+				$("#payVipButton").css("display", "");
 				$("#registerButton").css("display", "none");
 				$("#usernameSpanText").text(res.user_name);
 				$("#usernameSpan").css("display", "");
@@ -68,6 +69,7 @@ var user = function() {
 				$("#phoneLoginModal").modal("hide");
 				$("#loginButton").css("display", "none");
 				$("#logoutButton").css("display", "");
+				$("#payVipButton").css("display", "");
 				$("#registerButton").css("display", "none");
 				$("#usernameSpanText").text(res.username);
 				$("#usernameSpan").css("display", "");
@@ -91,6 +93,7 @@ var user = function() {
 				$("#loginButton").css("display", "none");
 				$("#changePasswordButton").css("display", "");
 				$("#logoutButton").css("display", "");
+				$("#payVipButton").css("display", "");
 				$("#registerButton").css("display", "none");
 				$("#usernameSpanText").text(res.username);
 				$("#usernameSpan").css("display", "");
@@ -112,6 +115,7 @@ var user = function() {
 				
 				// Logout ok
 				$("#logoutButton").css("display", "none");
+				$("#payVipButton").css("display", "none");
 				$("#changePasswordButton").css("display", "none");
 				$("#loginButton").css("display", "");
 				$("#registerButton").css("display", "");
@@ -176,6 +180,25 @@ var user = function() {
 				// Change password ok
 				alert("修改成功！");
 				$("#changePasswordModal").modal("hide");
+			});
+		});
+
+		$("#payVipButton").click(function() {
+			$("#payVipModal").modal();
+		});
+
+		$("#payVipSubmitButton").click(function() {
+			$("#payVipSubmitButton").attr("disabled", "disabled");
+			
+			logic.doPayVip(function(err, res) {
+				$("#payVipSubmitButton").removeAttr("disabled");
+				
+				if (err != undefined) {
+					alert("付费失败： " + err);
+					return;
+				}
+				alert("付费成功！");
+				$("#payVipModal").modal("hide");
 			});
 		});
 

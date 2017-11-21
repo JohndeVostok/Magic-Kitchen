@@ -1,0 +1,9 @@
+{
+	"blockTypes":[1,2,7,8],
+	"playerInfo":{"pos":7,"dir":0},
+	"opFloor":[1,2,3,4,5,6,0],
+	"input":[[{"type":2}, {"type":2}, {"type":2}]],
+	"output":[[{"type":2}, {"type":2}, {"type":2}]],
+	"itemList":[],
+	"description":"这次小精灵们想要三个蛋糕，请从入口拿来给他们。"
+}

@@ -69,6 +69,10 @@
 				<span class="glyphicon glyphicon-user"></span>
 				<span> 登出 </span>
 			</button>
+			<button class="btn btn-danger" id="payVipButton" style="display:none">
+				<span class="glyphicon glyphicon-user"></span>
+				<span> 付费 </span>
+			</button>
 			<button class="btn btn-success" id="registerButton">
 				<span class="glyphicon glyphicon-plus"></span>
 				<span> 注册 </span>
@@ -134,85 +138,78 @@
 					</div>
 					<div id="editorDiv">
 						<form action="javascript:void(0);">
-							<div class="form-group">
-								<table>
-									<tr>
-									<th><label>
-										<span> input: </span>
-									</label></th>
-									<th><input class="form-control" id="textPushInput"/></th>
-									<th><button type="button" class="btn btn-primary" id="buttonPushInput">
+							<table>
+								<tr><td><label><span> input: </span></label></td>
+								<td><div>
+									<input id="textPushInput" size = "5"/>
+									<button type="button" class="btn btn-primary" id="buttonPushInput" style="width:60px">
 										<span> push </span>
-									</button></th>
-									<th><button type="button" class="btn btn-primary" id="buttonPopInput">
+									</button>
+									<button type="button" class="btn btn-primary" id="buttonPopInput" style="width:60px">
 										<span> pop </span>
-									</button></th>
-									<th><button type="button" class="btn btn-primary" id="buttonClearInput">
+									</button>
+									<button type="button" class="btn btn-primary" id="buttonClearInput" style="width:60px">
 										<span> clear </span>
-									</button></th>
-									</tr>
-									<tr>
-									<th><label>
-										<span> output: </span>
-									</label></th>
-									<th><input class="form-control" id="textPushOutput" size = "5"/></th>
-									<th><button type="button" class="btn btn-primary" id="buttonPushOutput">
+									</button>
+								</div></td></tr>
+								<tr><td><label><span> output: </span></label></td>
+								<td><div>
+									<input id="textPushOutput" size = "5"/>
+									<button type="button" class="btn btn-primary" id="buttonPushOutput" style="width:60px">
 										<span> push </span>
-									</button></th>
-									<th><button type="button" class="btn btn-primary" id="buttonPopOutput">
+									</button>
+									<button type="button" class="btn btn-primary" id="buttonPopOutput" style="width:60px">
 										<span> pop </span>
-									</button></th>
-									<th><button type="button" class="btn btn-primary" id="buttonClearOutput">
+									</button>
+									<button type="button" class="btn btn-primary" id="buttonClearOutput" style="width:60px">
 										<span> clear </span>
-									</button></th>
-									</tr>
-									<tr>
-									<th><label>
-										<span> floor: </span>
-									</label></th>
-									<th><input class="form-control" id="textSetFloor" size = "5"/></th>
-									<th><button type="button" class="btn btn-primary" id="buttonSetFloor">
+									</button>
+								</div></td></tr>
+								<tr><td><label><span> floor: </span></label></td>
+								<td><div>
+									<input id="textSetFloor" size = "5"/>
+									<button type="button" class="btn btn-primary" id="buttonSetFloor" style="width:60px">
 										<span> set </span>
-									</button></th>
-									</tr>
-									<tr>
-									<th><label>
-										<span> inbox: </span>
-									</label></th>
-									<th><input class="form-control" id="textSetInbox" size = "5"/></th>
-									<th><button type="button" class="btn btn-primary" id="buttonSetInbox">
+									</button>
+								</div></td></tr>
+								<tr><td><label><span> inbox: </span></label></td>
+								<td><div>
+									<input id="textSetInbox" size = "5"/>
+									<button type="button" class="btn btn-primary" id="buttonSetInbox" style="width:60px">
 										<span> set </span>
-									</button></th>
-									</tr>
-									<tr>
-									<th><label>
-										<span> outbox: </span>
-									</label></th>
-									<th><input class="form-control" id="textSetOutbox" size = "5"/></th>
-									<th><button type="button" class="btn btn-primary" id="buttonSetOutbox">
+									</button>
+								</div></td></tr>
+								<tr><td><label><span> outbox: </span></label></td>
+								<td><div>
+									<input id="textSetOutbox" size = "5"/>
+									<button type="button" class="btn btn-primary" id="buttonSetOutbox" style="width:60px">
 										<span> set </span>
-									</button></th>
-									</tr>
-									<tr>
-									<th><label>
-										<span> erase: </span>
-									</label></th>
-									<th><input class="form-control" id="textErase" size = "5"/></th>
-									<th><button type="button" class="btn btn-primary" id="buttonErase">
+									</button>
+								</div></td></tr>
+								<tr><td><label><span> erase: </span></label></td>
+								<td><div>
+									<input id="textErase" size = "5"/>
+									<button type="button" class="btn btn-primary" id="buttonErase" style="width:60px">
 										<span> erase </span>
-									</button></th>
-									</tr>
-									<tr>
-									<th><label>
-										<span> item: </span>
-									</label></th>
-									<th><input class="form-control" id="textSetItemPos" size = "5"/></th>
-									<th><input class="form-control" id="textSetItemValue" size = "5"/></th>
-									<th><button type="button" class="btn btn-primary" id="buttonSetItem">
+									</button>
+								</div></td></tr>
+								<tr><td><label><span> item: </span></label></td>
+								<td><div>
+									<input id="textSetItemPos" size = "5"/>
+									<input id="textSetItemValue" size = "5"/>
+									<button type="button" class="btn btn-primary" id="buttonSetItem" style="width:60px">
 										<span> set </span>
-									</button></th>
-									</tr>
-								</table>
+									</button>
+								</div></td></tr>
+								<tr><td><label><span> description: </span></label></td>
+								<td>
+								<div>
+									<button type="button" class="btn btn-primary" id="buttonSetDescription" style="width:60px">
+										<span> set </span>
+									</button>
+								</div></td></tr>
+								<tr><td></td><td>
+								<textarea class="form-control" id="textSetDescription" style="height: 200px"></textarea></td></tr>
 							</div>
 						</form>
 					</div>
@@ -538,6 +535,31 @@
 				<button type="button" class="btn btn-default" data-dismiss="modal">
 					<span class="glyphicon glyphicon-remove" />
 					<span> 返回界面 </span>
+				</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="modal fade" id="payVipModal" tabindex="-1" role="dialog">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal">
+					<span aria-hidden="true"> &times; </span>
+				</button>
+				<h4 class="modal-title">
+					付费1天
+				</h4>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-primary" id="payVipSubmitButton">
+					<span class="glyphicon glyphicon-ok" />
+					<span> 付费 </span>
+				</button>
+				<button type="button" class="btn btn-default" data-dismiss="modal">
+					<span class="glyphicon glyphicon-remove" />
+					<span> 取消 </span>
 				</button>
 			</div>
 		</div>

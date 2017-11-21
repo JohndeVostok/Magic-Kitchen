@@ -142,6 +142,7 @@ function Logic()
 		var opFloor = [];
 		var input = [], output = [];
 		var map = [];
+		var description = "";
 
 		this.init = function()
 		{
@@ -261,6 +262,7 @@ function Logic()
 				if (item.type == 1)
 					ui.setItemValue(item.pos, item.value);
 			}
+			ui.addPlayerAnimation(7, 7, 0, 0);
 		}
 
 		this.refreshCreator = function()
@@ -306,6 +308,8 @@ function Logic()
 
 		this.newCreatorFloor = function(pos)
 		{
+			if (pos == 7)
+				return undefined;
 			if (map[pos].isOpFloor)
 				return undefined;
 			opFloor.unshift(pos);
@@ -315,6 +319,8 @@ function Logic()
 
 		this.newCreatorItem = function(item)
 		{
+			if (item.pos == 7)
+				return undefined;
 			if (!map[item.pos].isOpFloor)
 				return undefined;
 			if (map[item.pos].haveItem)
@@ -333,6 +339,8 @@ function Logic()
 
 		this.setInbox = function(pos)
 		{
+			if (pos == 7)
+				return undefined;
 			if (map[pos].isOpFloor && map[pos].address != opFloor.length - 1)
 				return undefined;
 			opFloor[opFloor.length - 1] = pos;
@@ -342,6 +350,8 @@ function Logic()
 
 		this.setOutbox = function(pos)
 		{
+			if (pos == 7)
+				return undefined;
 			if (map[pos].isOpFloor && map[pos].address != opFloor.length - 2)
 				return undefined;
 			opFloor[opFloor.length - 2] = pos;
@@ -361,6 +371,12 @@ function Logic()
 			ui.setOutput(list);
 		}
 
+		this.setDescription = function(index)
+		{
+			description = index;
+			//TODO set ui.description
+		}
+
 		this.eraseCreator = function(pos)
 		{
 			if (map[pos].isOpFloor)
@@ -377,7 +393,24 @@ function Logic()
 			map[pos].haveItem = 0;
 			map[pos].itemId = 0;
 			this.refreshCreator();
+
 			this.renderCreator();
+		}
+
+		this.test = function()
+		{
+			return description;
+		}
+
+		this.checkCreator = function()
+		{
+			if (opFloor[opFloor.length - 1] == -1)
+				return false;
+			if (opFloor[opFloor.length - 2] == -1)
+				return false;
+			if (output.length == 0 || output[0].length == 0)
+				return false;
+			return true;
 		}
 
 		this.dumpLevel = function()
@@ -388,7 +421,8 @@ function Logic()
 				opFloor: opFloor,
 				input: input,
 				output: output,
-				itemList: itemList
+				itemList: itemList,
+				description: description
 			}
 			return JSON.stringify(level)
 		}
@@ -979,6 +1013,62 @@ function Logic()
 		else network.getLevelInfo(levelId, compLevel);
 	};
 
+	this.loadDefaultLevel = function(levelId, afterwards)
+	{
+		var compLevel = function(data) {
+			if (data["status"] == msg.getMsgId("Succeeded"))
+			{
+				user.setLevelId(levelId);
+				initLevel(JSON.parse(data["level_info"]));
+				bestBlockNum = data["block_num"];
+				network.getCurrentUserInfo(function(data){
+					if (data["status"] == msg.getMsgId("Succeeded"))
+					{
+						var solution_id = JSON.parse(data["solution_dict"])[levelId];
+						if (solution_id != undefined)
+						{
+							logic.loadSolution(solution_id, afterwards);
+						}
+					}
+					else
+					{
+						if (afterwards != undefined) afterwards();
+					}
+				});
+			}
+			else alert(msg.getMessage(data["status"]));
+		};
+		network.getDefaultLevelInfo(levelId, compLevel);
+	};
+
+	this.loadSharedLevel = function(levelId, afterwards)
+	{
+		var compLevel = function(data) {
+			if (data["status"] == msg.getMsgId("Succeeded"))
+			{
+				user.setLevelId(levelId);
+				initLevel(JSON.parse(data["level_info"]));
+				bestBlockNum = data["block_num"];
+				network.getCurrentUserInfo(function(data){
+					if (data["status"] == msg.getMsgId("Succeeded"))
+					{
+						var solution_id = JSON.parse(data["solution_dict"])[levelId];
+						if (solution_id != undefined)
+						{
+							logic.loadSolution(solution_id, afterwards);
+						}
+					}
+					else
+					{
+						if (afterwards != undefined) afterwards();
+					}
+				});
+			}
+			else alert(msg.getMessage(data["status"]));
+		};
+		network.getSharedLevelInfo(levelId, compLevel);
+	};
+
 	this.loadSolution = function(solutionId, afterwards){
 		network.getSolutionInfo(
 			solutionId,
@@ -1504,9 +1594,24 @@ function Logic()
 		this.setOutput(user.getOutput());
 	}
 
+	this.setDescription = function(index)
+	{
+		state.setDescription(index);
+	}
+
+	this.checkCreator = function()
+	{
+		return state.checkCreator();
+	}
+
 	this.dumpLevel = function()
 	{
 		return state.dumpLevel();
+	}
+
+	this.test = function()
+	{
+		return state.test();
 	}
 
 // Functions for network
@@ -1819,6 +1924,22 @@ function Logic()
 	{
 		getSharedLevelList({}, callback);
 	}
+
+	this.doPayVip = function(callback)
+	{
+		network.pay(function(res) {
+			if (res.status == msg.getMsgId("Succeeded"))
+			{
+				callback(undefined, {
+					status: "succeeded",
+				});
+			}
+			else
+			{
+				callback(msg.getMessage(res.status), {status: "failed"});
+			}
+		});
+	};
 
 	this.doStarEvaluation = function()
 	{
