@@ -1002,6 +1002,62 @@ function Logic()
 		else network.getLevelInfo(levelId, compLevel);
 	};
 
+	this.loadDefaultLevel = function(levelId, afterwards)
+	{
+		var compLevel = function(data) {
+			if (data["status"] == msg.getMsgId("Succeeded"))
+			{
+				user.setLevelId(levelId);
+				initLevel(JSON.parse(data["level_info"]));
+				bestBlockNum = data["block_num"];
+				network.getCurrentUserInfo(function(data){
+					if (data["status"] == msg.getMsgId("Succeeded"))
+					{
+						var solution_id = JSON.parse(data["solution_dict"])[levelId];
+						if (solution_id != undefined)
+						{
+							logic.loadSolution(solution_id, afterwards);
+						}
+					}
+					else
+					{
+						if (afterwards != undefined) afterwards();
+					}
+				});
+			}
+			else alert(msg.getMessage(data["status"]));
+		};
+		network.getDefaultLevelInfo(levelId, compLevel);
+	};
+
+	this.loadSharedLevel = function(levelId, afterwards)
+	{
+		var compLevel = function(data) {
+			if (data["status"] == msg.getMsgId("Succeeded"))
+			{
+				user.setLevelId(levelId);
+				initLevel(JSON.parse(data["level_info"]));
+				bestBlockNum = data["block_num"];
+				network.getCurrentUserInfo(function(data){
+					if (data["status"] == msg.getMsgId("Succeeded"))
+					{
+						var solution_id = JSON.parse(data["solution_dict"])[levelId];
+						if (solution_id != undefined)
+						{
+							logic.loadSolution(solution_id, afterwards);
+						}
+					}
+					else
+					{
+						if (afterwards != undefined) afterwards();
+					}
+				});
+			}
+			else alert(msg.getMessage(data["status"]));
+		};
+		network.getSharedLevelInfo(levelId, compLevel);
+	};
+
 	this.loadSolution = function(solutionId, afterwards){
 		network.getSolutionInfo(
 			solutionId,

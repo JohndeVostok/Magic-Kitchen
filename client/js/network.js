@@ -138,6 +138,26 @@ var network = function() {
 		);
 	};
 
+	var getDefaultLevelInfo = function(level_id, callback) {
+		postRequest(
+			"/api/get_level_info",
+			{
+				"default_level_id": level_id
+			},
+			callback
+		);
+	};
+
+	var getSharedLevelInfo = function(level_id, callback) {
+		postRequest(
+			"/api/get_level_info",
+			{
+				"level_id": level_id
+			},
+			callback
+		);
+	};
+
 	var getCurrentUserInfo = function(callback) {
 		postRequest(
 			"/api/get_current_user_info",
@@ -308,6 +328,8 @@ var network = function() {
 		editDefaultLevel: editDefaultLevel,
 		getDefaultLevelInfo: getDefaultLevelInfo,
 		getLevelInfo: getLevelInfo,
+		getDefaultLevelInfo: getDefaultLevelInfo,
+		getSharedLevelInfo: getSharedLevelInfo,
 		getCurrentUserInfo: getCurrentUserInfo,
 		newUsermadeLevel: newUsermadeLevel,
 		shareLevel: shareLevel,

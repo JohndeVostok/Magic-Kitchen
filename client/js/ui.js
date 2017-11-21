@@ -359,7 +359,7 @@ var ui = function() {
 					$(btn).click(function() {
 						var targetLevelId = $(this).attr("value");
 						if (isNaN(targetLevelId)) alert("请输入正确的关卡编号");
-						else logic.loadLevel(parseInt(targetLevelId));
+						else logic.loadSharedLevel(parseInt(targetLevelId));
 						resetGameButtons();
 						$("#chooseLevelModal").modal("hide");
 					});
@@ -379,7 +379,7 @@ var ui = function() {
 							+ 'chooseDefaultLevelButtonId' + i
 							+ '" value = "'
 							+ defaultList[i].default_level_id
-							+ '"><span'
+							+ '"><span '
 							+ levelicon
 							+ '>'
 							+ defaultList[i].default_level_id
@@ -389,7 +389,7 @@ var ui = function() {
 					$(btn).click(function() {
 						var targetLevelId = $(this).attr("value");
 						if (isNaN(targetLevelId)) alert("请输入正确的关卡编号");
-						else logic.loadLevel(parseInt(targetLevelId));
+						else logic.loadDefaultLevel(parseInt(targetLevelId));
 						resetGameButtons();
 						$("#chooseLevelModal").modal("hide");
 					});
