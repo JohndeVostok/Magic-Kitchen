@@ -452,7 +452,9 @@ var ui = function() {
 		});
 		$("#saveLevelButton").click(function() {
 			// Init login modal.
+			$("#saveLevelButton").attr("disabled", "disabled");
 			logic.doSaveLevel(function(err, res) {
+				$("#saveLevelButton").removeAttr("disabled");
 				if (err != undefined) {
 					alert("保存失败： " + err);
 					return;
@@ -461,7 +463,9 @@ var ui = function() {
 		});
 		$("#shareLevelButton").click(function() {
 			// Init login modal.
+			$("#shareLevelButton").attr("disabled", "disabled");
 			logic.doShareLevel(function(err, res) {
+				$("#shareLevelButton").removeAttr("disabled");
 				if (err != undefined) {
 					alert("分享失败： " + err);
 					return;
@@ -474,7 +478,9 @@ var ui = function() {
 		});
 		$("#saveSolutionButton").click(function() {
 			// Init login modal.
+			$("#saveSolutionButton").attr("disabled", "disabled");
 			logic.doSaveSolution(function(err, res) {
+				$("#saveSolutionButton").removeAttr("disabled");
 				if (err != undefined) {
 					alert("解法保存失败： " + err);
 					return;
@@ -483,7 +489,9 @@ var ui = function() {
 		});
 		$("#shareSolutionButton").click(function() {
 			// Init login modal.
+			$("#shareSolutionButton").attr("disabled", "disabled");
 			logic.doShareSolution(function(err, res) {
+				$("#shareSolutionButton").removeAttr("disabled");
 				if (err != undefined) {
 					alert("解法分享失败： " + err);
 					return;
