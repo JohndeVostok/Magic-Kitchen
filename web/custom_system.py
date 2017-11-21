@@ -221,7 +221,7 @@ def change_password_by_email(request):
     user.save()
     ret['identifying_code'] = identifying_code
 
-    email_thread('Email From CodeCheF', 'This is the identifying code needed to change the password:\n' + identifying_code, email).start()
+    #email_thread('Email From CodeCheF', 'This is the identifying code needed to change the password:\n' + identifying_code, email).start()
     ret['status'] = msgid.SUCCESS #'succeeded'
     return json_response(ret)
 
@@ -308,6 +308,23 @@ def get_current_user_info(request):
             break
     if not has_next_level:
         ret['next_default_level_id'] = -1
+
+    numeric_only = True
+    for c in session:
+        if (c > '9') or (c < '0'):
+            numeric_only = False
+            break
+    if numeric_only:
+        ret['is_mobile_phone_user'] = 1
+    else:
+        ret['is_mobile_phone_user'] = 0
+
+    refresh_vip_authority(user)
+    user = User.objects.filter(name = session)[0]
+    if user.authority >= 2:
+        ret['is_VIP'] = 1
+    else:
+        ret['is_VIP'] = 0
 
     return json_response(ret)
 
