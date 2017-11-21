@@ -281,6 +281,11 @@ var ui = function() {
 			});
 		});
 		$("#saveLevelButton").click(function() {
+			if (!logic.checkCreator())
+			{
+				alert("关卡不合法");
+				return;
+			}
 			// Init login modal.
 			$("#saveLevelButton").attr("disabled", "disabled");
 			logic.doSaveLevel(function(err, res) {

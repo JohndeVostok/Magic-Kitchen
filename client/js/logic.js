@@ -402,6 +402,17 @@ function Logic()
 			return description;
 		}
 
+		this.checkCreator = function()
+		{
+			if (opFloor[opFloor.length - 1] == -1)
+				return false;
+			if (opFloor[opFloor.length - 2] == -1)
+				return false;
+			if (output.length == 0 || output[0].length == 0)
+				return false;
+			return true;
+		}
+
 		this.dumpLevel = function()
 		{
 			level = {
@@ -1586,6 +1597,11 @@ function Logic()
 	this.setDescription = function(index)
 	{
 		state.setDescription(index);
+	}
+
+	this.checkCreator = function()
+	{
+		return state.checkCreator();
 	}
 
 	this.dumpLevel = function()
