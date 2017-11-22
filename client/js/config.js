@@ -33,36 +33,36 @@ var config = {
 	UI: {
 		images: {
 			MAP_BACKGROUND: {
-				src: "/images/map/background.png",
-				width: 300,
-				height: 300,
+				src: "/images/new/map/background.png",
+				width: 380,
+				height: 269,
 				x: 0,
-				y: 300,
-				len: 300
+				y: 269,
+				len: 380
 			},
 			MAP_INPUT: {
-				src: "/images/map/obstacles/input.png",
-				width: 300,
-				height: 300,
+				src: "/images/new/map/input.png",
+				width: 380,
+				height: 359,
 				x: 0,
-				y: 300,
-				len: 300
+				y: 359,
+				len: 380
 			},
 			MAP_OUTPUT: {
-				src: "/images/map/obstacles/output.png",
-				width: 300,
-				height: 300,
+				src: "/images/new/map/output.png",
+				width: 380,
+				height: 359,
 				x: 0,
-				y: 300,
-				len: 300
+				y: 359,
+				len: 380
 			},
 			MAP_TABLE: {
-				src: "/images/map/obstacles/table.png",
-				width: 300,
-				height: 300,
+				src: "/images/new/map/table.png",
+				width: 380,
+				height: 359,
 				x: 0,
-				y: 300,
-				len: 300
+				y: 359,
+				len: 380
 			},
 			MAP_WALL: {
 				src: "/images/map/obstacles/wall.png",
@@ -73,20 +73,20 @@ var config = {
 				len: 300
 			},
 			ITEM_MAGICPAPER: {
-				src: "/images/map/objects/magic_paper.png",
-				width: 300,
-				height: 300,
+				src: "/images/new/items/magic_paper.png",
+				width: 380,
+				height: 269,
 				x: 0,
-				y: 300,
-				len: 300
+				y: 269,
+				len: 380
 			},
-			ITEM_BANANA: {
-				src: "/images/map/objects/banana.png",
-				width: 300,
-				height: 300,
+			ITEM_CAKE: {
+				src: "/images/new/items/cake.png",
+				width: 380,
+				height: 269,
 				x: 0,
-				y: 300,
-				len: 300
+				y: 269,
+				len: 380
 			}
 		},
 		map: {
@@ -101,18 +101,18 @@ var config = {
 		object: {
 			images: {
 				1: "ITEM_MAGICPAPER",
-				2: "ITEM_BANANA"
+				2: "ITEM_CAKE"
 			}
 		},
 		player: {
 			images: {
-				0: ["/images/map/player/front0.png", "/images/map/player/front1.png"],
-				1: ["/images/map/player/right0.png", "/images/map/player/right1.png"],
-				2: ["/images/map/player/back0.png", "/images/map/player/back1.png"],
-				3: ["/images/map/player/left0.png", "/images/map/player/left1.png"],
+				0: ["/images/new/player/front.png", "/images/new/player/front.png"],
+				1: ["/images/new/player/right.png", "/images/new/player/right.png"],
+				2: ["/images/new/player/back.png", "/images/new/player/back.png"],
+				3: ["/images/new/player/left.png", "/images/new/player/left.png"],
 			},
-			imageWidth: 300,
-			imageHeight: 300
+			imageWidth: 380,
+			imageHeight: 810
 		},
 	},
 

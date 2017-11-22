@@ -104,12 +104,12 @@ var ui = function() {
 	var playerDirection = 0;
 	
 	// Input/Output
-	const IOItemsWidth = 50;
+	const IOItemsWidth = 50 * 1.2;
 	const IOItemsHeight = 50;
 	const IOItemsHorizontalGap = 20;
-	const IOItemsLeftPos = 100;
-	const inputTopPos = 0 + 160;
-	const outputTopPos = 75 + 160;
+	const IOItemsLeftPos = 100 * 1.2;
+	const inputTopPos = 20 + 100 + 45;
+	const outputTopPos = 75 + 20 + 100 + 30;
 	var inputItems = [];
 	var outputItems = [];
 	
@@ -176,9 +176,9 @@ var ui = function() {
 		
 		// Setup and render on CreateJS.
 		mapLeftPos = 2;
-		mapTopPos = 2 + 150 + 160;
+		mapTopPos = 2 + 150 + 150;
 		mapGridHeight = 546 * 0.707 / N;
-		mapGridWidth = 546 * 0.707 / M;
+		mapGridWidth = 546 / M;
 		
 		mapSpriteSheet = {};
 		for (var i in config.UI.map.images) {
@@ -667,8 +667,8 @@ var ui = function() {
 			x = x % M;
 		}
 		return {
-			x: mapLeftPos + mapGridWidth * (x + 0.03),
-			y: mapTopPos + mapGridHeight * (y + 0.99),
+			x: mapLeftPos + mapGridWidth * (x + 0.03 + 0.05),
+			y: mapTopPos + mapGridHeight * (y + 0.99 - 0.05),
 			len: 1.0  // Not to scale
 		};
 	};
@@ -705,7 +705,7 @@ var ui = function() {
 				graphics.setSpritePos(s, getMapGridPos(j, i));
 				mapSprites.push(s);
 				
-				var ts = graphics.newCustomSprite(new createjs.Text("", "15px Arial", "#00e077"), {
+				var ts = graphics.newCustomSprite(new createjs.Text("", "15px Arial", "#003022"), {
 					x: 0.0,
 					y: 15.0,
 					len: 1.0  // Not to scale
@@ -877,7 +877,7 @@ var ui = function() {
 	
 	var genNewItem = function(args) {
 		var s = graphics.newSprite(objectSpriteSheets[args.type]);
-		var ts = graphics.newCustomSprite(new createjs.Text(args.value == undefined ? "" : args.value + "", "15px Arial", "yellow"), {
+		var ts = graphics.newCustomSprite(new createjs.Text(args.value == undefined ? "" : args.value + "", "15px Arial", "blue"), {
 			x: 0.0,
 			y: 15.0,
 			len: 1.0
@@ -1066,8 +1066,8 @@ var ui = function() {
 	var getIOItemTextPos = function(itemIndex, isOutput = false) {
 		var pos = getIOItemPos(itemIndex, isOutput);
 		return {
-			x: pos.x + 0.2 * IOItemsWidth,
-			y: pos.y + (-1.0 + 0.7) * IOItemsHeight,
+			x: pos.x + (0.2 + 0.1) * IOItemsWidth,
+			y: pos.y + (-1.0 + 0.7 - 0.05) * IOItemsHeight,
 			len: 1.0
 		};
 	};
