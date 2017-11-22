@@ -355,6 +355,10 @@ var ui = function() {
 						res["solution_id"]);
 			});
 		});
+		$("#nextLevelButton").click(function() {
+			$("#passLevelModal").modal("hide");
+			start();
+		});
 		$("#chooseLevelButton").click(function() {
 			// Init login modal.
 			logic.doGetLevelList(function(err, res) {
@@ -539,6 +543,7 @@ var ui = function() {
 	}
 
 	var start = function() {
+		resetGameButtons();
 		// Grab & start a new level.
 		// The main loop is not present here, because the system event loop already does this.
 		if ($("#defaultLevelIdSpan").text() === "{{defaultLevelId}}")
