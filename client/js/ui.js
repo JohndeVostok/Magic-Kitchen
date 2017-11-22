@@ -367,6 +367,7 @@ var ui = function() {
 					return;
 				}
 				$("#chooseLevelModal").modal();
+				
 				var privateList = res.privateLevelList;
 				$("#choosePrivateLevelDiv").empty();
 				var but = "";
@@ -434,10 +435,16 @@ var ui = function() {
 							+ '</span></button>&nbsp&nbsp';
 					$("#chooseDefaultLevelDiv").append(btn);
 					btn = "#chooseDefaultLevelButtonId" + i;
+					if (i >= res.nextDefaultLevel) $(btn).attr("disabled", true);
 					$(btn).click(function() {
 						var targetLevelId = $(this).attr("value");
-						if (isNaN(targetLevelId)) alert("请输入正确的关卡编号");
-						else logic.loadDefaultLevel(parseInt(targetLevelId));
+						if (isNaN(targetLevelId))
+							alert("请输入正确的关卡编号");
+						else
+						{
+							logic.setOfflineLevel(parseInt(targetLevelId));
+							logic.loadDefaultLevel(parseInt(targetLevelId));
+						}
 						resetGameButtons();
 						$("#chooseLevelModal").modal("hide");
 						$("#shareLevelButtonExtra").css("display", "none");
@@ -548,15 +555,12 @@ var ui = function() {
 		// The main loop is not present here, because the system event loop already does this.
 		if ($("#defaultLevelIdSpan").text() === "{{defaultLevelId}}")
 		{
-			network.getCurrentUserInfo(function(res) {
-				if (res.status == 1000)
-				{
-					logic.loadDefaultLevel(res.next_default_level_id);
-				}
-				else
-				{
+			logic.getNextDefaultLevel({}, function(err, res) {
+				if (err != undefined) {
 					logic.loadDefaultLevel(1);
+					return;
 				}
+				logic.loadDefaultLevel(res.nextDefaultLevel);
 			});
 		}
 		else

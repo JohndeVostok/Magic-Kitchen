@@ -327,6 +327,14 @@ var network = function() {
 		);
 	}
 
+	var getCurrentUserInfo = function(callback) {
+		postRequest(
+			"api/get_current_user_info",
+			{},
+			callback
+		);
+	}
+
 	return {
 		doLoad: doLoad,
 		register: register,
