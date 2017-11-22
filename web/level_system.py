@@ -141,6 +141,7 @@ def get_level_info(request):
 
         ret['status'] = msgid.SUCCESS #'succeeded'
         ret['level_info'] = default_level_id_filter[0].info #json
+        ret['level_id'] = default_level_id_filter[0].level_id
         ret['shared'] = default_level_id_filter[0].shared #bool
 
     else:
@@ -193,6 +194,7 @@ def get_level_info(request):
 
         ret['status'] = msgid.SUCCESS #'succeeded'
         ret['level_info'] = level_id_filter[0].info #json
+        ret['level_id'] = level_id_filter[0].level_id
         ret['shared'] = level_id_filter[0].shared #bool
 
     return json_response(ret)

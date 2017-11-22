@@ -32,7 +32,7 @@ function Msg()
 		1028: ["Days can't be empty.", "输入天数不能为空"],
 		1029: ["The input days needs to be an Integer.", "天数需要是整数类型"],
 		1030: ["The input days needs to be in range[1, 99999].", "天数需要属于区间[1,99999]"],
-		1031: ["You don't have operation authority.", "你没有操作权限"],
+		1031: ["You don't have operation authority.", "想玩接下来的关卡，请充值VIP"],
 		1032: ["You can't create more level.", "你无法创建更多关卡"],
 		1033: ["Share can't be empty.", "是否分享不能为空"],
 		1034: ["The input share needs to be 0 or 1.", "输入的\"是否分享\"需要是0或1"],
@@ -84,7 +84,7 @@ function Msg()
 
 		9000: ["Network timeout.", "网络请求超时。"]
 	}
-	var language = 0;
+	var language = 1;
 	var msgId = {};
 
 	for (id in content)

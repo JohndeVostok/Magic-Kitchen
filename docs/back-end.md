@@ -94,11 +94,12 @@
         关于这两个参数在数据库中的存储：level_id是AutoField，也就是每个level_id唯一对应一个关卡；default_level_id则不是，用户创建的关卡的default_level_id都为-1。
         游戏的前5个关卡提供试玩,用户在登录或未登录状态下均可进行游戏（调用API），从第5关以后的关卡需要用户登录且具有VIP权限。这里的“第五关之后”是指default_level_id>5。
         只有管理员和关卡作者可以获得未分享关卡信息。
-        
+        返回值中的level_id表示这个关卡的内置id，用于记录解法等信息。
 
         return json dict:
             status = 1000
                 level_info = json_info_str
+				level_id = id
                 shared = shared_bool
                 block_num = block_num_int(-2 means not default level, -1 means default level have no std solution)
             status = 1001

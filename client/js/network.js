@@ -148,16 +148,6 @@ var network = function() {
 		);
 	};
 
-	var getSharedLevelInfo = function(level_id, callback) {
-		postRequest(
-			"/api/get_level_info",
-			{
-				"level_id": level_id
-			},
-			callback
-		);
-	};
-
 	var getCurrentUserInfo = function(callback) {
 		postRequest(
 			"/api/get_current_user_info",
@@ -182,6 +172,18 @@ var network = function() {
 			{
 				"level_id": level_id,
 				"solution_info": solution_info,
+			},
+			callback
+		);
+	};
+
+	var newStdSolution = function(default_level_id, solution_info, callback) {
+		postRequest(
+			"/api/new_std_solution",
+			{
+				"default_level_id": default_level_id,
+				"solution_info": solution_info,
+				"edit": 0
 			},
 			callback
 		);
@@ -337,7 +339,6 @@ var network = function() {
 		getDefaultLevelInfo: getDefaultLevelInfo,
 		getLevelInfo: getLevelInfo,
 		getDefaultLevelInfo: getDefaultLevelInfo,
-		getSharedLevelInfo: getSharedLevelInfo,
 		getCurrentUserInfo: getCurrentUserInfo,
 		newUsermadeLevel: newUsermadeLevel,
 		shareLevel: shareLevel,
@@ -345,6 +346,7 @@ var network = function() {
 		shareSolution: shareSolution,
 		unshareSolution: unshareSolution,
 		newSolution: newSolution,
+		newStdSolution: newStdSolution,
 		getAllLevel: getAllLevel,
 		getPrivateLevel: getPrivateLevel,
 		getSharedLevel: getSharedLevel,
