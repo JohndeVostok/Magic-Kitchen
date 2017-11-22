@@ -6,10 +6,6 @@ import hashlib
 import os
 import json
 
-def new_std_solution(_default_level_id, _solution_info_str):
-    import json
-    
-
 def get_num_in_file_name(name):
     i = 0
     for i in range(len(name)):
