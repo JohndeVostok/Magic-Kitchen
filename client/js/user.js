@@ -35,13 +35,13 @@ var user = function() {
 			$("#loginIdentifyingCode").val("");
 			
 			$("#phoneLoginModal").modal();
-
+			$("#phoneLoginGetCodeButton").css("display", "")
 		});
 		$("#phoneLoginGetCodeButton").click(function() {
 			$("#phoneLoginGetCodeButton").attr("disabled", "disabled");
 			logic.doPhoneGetCode($("#loginPhoneNumber").val(), function(err, res) {
 				$("#phoneLoginGetCodeButton").removeAttr("disabled");
-
+				$("#phoneLoginGetCodeButton").css("display", "none")
 				if (err != undefined) {
 					alert("获取失败： " + err);
 					return;

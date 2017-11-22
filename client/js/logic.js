@@ -981,6 +981,7 @@ function Logic()
 			if (data["status"] == msg.getMsgId("Succeeded"))
 			{
 				user.setLevelId(levelId);
+				ui.setLevelId(levelId);
 				initLevel(JSON.parse(data["level_info"]));
 				bestBlockNum = data["block_num"];
 				network.getCurrentUserInfo(function(data){
@@ -1000,17 +1001,7 @@ function Logic()
 			}
 			else alert(msg.getMessage(data["status"]));
 		};
-		if (levelId == undefined)
-		{
-			if (config.useFakeLevel)
-				initLevel(config.fakeLevelInfo);
-			else
-			{
-				levelId = config.defaultOnlineLevelId;
-				network.getDefaultLevelInfo(levelId, compLevel);
-			}
-		}
-		else network.getLevelInfo(levelId, compLevel);
+		network.getLevelInfo(levelId, compLevel);
 	};
 
 	this.loadDefaultLevel = function(levelId, afterwards)
@@ -1018,13 +1009,14 @@ function Logic()
 		var compLevel = function(data) {
 			if (data["status"] == msg.getMsgId("Succeeded"))
 			{
-				user.setLevelId(levelId);
+				user.setLevelId(data["level_id"]);
+				ui.setDefaultLevelId(levelId);
 				initLevel(JSON.parse(data["level_info"]));
 				bestBlockNum = data["block_num"];
 				network.getCurrentUserInfo(function(data){
 					if (data["status"] == msg.getMsgId("Succeeded"))
 					{
-						var solution_id = JSON.parse(data["solution_dict"])[levelId];
+						var solution_id = JSON.parse(data["solution_dict"])[user.getLevelId()];
 						if (solution_id != undefined)
 						{
 							logic.loadSolution(solution_id, afterwards);
@@ -1036,37 +1028,13 @@ function Logic()
 					}
 				});
 			}
-			else alert(msg.getMessage(data["status"]));
+			else
+			{
+				alert(msg.getMessage(data["status"]));
+				logic.loadDefaultLevel(1, afterwards);
+			}
 		};
 		network.getDefaultLevelInfo(levelId, compLevel);
-	};
-
-	this.loadSharedLevel = function(levelId, afterwards)
-	{
-		var compLevel = function(data) {
-			if (data["status"] == msg.getMsgId("Succeeded"))
-			{
-				user.setLevelId(levelId);
-				initLevel(JSON.parse(data["level_info"]));
-				bestBlockNum = data["block_num"];
-				network.getCurrentUserInfo(function(data){
-					if (data["status"] == msg.getMsgId("Succeeded"))
-					{
-						var solution_id = JSON.parse(data["solution_dict"])[levelId];
-						if (solution_id != undefined)
-						{
-							logic.loadSolution(solution_id, afterwards);
-						}
-					}
-					else
-					{
-						if (afterwards != undefined) afterwards();
-					}
-				});
-			}
-			else alert(msg.getMessage(data["status"]));
-		};
-		network.getSharedLevelInfo(levelId, compLevel);
 	};
 
 	this.loadSolution = function(solutionId, afterwards){

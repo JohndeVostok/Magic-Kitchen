@@ -403,7 +403,7 @@ var ui = function() {
 					$(btn).click(function() {
 						var targetLevelId = $(this).attr("value");
 						if (isNaN(targetLevelId)) alert("请输入正确的关卡编号");
-						else logic.loadSharedLevel(parseInt(targetLevelId));
+						else logic.loadLevel(parseInt(targetLevelId));
 						resetGameButtons();
 						$("#chooseLevelModal").modal("hide");
 						$("#shareLevelButtonExtra").css("display", "none");
@@ -543,7 +543,16 @@ var ui = function() {
 		// The main loop is not present here, because the system event loop already does this.
 		if ($("#defaultLevelIdSpan").text() === "{{defaultLevelId}}")
 		{
-			logic.loadLevel();
+			network.getCurrentUserInfo(function(res) {
+				if (res.status == 1000)
+				{
+					logic.loadDefaultLevel(res.next_default_level_id);
+				}
+				else
+				{
+					logic.loadDefaultLevel(1);
+				}
+			});
 		}
 		else
 		{
@@ -1284,6 +1293,16 @@ var ui = function() {
 		console.log(animationRunning);
 		console.log(animationQueue);
 	};
+
+	var setLevelId = function(level_id)
+	{
+		$("#currentLevelSpan").text("用户关卡：第" + level_id + "关")
+	};
+	
+	var setDefaultLevelId = function(default_level_id)
+	{
+		$("#currentLevelSpan").text("默认关卡：第" + default_level_id + "关")	
+	};
 	
 	return {
 		doLoad: doLoad,
@@ -1305,6 +1324,8 @@ var ui = function() {
 		blockStep: blockStep,
 		finishLevel: finishLevel,
 		unfinishLevel: unfinishLevel,
-		debug: debug
+		debug: debug,
+		setLevelId: setLevelId,
+		setDefaultLevelId: setDefaultLevelId,
 	};
 }();
