@@ -313,6 +313,26 @@ def get_all_level(request):
     ret['status'] = msgid.SUCCESS #'succeeded'
     return json_response(ret)
 
+def get_all_private_level(request):
+    content = request.POST
+    ret = {}
+
+    session = get_session(request)
+
+    if (session == None):
+        ret['all_private_level'] = json.dumps([])
+        ret['status'] = msgid.SUCCESS #'succeeded'
+        return json_response(ret)
+
+    private_level = Level.objects.filter(user_name = session)
+    private_level_id = []
+    for level in private_level:
+        if not level.shared:
+            private_level_id.append(level.level_id)
+    ret['all_private_level'] = json.dumps(private_level_id)
+    ret['status'] = msgid.SUCCESS #'succeeded'
+    return json_response(ret)
+
 def get_all_shared_level(request):
     content = request.POST
     ret = {}
