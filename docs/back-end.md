@@ -167,6 +167,15 @@
             status = 1001
             status = 1031
 
+### Get All Private Level
+        Post('/api/get_all_private_level')
+        返回所有当前用户创建关卡中未被分享的部分。
+        如果没有登陆，不会报错，但会返回空列表。
+
+        return json dict:
+            status = 1000
+                all_private_level = all_private_level_id_list_jsonStr
+
 ### Get All Shared Level
         Post('/api/get_all_shared_level')
         不需要登录即可调用此API。

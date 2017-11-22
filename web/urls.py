@@ -24,6 +24,7 @@ urlpatterns = [
     url(r'^api/set_admin$', custom_system.set_admin),
     url(r'^api/get_all_level$', level_system.get_all_level),
     url(r'^api/share_level$', level_system.share_level),
+    url(r'^api/get_all_private_level$', level_system.get_all_private_level),
     url(r'^api/get_all_shared_level$', level_system.get_all_shared_level),
     url(r'^api/share_solution$', solution_system.share_solution),
     url(r'^api/get_all_shared_solution$', solution_system.get_all_shared_solution),
@@ -32,8 +33,8 @@ urlpatterns = [
     url(r'^api/get_all_default_level$', level_system.get_all_default_level),
     url(r'^api/send_code_to_mobile_phone_user$', custom_system.send_code_to_mobile_phone_user),
     url(r'^api/login_with_phone_number$', custom_system.login_with_phone_number),
-	# Sharing
-	url(r'^external_share_level$', views.external_share_level),
+    # Sharing
+    url(r'^external_share_level$', views.external_share_level),
     # Force to serve static files, which is not recommended by Django
     url(r'^(?P<path>.*)$', views.static_file),
 ]

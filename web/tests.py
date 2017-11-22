@@ -1191,6 +1191,63 @@ class LevelSystemTestCase(TestCase):
         self.assertEqual(ret['status'], msgid.SUCCESS) #'succeeded'
         self.assertEqual(json.loads(ret['all_level']), [1, 2])
 
+    def test_get_all_private_level(self):
+
+        c = Client()
+
+        #register
+        response = c.post('/api/register', {'name': 'sth', 'password': 'abc', 'email': '765215342@qq.com'})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], msgid.SUCCESS) #'succeeded'
+
+        #login
+        response = c.post('/api/login', {'name': 'sth', 'password': 'abc'})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], msgid.SUCCESS) #'succeeded'
+
+        #new user-made level
+        response = c.post('/api/new_usermade_level', {'level_info': 'jsonStr'})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], msgid.SUCCESS) #'succeeded'
+
+        #test get all private level
+        response = c.post('/api/get_all_private_level')
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], msgid.SUCCESS) #'succeeded'
+        self.assertEqual(json.loads(ret['all_private_level']), [1])
+
+        level1 = Level.objects.filter(level_id = 1)[0]
+        level1.shared = True
+        level1.save()
+
+        #test get all private level
+        response = c.post('/api/get_all_private_level')
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], msgid.SUCCESS) #'succeeded'
+        self.assertEqual(json.loads(ret['all_private_level']), [])
+
+        #new user-made level
+        response = c.post('/api/new_usermade_level', {'level_info': 'jsonStr'})
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], msgid.SUCCESS) #'succeeded'
+
+        #test get all private level
+        response = c.post('/api/get_all_private_level')
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], msgid.SUCCESS) #'succeeded'
+        self.assertEqual(json.loads(ret['all_private_level']), [2])
+
+        #logout
+        response = c.post('/api/logout')
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], msgid.SUCCESS) #'succeeded'
+
+        #test get all private level
+        response = c.post('/api/get_all_private_level')
+        ret = json.loads(response.content)
+        self.assertEqual(ret['status'], msgid.SUCCESS) #'succeeded'
+        self.assertEqual(json.loads(ret['all_private_level']), [])
+
     def test_get_all_shared_level(self):
         c = Client()
 
