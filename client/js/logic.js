@@ -1873,23 +1873,6 @@ function Logic()
 		});
 	}
 
-	this.doGetSharedLevel = function(callback)
-	{
-		network.getSharedLevel(function(res) {
-			if (res.status == msg.getMsgId("Succeeded"))
-			{
-				callback(undefined, {
-					status: "succeeded",
-					levelList: JSON.parse(res.all_shared_level)
-				});
-			}
-			else
-			{
-				callback(msg.getMessage(res.status), {status: "failed"});
-			}
-		});
-	}
-
 	var getDefaultLevelList = function(list, callback)
 	{
 		network.getDefaultLevel(function(res) {
@@ -1920,9 +1903,25 @@ function Logic()
 		});
 	}
 
+	var getPrivateLevelList = function(list, callback)
+	{
+		network.getPrivateLevel(function(res) {
+			if (res.status == msg.getMsgId("Succeeded"))
+			{
+				var ans = $.extend(true, {}, list, {privateLevelList: JSON.parse(res.all_private_level)});
+				getSharedLevelList(ans, callback);
+			}
+			else
+			{
+				callback(msg.getMessage(res.status), {status: "failed"});
+			}
+		});
+	}
+
+
 	this.doGetLevelList = function(callback)
 	{
-		getSharedLevelList({}, callback);
+		getPrivateLevelList({}, callback);
 	}
 
 	this.doPayVip = function(callback)

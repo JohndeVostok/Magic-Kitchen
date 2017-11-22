@@ -268,6 +268,14 @@ var network = function() {
 		);
 	}
 
+	var getPrivateLevel = function(callback) {
+		postRequest(
+			"api/get_all_private_level",
+			{},
+			callback
+		);
+	}
+
 	var getSharedLevel = function(callback) {
 		postRequest(
 			"api/get_all_shared_level",
@@ -338,6 +346,7 @@ var network = function() {
 		unshareSolution: unshareSolution,
 		newSolution: newSolution,
 		getAllLevel: getAllLevel,
+		getPrivateLevel: getPrivateLevel,
 		getSharedLevel: getSharedLevel,
 		getDefaultLevel: getDefaultLevel,
 		getSolutionInfo: getSolutionInfo,

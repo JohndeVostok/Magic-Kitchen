@@ -311,6 +311,22 @@ var ui = function() {
 						res["level_id"]);
 			});
 		});
+		$("#shareLevelButtonExtra").click(function() {
+			// Init login modal.
+			$("#shareLevelButtonExtra").attr("disabled", "disabled");
+			logic.doShareLevel(function(err, res) {
+				$("#shareLevelButtonExtra").removeAttr("disabled");
+				if (err != undefined) {
+					alert("分享失败： " + err);
+					return;
+				}
+				alert("shared: " + 
+						window.location.host +
+						"/external_share_level?level_id=" + 
+						res["level_id"]);
+				$("#shareLevelButtonExtra").css("display", "none");
+			});
+		});
 		$("#saveSolutionButton").click(function() {
 			// Init login modal.
 			$("#saveSolutionButton").attr("disabled", "disabled");
@@ -346,8 +362,31 @@ var ui = function() {
 					alert("查询失败： " + err);
 					return;
 				}
-				var sharedList = res.sharedLevelList;
 				$("#chooseLevelModal").modal();
+				var privateList = res.privateLevelList;
+				$("#choosePrivateLevelDiv").empty();
+				var but = "";
+				for (let i = 0; i < privateList.length; i++)
+				{
+					var btn = '<button type="button" class="btn btn-primary" id="'
+							+ 'choosePrivateLevelButtonId' + i
+							+ '" value = "'
+							+ privateList[i]
+							+ '"><span class="glyphicon glyphicon-star-empty">'
+							+ privateList[i]
+							+ '</span></button>&nbsp&nbsp';
+					$("#choosePrivateLevelDiv").append(btn);
+					btn = "#choosePrivateLevelButtonId" + i;
+					$(btn).click(function() {
+						var targetLevelId = $(this).attr("value");
+						if (isNaN(targetLevelId)) alert("请输入正确的关卡编号");
+						else logic.loadLevel(parseInt(targetLevelId));
+						resetGameButtons();
+						$("#chooseLevelModal").modal("hide");
+						$("#shareLevelButtonExtra").css("display", "");
+					});
+				}
+				var sharedList = res.sharedLevelList;
 				$("#chooseSharedLevelDiv").empty();
 				var but = "";
 				for (let i = 0; i < sharedList.length; i++)
@@ -356,7 +395,7 @@ var ui = function() {
 							+ 'chooseSharedLevelButtonId' + i
 							+ '" value = "'
 							+ sharedList[i]
-							+ '"><span>'
+							+ '"><span class="glyphicon glyphicon-star">'
 							+ sharedList[i]
 							+ '</span></button>&nbsp&nbsp';
 					$("#chooseSharedLevelDiv").append(btn);
@@ -367,10 +406,10 @@ var ui = function() {
 						else logic.loadSharedLevel(parseInt(targetLevelId));
 						resetGameButtons();
 						$("#chooseLevelModal").modal("hide");
+						$("#shareLevelButtonExtra").css("display", "none");
 					});
 				}
 				var defaultList = res.defaultLevelList;
-				$("#chooseLevelModal").modal();
 				$("#chooseDefaultLevelDiv").empty();
 				var but = "";
 				for (let i = 0; i < defaultList.length; i++)
@@ -397,6 +436,7 @@ var ui = function() {
 						else logic.loadDefaultLevel(parseInt(targetLevelId));
 						resetGameButtons();
 						$("#chooseLevelModal").modal("hide");
+						$("#shareLevelButtonExtra").css("display", "none");
 					});
 				}
 			});
