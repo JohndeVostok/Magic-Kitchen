@@ -1303,6 +1303,10 @@ var ui = function() {
 	{
 		$("#currentLevelSpan").text("默认关卡：第" + default_level_id + "关")	
 	};
+
+	var setDescription = function(index)
+	{
+	}
 	
 	return {
 		doLoad: doLoad,
@@ -1327,5 +1331,6 @@ var ui = function() {
 		debug: debug,
 		setLevelId: setLevelId,
 		setDefaultLevelId: setDefaultLevelId,
+		setDescription: setDescription,
 	};
 }();

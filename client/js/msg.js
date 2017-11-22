@@ -61,7 +61,7 @@ function Msg()
 		3011: ["Target is not an operation floor.", "目标不是操作台。"],
 		3012: ["I have something in my hand.", "我手里有东西。"],
 		3013: ["There is nothing there to load", "那没什么可拿的。"],
-		3014: ["Inbox in empty.", "进材口已经空了。"],
+		3014: ["Inbox is empty.", "进材口已经空了。"],
 		3015: ["I have nothing in my hand.", "我手里没东西。"],
 		3016: ["There is something there.", "那已经有东西了。"],
 		3017: ["I can't store it there.", "我不能向进材口丢东西。"],

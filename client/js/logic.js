@@ -215,6 +215,7 @@ function Logic()
 			ui.addPlayerAnimation(player.pos, player.pos, player.dir, player.dir);
 			ui.setInput(input[0]);
 			ui.setOutput(output[0]);
+			ui.setDescription(description);
 		}
 
 	//Functions for creator.
@@ -263,6 +264,7 @@ function Logic()
 					ui.setItemValue(item.pos, item.value);
 			}
 			ui.addPlayerAnimation(7, 7, 0, 0);
+			ui.setDescription(description);
 		}
 
 		this.refreshCreator = function()
@@ -374,7 +376,7 @@ function Logic()
 		this.setDescription = function(index)
 		{
 			description = index;
-			//TODO set ui.description
+			ui.setDescription(description);
 		}
 
 		this.eraseCreator = function(pos)
@@ -385,6 +387,7 @@ function Logic()
 					opFloor.splice(map[pos].address, 1);
 				else
 					opFloor[map[pos].address] = -1;
+
 			}
 			if (map[pos].haveItem)
 				itemList.splice(map[pos].itemId, 1);
@@ -399,7 +402,6 @@ function Logic()
 
 		this.test = function()
 		{
-			return description;
 		}
 
 		this.checkCreator = function()
@@ -1551,6 +1553,7 @@ function Logic()
 	}
 
 	this.popOutput = function()
+
 	{
 		user.popOutput();
 		this.setOutput(user.getOutput());
@@ -1579,7 +1582,7 @@ function Logic()
 
 	this.test = function()
 	{
-		return state.test();
+		return validator.validate();
 	}
 
 // Functions for network
