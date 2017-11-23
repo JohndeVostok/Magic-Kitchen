@@ -355,6 +355,10 @@ var ui = function() {
 						res["solution_id"]);
 			});
 		});
+		$("#nextLevelButton").click(function() {
+			$("#passLevelModal").modal("hide");
+			start();
+		});
 		$("#chooseLevelButton").click(function() {
 			// Init login modal.
 			logic.doGetLevelList(function(err, res) {
@@ -363,6 +367,7 @@ var ui = function() {
 					return;
 				}
 				$("#chooseLevelModal").modal();
+				
 				var privateList = res.privateLevelList;
 				$("#choosePrivateLevelDiv").empty();
 				var but = "";
@@ -430,10 +435,15 @@ var ui = function() {
 							+ '</span></button>&nbsp&nbsp';
 					$("#chooseDefaultLevelDiv").append(btn);
 					btn = "#chooseDefaultLevelButtonId" + i;
+					if (i >= res.nextDefaultLevel) $(btn).attr("disabled", true);
 					$(btn).click(function() {
 						var targetLevelId = $(this).attr("value");
-						if (isNaN(targetLevelId)) alert("请输入正确的关卡编号");
-						else logic.loadDefaultLevel(parseInt(targetLevelId));
+						if (isNaN(targetLevelId))
+							alert("请输入正确的关卡编号");
+						else
+						{
+							logic.loadDefaultLevel(parseInt(targetLevelId));
+						}
 						resetGameButtons();
 						$("#chooseLevelModal").modal("hide");
 						$("#shareLevelButtonExtra").css("display", "none");
@@ -539,19 +549,17 @@ var ui = function() {
 	}
 
 	var start = function() {
+		resetGameButtons();
 		// Grab & start a new level.
 		// The main loop is not present here, because the system event loop already does this.
 		if ($("#defaultLevelIdSpan").text() === "{{defaultLevelId}}")
 		{
-			network.getCurrentUserInfo(function(res) {
-				if (res.status == 1000)
-				{
-					logic.loadDefaultLevel(res.next_default_level_id);
-				}
-				else
-				{
+			logic.getNextDefaultLevel({}, function(err, res) {
+				if (err != undefined) {
 					logic.loadDefaultLevel(1);
+					return;
 				}
+				logic.loadDefaultLevel(res.nextDefaultLevel);
 			});
 		}
 		else
@@ -1290,8 +1298,6 @@ var ui = function() {
 	};
 
 	var debug = function() {
-		console.log(animationRunning);
-		console.log(animationQueue);
 	};
 
 	var setLevelId = function(level_id)
@@ -1303,6 +1309,10 @@ var ui = function() {
 	{
 		$("#currentLevelSpan").text("默认关卡：第" + default_level_id + "关")	
 	};
+
+	var setDescription = function(index)
+	{
+	}
 	
 	return {
 		doLoad: doLoad,
@@ -1327,5 +1337,6 @@ var ui = function() {
 		debug: debug,
 		setLevelId: setLevelId,
 		setDefaultLevelId: setDefaultLevelId,
+		setDescription: setDescription,
 	};
 }();

@@ -38,6 +38,8 @@ function Logic()
 		var solutionId = 0;
 		var inputBuf = [];
 		var outputBuf = [];
+		var nextLevel = 1;
+		var currentLevel = 1;
 
 		this.status = function()
 		{
@@ -49,12 +51,14 @@ function Logic()
 			status = true;
 			username = usernameIn;
 			editLevel = "";
+			nextLevel = 1;
 		};
 
 		this.logout = function()
 		{
 			status = false;
 			username = "";
+			nextLevel = 1;
 		}
 
 		this.editContent = function(str)
@@ -130,6 +134,26 @@ function Logic()
 		this.getOutput = function()
 		{
 			return $.extend(true, [], outputBuf);
+		}
+
+		this.setNextLevel = function(levelId)
+		{
+			nextLevel = levelId;
+		}
+
+		this.setCurrentLevel = function(levelId)
+		{
+			currentLevel = levelId;
+		}
+
+		this.getNextLevel = function()
+		{
+			return nextLevel;
+		}
+
+		this.getCurrentLevel = function()
+		{
+			return currentLevel;
 		}
 	}
 
@@ -215,6 +239,7 @@ function Logic()
 			ui.addPlayerAnimation(player.pos, player.pos, player.dir, player.dir);
 			ui.setInput(input[0]);
 			ui.setOutput(output[0]);
+			ui.setDescription(description);
 		}
 
 	//Functions for creator.
@@ -263,6 +288,7 @@ function Logic()
 					ui.setItemValue(item.pos, item.value);
 			}
 			ui.addPlayerAnimation(7, 7, 0, 0);
+			ui.setDescription(description);
 		}
 
 		this.refreshCreator = function()
@@ -374,7 +400,7 @@ function Logic()
 		this.setDescription = function(index)
 		{
 			description = index;
-			//TODO set ui.description
+			ui.setDescription(description);
 		}
 
 		this.eraseCreator = function(pos)
@@ -385,6 +411,7 @@ function Logic()
 					opFloor.splice(map[pos].address, 1);
 				else
 					opFloor[map[pos].address] = -1;
+
 			}
 			if (map[pos].haveItem)
 				itemList.splice(map[pos].itemId, 1);
@@ -395,11 +422,6 @@ function Logic()
 			this.refreshCreator();
 
 			this.renderCreator();
-		}
-
-		this.test = function()
-		{
-			return description;
 		}
 
 		this.checkCreator = function()
@@ -1006,6 +1028,7 @@ function Logic()
 
 	this.loadDefaultLevel = function(levelId, afterwards)
 	{
+		logic.setOfflineLevel(levelId);
 		var compLevel = function(data) {
 			if (data["status"] == msg.getMsgId("Succeeded"))
 			{
@@ -1371,6 +1394,22 @@ function Logic()
 			ui.finishLevel();
 		else
 			ui.unfinishLevel();
+
+		if (user.getNextLevel() == user.getCurrentLevel())
+			user.setNextLevel(user.getNextLevel() + 1);
+
+		network.getCurrentUserInfo(function(data){
+			if (data['status'] == msg.getMsgId("Succeeded"))
+			{
+				logic.doSaveSolution(function(err, res) {
+					$("#saveSolutionButton").removeAttr("disabled");
+					if (err != undefined) {
+						alert("解法上传失败： " + err);
+						return;
+					}
+				});
+			}
+		});
 	};
 
 	var branch = function(op)
@@ -1551,6 +1590,7 @@ function Logic()
 	}
 
 	this.popOutput = function()
+
 	{
 		user.popOutput();
 		this.setOutput(user.getOutput());
@@ -1579,7 +1619,7 @@ function Logic()
 
 	this.test = function()
 	{
-		return state.test();
+		return user.getLevelId();
 	}
 
 // Functions for network
@@ -1789,7 +1829,6 @@ function Logic()
 			if (res.status == msg.getMsgId("Succeeded"))
 			{
 				user.setSolutionId(res.solution_id);
-				alert(res.solution_id);
 				callback(undefined, {
 					status: "succeeded"
 				});
@@ -1841,13 +1880,29 @@ function Logic()
 		});
 	}
 
+	this.getNextDefaultLevel = function(list, callback)
+	{
+		network.getCurrentUserInfo(function(res) {
+			if (res.status == msg.getMsgId("Succeeded"))
+			{
+				var ans = $.extend(true, {}, list, {nextDefaultLevel: res.next_default_level_id});
+				callback(undefined, ans);
+			}
+			else
+			{
+				var ans = $.extend(true, {}, list, {nextDefaultLevel: user.getNextLevel()});
+				callback(undefined, ans);
+			}
+		});
+	}
+
 	var getDefaultLevelList = function(list, callback)
 	{
 		network.getDefaultLevel(function(res) {
 			if (res.status == msg.getMsgId("Succeeded"))
 			{
 				var ans = $.extend(true, {}, list, {defaultLevelList: JSON.parse(res.level)});
-				callback(undefined, ans);
+				logic.getNextDefaultLevel(ans, callback);
 			}
 			else
 			{
@@ -1921,6 +1976,11 @@ function Logic()
 		else if (usedNum <= bestBlockNum * 2) star = 2;
 		else star = 1;
 		return {used_num: usedNum, best_num: bestNum, result: star};
+	}
+
+	this.setOfflineLevel = function(levelId)
+	{
+		user.setCurrentLevel(levelId);
 	}
 }
 

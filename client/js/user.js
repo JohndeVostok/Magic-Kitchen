@@ -73,6 +73,7 @@ var user = function() {
 				$("#registerButton").css("display", "none");
 				$("#usernameSpanText").text(res.username);
 				$("#usernameSpan").css("display", "");
+				ui.start();
 			});
 		});
 		$("#loginSubmitButton").click(function() {
@@ -97,6 +98,7 @@ var user = function() {
 				$("#registerButton").css("display", "none");
 				$("#usernameSpanText").text(res.username);
 				$("#usernameSpan").css("display", "");
+				ui.start();
 			});
 		});
 		
@@ -121,6 +123,7 @@ var user = function() {
 				$("#registerButton").css("display", "");
 				$("#usernameSpanText").text("");
 				$("#usernameSpan").css("display", "none");
+				ui.start();
 			});
 		});
 		
@@ -199,6 +202,7 @@ var user = function() {
 				}
 				alert("付费成功！");
 				$("#payVipModal").modal("hide");
+				ui.start();
 			});
 		});
 
