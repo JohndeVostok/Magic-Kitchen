@@ -442,7 +442,6 @@ var ui = function() {
 							alert("请输入正确的关卡编号");
 						else
 						{
-							logic.setOfflineLevel(parseInt(targetLevelId));
 							logic.loadDefaultLevel(parseInt(targetLevelId));
 						}
 						resetGameButtons();
@@ -1299,8 +1298,6 @@ var ui = function() {
 	};
 
 	var debug = function() {
-		console.log(animationRunning);
-		console.log(animationQueue);
 	};
 
 	var setLevelId = function(level_id)

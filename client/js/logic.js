@@ -1028,10 +1028,10 @@ function Logic()
 
 	this.loadDefaultLevel = function(levelId, afterwards)
 	{
+		logic.setOfflineLevel(levelId);
 		var compLevel = function(data) {
 			if (data["status"] == msg.getMsgId("Succeeded"))
 			{
-				console.log(data);
 				user.setLevelId(data["level_id"]);
 				ui.setDefaultLevelId(levelId);
 				initLevel(JSON.parse(data["level_info"]));
@@ -1398,11 +1398,16 @@ function Logic()
 		if (user.getNextLevel() == user.getCurrentLevel())
 			user.setNextLevel(user.getNextLevel() + 1);
 
-		logic.doSaveSolution(function(err, res) {
-			$("#saveSolutionButton").removeAttr("disabled");
-			if (err != undefined) {
-				alert("解法上传失败： " + err);
-				return;
+		network.getCurrentUserInfo(function(data){
+			if (data['status'] == msg.getMsgId("Succeeded"))
+			{
+				logic.doSaveSolution(function(err, res) {
+					$("#saveSolutionButton").removeAttr("disabled");
+					if (err != undefined) {
+						alert("解法上传失败： " + err);
+						return;
+					}
+				});
 			}
 		});
 	};
@@ -1824,7 +1829,6 @@ function Logic()
 			if (res.status == msg.getMsgId("Succeeded"))
 			{
 				user.setSolutionId(res.solution_id);
-				alert(res.solution_id);
 				callback(undefined, {
 					status: "succeeded"
 				});
