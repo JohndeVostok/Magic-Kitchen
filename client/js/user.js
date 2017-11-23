@@ -27,6 +27,7 @@ var user = function() {
 			$("#loginPassword").val("");
 			
 			$("#loginModal").modal();
+			$("#forgotPasswordButton").css("display", "");
 		});
 		$("#phoneLoginButton").click(function() {
 			$("#loginMethodModal").modal("hide");
@@ -102,6 +103,24 @@ var user = function() {
 			});
 		});
 		
+		$("#forgotPasswordButton").click(function() {
+			$("#forgotPasswordButton").attr("disabled", "disabled");
+			
+			// Call logic login interface.
+			network.changePasswordByEmail($("#loginUsername").val(), function(data) {
+				$("#forgotPasswordButton").removeAttr("disabled");
+				$("#forgotPasswordButton").css("display", "none");
+				
+				if (data["status"] != msg.getMsgId("Succeeded")) {
+					alert("找回失败：" + msg.getMessage(data["status"]));
+					$("#loginPassword").val("");
+					return;
+				}
+				
+				alert("邮件已发送，请查收");
+				$("#loginPassword").val("");
+			});
+		});
 		// For logout function.
 		$("#logoutButton").click(function() {
 			$("#logoutButton").attr("disabled", "disabled");
