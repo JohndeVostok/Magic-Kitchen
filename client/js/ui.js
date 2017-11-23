@@ -176,7 +176,7 @@ var ui = function() {
 		
 		// Setup and render on CreateJS.
 		mapLeftPos = 2;
-		mapTopPos = 2 + 150 + 150;
+		mapTopPos = 2 + 150 + 160;
 		mapGridHeight = 546 * 0.707 / N;
 		mapGridWidth = 546 / M;
 		
@@ -192,25 +192,288 @@ var ui = function() {
 		
 		playerSpriteSheet = new createjs.SpriteSheet({
 			images: [
-				config.UI.player.images[0][0],
-				config.UI.player.images[0][1],
-				config.UI.player.images[1][0],
-				config.UI.player.images[1][1],
-				config.UI.player.images[2][0],
-				config.UI.player.images[2][1],
-				config.UI.player.images[3][0],
-				config.UI.player.images[3][1],
+				config.UI.player.images.front,
+				config.UI.player.images.right,
+				config.UI.player.images.back,
+				config.UI.player.images.left,
+				config.UI.player.images.front_item,
+				config.UI.player.images.right_item,
+				config.UI.player.images.back_item,
+				config.UI.player.images.left_item,
+				
+				config.UI.player.images.pick_item_front[0],
+				config.UI.player.images.pick_item_front[1],
+				config.UI.player.images.pick_item_front[2],
+				config.UI.player.images.pick_item_front[3],
+				
+				config.UI.player.images.pick_item_right[0],
+				config.UI.player.images.pick_item_right[1],
+				config.UI.player.images.pick_item_right[2],
+				config.UI.player.images.pick_item_right[3],
+				
+				config.UI.player.images.pick_item_back[0],
+				config.UI.player.images.pick_item_back[1],
+				config.UI.player.images.pick_item_back[2],
+				config.UI.player.images.pick_item_back[3],
+				
+				config.UI.player.images.pick_item_left[0],
+				config.UI.player.images.pick_item_left[1],
+				config.UI.player.images.pick_item_left[2],
+				config.UI.player.images.pick_item_left[3],
+				
+				// 24, walk front
+				config.UI.player.images.walk_front[0],
+				config.UI.player.images.walk_front[1],
+				config.UI.player.images.walk_front[2],
+				config.UI.player.images.walk_front[3],
+				config.UI.player.images.walk_front[4],
+				config.UI.player.images.walk_front[5],
+				config.UI.player.images.walk_front[6],
+				config.UI.player.images.walk_front[7],
+				config.UI.player.images.walk_front[8],
+				
+				// 33, walk right
+				config.UI.player.images.walk_right[0],
+				config.UI.player.images.walk_right[1],
+				config.UI.player.images.walk_right[2],
+				config.UI.player.images.walk_right[3],
+				config.UI.player.images.walk_right[4],
+				config.UI.player.images.walk_right[5],
+				config.UI.player.images.walk_right[6],
+				config.UI.player.images.walk_right[7],
+				
+				// 41, walk back
+				config.UI.player.images.walk_back[0],
+				config.UI.player.images.walk_back[1],
+				config.UI.player.images.walk_back[2],
+				config.UI.player.images.walk_back[3],
+				config.UI.player.images.walk_back[4],
+				config.UI.player.images.walk_back[5],
+				config.UI.player.images.walk_back[6],
+				config.UI.player.images.walk_back[7],
+				config.UI.player.images.walk_back[8],
+				
+				// 50, walk left
+				config.UI.player.images.walk_left[0],
+				config.UI.player.images.walk_left[1],
+				config.UI.player.images.walk_left[2],
+				config.UI.player.images.walk_left[3],
+				config.UI.player.images.walk_left[4],
+				config.UI.player.images.walk_left[5],
+				config.UI.player.images.walk_left[6],
+				config.UI.player.images.walk_left[7],
+				
+				
+				// 58, walk item front
+				config.UI.player.images.walk_item_front[0],
+				config.UI.player.images.walk_item_front[1],
+				config.UI.player.images.walk_item_front[2],
+				config.UI.player.images.walk_item_front[3],
+				config.UI.player.images.walk_item_front[4],
+				config.UI.player.images.walk_item_front[5],
+				config.UI.player.images.walk_item_front[6],
+				config.UI.player.images.walk_item_front[7],
+				
+				// 66, walk item right
+				config.UI.player.images.walk_item_right[0],
+				config.UI.player.images.walk_item_right[1],
+				config.UI.player.images.walk_item_right[2],
+				config.UI.player.images.walk_item_right[3],
+				config.UI.player.images.walk_item_right[4],
+				config.UI.player.images.walk_item_right[5],
+				config.UI.player.images.walk_item_right[6],
+				config.UI.player.images.walk_item_right[7],
+				
+				// 74, walk item back
+				config.UI.player.images.walk_item_back[0],
+				config.UI.player.images.walk_item_back[1],
+				config.UI.player.images.walk_item_back[2],
+				config.UI.player.images.walk_item_back[3],
+				config.UI.player.images.walk_item_back[4],
+				config.UI.player.images.walk_item_back[5],
+				config.UI.player.images.walk_item_back[6],
+				config.UI.player.images.walk_item_back[7],
+				config.UI.player.images.walk_item_back[8],
+				
+				// 83, walk item left
+				config.UI.player.images.walk_item_left[0],
+				config.UI.player.images.walk_item_left[1],
+				config.UI.player.images.walk_item_left[2],
+				config.UI.player.images.walk_item_left[3],
+				config.UI.player.images.walk_item_left[4],
+				config.UI.player.images.walk_item_left[5],
+				config.UI.player.images.walk_item_left[6],
+				config.UI.player.images.walk_item_left[7],
+				
 			],
-			frames: {
-				width: config.UI.player.imageWidth,
-				height: config.UI.player.imageHeight
-			},
-			framerate: 2,
+			frames: [
+				[0, 0, 380, 810, 0, -380],
+				[0, 0, 380, 810, 1, -380],
+				[0, 0, 380, 810, 2, -380],
+				[0, 0, 380, 810, 3, -380],
+				[0, 0, 760, 810, 4, -190],
+				[0, 0, 760, 810, 5, -380],
+				[0, 0, 760, 810, 6, -190],
+				[0, 0, 760, 810, 7, 0],
+				
+				// 8, pick
+				[0, 0, 760, 810, 8, -190],
+				[0, 0, 760, 810, 9, -190],
+				[0, 0, 760, 810, 10, -190],
+				[0, 0, 760, 810, 11, -190],
+				
+				[0, 0, 760, 810, 12, -380],
+				[0, 0, 760, 810, 13, -380],
+				[0, 0, 760, 810, 14, -380],
+				[0, 0, 760, 810, 15, -380],
+				
+				[0, 0, 760, 810, 16, -190],
+				[0, 0, 760, 810, 17, -190],
+				[0, 0, 760, 810, 18, -190],
+				[0, 0, 760, 810, 19, -190],
+				
+				[0, 0, 760, 810, 20, 0],
+				[0, 0, 760, 810, 21, 0],
+				[0, 0, 760, 810, 22, 0],
+				[0, 0, 760, 810, 23, 0],
+				
+				// 24, drop
+				[0, 0, 760, 810, 11, -190],
+				[0, 0, 760, 810, 10, -190],
+				[0, 0, 760, 810, 9, -190],
+				[0, 0, 760, 810, 8, -190],
+				
+				[0, 0, 760, 810, 15, -380],
+				[0, 0, 760, 810, 14, -380],
+				[0, 0, 760, 810, 13, -380],
+				[0, 0, 760, 810, 12, -380],
+				
+				[0, 0, 760, 810, 19, -190],
+				[0, 0, 760, 810, 18, -190],
+				[0, 0, 760, 810, 17, -190],
+				[0, 0, 760, 810, 16, -190],
+				
+				[0, 0, 760, 810, 23, 0],
+				[0, 0, 760, 810, 22, 0],
+				[0, 0, 760, 810, 21, 0],
+				[0, 0, 760, 810, 20, 0],
+				
+				// 40, walk front
+				[0, 0, 760, 810, 24, -190],
+				[0, 0, 760, 810, 25, -190],
+				[0, 0, 760, 810, 26, -190],
+				[0, 0, 760, 810, 27, -190],
+				[0, 0, 760, 810, 28, -190],
+				[0, 0, 760, 810, 29, -190],
+				[0, 0, 760, 810, 30, -190],
+				[0, 0, 760, 810, 31, -190],
+				[0, 0, 760, 810, 32, -190],
+				
+				// 49, walk right
+				[0, 0, 760, 810, 33, -380],
+				[0, 0, 760, 810, 34, -380],
+				[0, 0, 760, 810, 35, -380],
+				[0, 0, 760, 810, 36, -380],
+				[0, 0, 760, 810, 37, -380],
+				[0, 0, 760, 810, 38, -380],
+				[0, 0, 760, 810, 39, -380],
+				[0, 0, 760, 810, 40, -380],
+				
+				// 57, walk back
+				[0, 0, 760, 810, 41, -190],
+				[0, 0, 760, 810, 42, -190],
+				[0, 0, 760, 810, 43, -190],
+				[0, 0, 760, 810, 44, -190],
+				[0, 0, 760, 810, 45, -190],
+				[0, 0, 760, 810, 46, -190],
+				[0, 0, 760, 810, 47, -190],
+				[0, 0, 760, 810, 48, -190],
+				[0, 0, 760, 810, 49, -190],
+				
+				// 66, walk left
+				[0, 0, 760, 810, 50, 0],
+				[0, 0, 760, 810, 51, 0],
+				[0, 0, 760, 810, 52, 0],
+				[0, 0, 760, 810, 53, 0],
+				[0, 0, 760, 810, 54, 0],
+				[0, 0, 760, 810, 55, 0],
+				[0, 0, 760, 810, 56, 0],
+				[0, 0, 760, 810, 57, 0],
+				
+				// 74, walk item front
+				[0, 0, 760, 810, 58, -190],
+				[0, 0, 760, 810, 59, -190],
+				[0, 0, 760, 810, 60, -190],
+				[0, 0, 760, 810, 61, -190],
+				[0, 0, 760, 810, 62, -190],
+				[0, 0, 760, 810, 63, -190],
+				[0, 0, 760, 810, 64, -190],
+				[0, 0, 760, 810, 65, -190],
+				
+				// 82, walk item right
+				[0, 0, 760, 810, 66, -380],
+				[0, 0, 760, 810, 67, -380],
+				[0, 0, 760, 810, 68, -380],
+				[0, 0, 760, 810, 69, -380],
+				[0, 0, 760, 810, 70, -380],
+				[0, 0, 760, 810, 71, -380],
+				[0, 0, 760, 810, 72, -380],
+				[0, 0, 760, 810, 73, -380],
+				
+				// 90, walk item back
+				[0, 0, 760, 810, 74, -190],
+				[0, 0, 760, 810, 75, -190],
+				[0, 0, 760, 810, 76, -190],
+				[0, 0, 760, 810, 77, -190],
+				[0, 0, 760, 810, 78, -190],
+				[0, 0, 760, 810, 79, -190],
+				[0, 0, 760, 810, 80, -190],
+				[0, 0, 760, 810, 81, -190],
+				[0, 0, 760, 810, 82, -190],
+				
+				// 99, walk item left
+				[0, 0, 760, 810, 83, 0],
+				[0, 0, 760, 810, 84, 0],
+				[0, 0, 760, 810, 85, 0],
+				[0, 0, 760, 810, 86, 0],
+				[0, 0, 760, 810, 87, 0],
+				[0, 0, 760, 810, 88, 0],
+				[0, 0, 760, 810, 89, 0],
+				[0, 0, 760, 810, 90, 0],
+				
+				
+			],
+			framerate: 6,
 			animations: {
-				a0: [0, 1],
-				a1: [2, 3],
-				a2: [4, 5],
-				a3: [6, 7]
+				a0: [0],
+				a1: [1],
+				a2: [2],
+				a3: [3],
+				
+				i0: [4],
+				i1: [5],
+				i2: [6],
+				i3: [7],
+				
+				pick0: [8,11,"i0"],
+				pick1: [12,15,"i1"],
+				pick2: [16,19,"i2"],
+				pick3: [20,23,"i3"],
+				
+				drop0: [24,27,"a0"],
+				drop1: [28,31,"a1"],
+				drop2: [32,35,"a2"],
+				drop3: [36,39,"a3"],
+				
+				walk0: [40,48,"walk0",2],
+				walk1: [49,56,"walk1",2],
+				walk2: [57,65,"walk2",2],
+				walk3: [66,73,"walk3",2],
+				
+				walki0: [74,81,"walki0",2],
+				walki1: [82,89,"walki1",2],
+				walki2: [90,98,"walki2",2],
+				walki3: [99,106,"walki3",2],
 			}
 		});
 		playerDirection = 0;
@@ -698,12 +961,15 @@ var ui = function() {
 			for (var j = 0; j < M; j++) {
 				var id = i * M + j;
 				var s = graphics.newSprite(mapSpriteSheets[0]);
+				graphics.getSprite(s).set({alpha: 0.6});
 				graphics.setSpritePos(s, getMapGridPos(j, i));
 				mapSprites.push(s);
 				
-				s = graphics.newSprite(mapSpriteSheets[map[id]]);
-				graphics.setSpritePos(s, getMapGridPos(j, i));
-				mapSprites.push(s);
+				if (map[id] != 0) {
+					s = graphics.newSprite(mapSpriteSheets[map[id]]);
+					graphics.setSpritePos(s, getMapGridPos(j, i));
+					mapSprites.push(s);
+				}
 				
 				var ts = graphics.newCustomSprite(new createjs.Text("", "15px Arial", "#003022"), {
 					x: 0.0,
@@ -719,9 +985,9 @@ var ui = function() {
 			graphics.removeSprite(playerSprite);
 		}
 		playerSprite = graphics.newCustomSprite(new createjs.Sprite(playerSpriteSheet), {
-			x: 0,
-			y: config.UI.player.imageHeight,
-			len: config.UI.player.imageWidth
+			x: 380,
+			y: 810,
+			len: 380
 		});
 		playerDirection = 0;
 		graphics.getSprite(playerSprite).gotoAndPlay("a0");
@@ -827,11 +1093,35 @@ var ui = function() {
 		var i = (pos - pos % M) / M;
 		var j = pos % M;
 		
-		return {
-			x: mapLeftPos + mapGridWidth * (j + 0.25),
-			y: mapTopPos + mapGridHeight * (i - 0.2 + 0.5),
-			len: mapGridWidth * 0.5
-		};
+		if (playerDirection == 0) {
+			// front
+			return {
+				x: mapLeftPos + mapGridWidth * (j + 0.25),
+				y: mapTopPos + mapGridHeight * (i - 0.2 + 0.5 + 0.05),
+				len: mapGridWidth * 0.5
+			};
+		} else if (playerDirection == 2) {
+			// back
+			return {
+				x: mapLeftPos + mapGridWidth * (j + 0.25),
+				y: mapTopPos + mapGridHeight * (i - 0.2 + 0.5 - 1.0),
+				len: mapGridWidth * 0.5
+			};
+		} else if (playerDirection == 1) {
+			// right
+			return {
+				x: mapLeftPos + mapGridWidth * (j + 0.25 + 1.0),
+				y: mapTopPos + mapGridHeight * (i - 0.2 + 0.5 - 0.55),
+				len: mapGridWidth * 0.6
+			};
+		} else {
+			// left
+			return {
+				x: mapLeftPos + mapGridWidth * (j + 0.25 - 1.0),
+				y: mapTopPos + mapGridHeight * (i - 0.2 + 0.5 - 0.55),
+				len: mapGridWidth * 0.6
+			};
+		}
 	};
 	
 	var getItemGraphicsPos = function(pos) {
@@ -864,7 +1154,7 @@ var ui = function() {
 		var ret = getItemGraphicsPos(pos);
 		return {
 			x: ret.x + mapGridWidth * 0.15,
-			y: ret.y + mapGridHeight * (-0.65 + 0.44),  // 0.44 is 0.25 + 15/78
+			y: ret.y + mapGridHeight * (-0.65 + 0.44 - 0.1),  // 0.44 is 0.25 + 15/78
 			len: 1.0
 		};
 	};
@@ -899,6 +1189,7 @@ var ui = function() {
 			}
 			itemOnHead = genNewItem(args);
 			setItemPos(itemOnHead, pos);
+			graphics.getSprite(playerSprite).gotoAndPlay("i" + playerDirection);
 		} else {
 			if (items[pos] != undefined) {
 				throw "Invalid newItem on " + pos;
@@ -909,7 +1200,7 @@ var ui = function() {
 			items[pos] = genNewItem(args);
 			setItemPos(items[pos], pos);
 		}
-		
+		updatePlayerZIndex();
 		setTimeout(setAnimationComplete, 0);
 	};
 	
@@ -924,8 +1215,13 @@ var ui = function() {
 			textTrans = graphics.getSpriteTransformToPos(item.textSprite, getItemTextGraphicsPos(pos));
 		}
 		
-		graphics.getTweenObject(item.sprite).to(itemTrans, 500, createjs.Ease.getPowInOut(3)).call(callback);
-		graphics.getTweenObject(item.textSprite).to(textTrans, 500, createjs.Ease.getPowInOut(3));
+		var powFactor = 1;
+		if (!isOnHead ^ (pos == -1)) {
+			powFactor = 3;
+		}
+		
+		graphics.getTweenObject(item.sprite).to(itemTrans, 500, createjs.Ease.getPowInOut(powFactor)).call(callback);
+		graphics.getTweenObject(item.textSprite).to(textTrans, 500, createjs.Ease.getPowInOut(powFactor));
 	};
 	
 	var runAddAnimation = function(args) {
@@ -951,12 +1247,14 @@ var ui = function() {
 		if (pos1 == -1) {
 			item = itemOnHead;
 			itemOnHead = undefined;
+			graphics.getSprite(playerSprite).gotoAndPlay("drop" + playerDirection);
 		} else {
 			item = items[pos1];
 			items[pos1] = undefined;
 		}
 		if (pos2 == -1) {
 			itemOnHead = item;
+			graphics.getSprite(playerSprite).gotoAndPlay("pick" + playerDirection);
 		} else {
 			items[pos2] = item;
 		}
@@ -970,19 +1268,46 @@ var ui = function() {
 	
 	// Move player's pos
 	var movePlayerPos = function(sprite, pos) {
+		var prefix = itemOnHead != undefined ? "walki" : "walk";
+		graphics.getSprite(playerSprite).gotoAndPlay(prefix + playerDirection);
 		return graphics.getTweenObject(sprite).to(
 			graphics.getSpriteTransformToPos(sprite, getMapGridPos(pos)),
 			500,
-			createjs.Ease.getPowInOut(3)
+			createjs.Ease.getPowInOut(1)
 		);
 	};
 	
+	var updateItemOnHead = function() {
+		if (itemOnHead != undefined) {
+			setItemPos(itemOnHead, -1);
+		}
+	};
+	
+	var updatePlayerZIndex = function() {
+		stage.setChildIndex(graphics.getSprite(playerSprite), stage.getNumChildren() - 1);
+		if (itemOnHead != undefined) {
+			if (playerDirection == 2) {
+				// back
+				stage.setChildIndex(graphics.getSprite(itemOnHead), stage.getNumChildren() - 1);
+				stage.setChildIndex(graphics.getSprite(playerSprite), stage.getNumChildren() - 1);
+			} else {
+				stage.setChildIndex(graphics.getSprite(itemOnHead), stage.getNumChildren() - 1);
+			}
+		}
+	};
+	
 	var runAddPlayerAnimation = function(args) {
+		var hasItemOnHead = itemOnHead != undefined;
+		var stillPrefix = hasItemOnHead ? "i" : "a";
+		
 		setPlayerPos(playerSprite, args.pos1);
 		if (playerDirection != args.dir1) {
-			graphics.getSprite(playerSprite).gotoAndPlay("a" + args.dir1);
+			graphics.getSprite(playerSprite).gotoAndPlay(stillPrefix + args.dir1);
 			playerDirection = args.dir1;
+			playerPos = args.pos2;
+			updateItemOnHead();
 		}
+		updatePlayerZIndex();
 		
 		// Move
 		if (args.pos1 != args.pos2 && args.dir1 == args.dir2) {
@@ -993,8 +1318,11 @@ var ui = function() {
 		} else if (args.pos1 == args.pos2 && args.dir1 != args.dir2) {
 			setTimeout(function() {
 				setPlayerPos(playerSprite, args.pos2);
-				graphics.getSprite(playerSprite).gotoAndPlay("a" + args.dir2);
+				graphics.getSprite(playerSprite).gotoAndPlay(stillPrefix + args.dir2);
 				playerDirection = args.dir2;
+				playerPos = args.pos2;
+				updateItemOnHead();
+				updatePlayerZIndex();
 			}, 250);
 			setTimeout(setAnimationComplete, 500);
 		} else if (args.pos1 == args.pos2 && args.dir1 == args.dir2) {
@@ -1005,8 +1333,11 @@ var ui = function() {
 				moveItem(itemOnHead, args.pos2, true);
 			}
 			setTimeout(function() {
-				graphics.getSprite(playerSprite).gotoAndPlay("a" + args.dir2);
+				graphics.getSprite(playerSprite).gotoAndPlay(stillPrefix + args.dir2);
 				playerDirection = args.dir2;
+				playerPos = args.pos2;
+				updateItemOnHead();
+				updatePlayerZIndex();
 			}, 750);
 			setTimeout(setAnimationComplete, msg.getMsgId("Succeeded"));
 		}
@@ -1021,6 +1352,7 @@ var ui = function() {
 			}
 			removeItem(itemOnHead);
 			itemOnHead = undefined;
+			graphics.getSprite(playerSprite).gotoAndPlay("a" + playerDirection);
 		} else {
 			if (items[pos] == undefined) {
 				throw "No such item on " + pos;
