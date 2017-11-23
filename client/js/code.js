@@ -66,18 +66,18 @@ var code = function() {
 		});
 	};
 
-    var setLock = function(state){
+	var setLock = function(state){
 		state = state || alwaysLock;
 		if (state) workspace.updateToolbox(disabledToolbox[0]);
 		else workspace.updateToolbox(enabledToolbox[0]);
-        currentBlocks = workspace.getAllBlocks();
-        for (let bid in currentBlocks)
-        {
-            currentBlocks[bid].setEditable(!state);
-            currentBlocks[bid].setMovable(!state);
-            currentBlocks[bid].setDeletable(!state);
-        }
-    };
+		currentBlocks = workspace.getAllBlocks();
+		for (let bid in currentBlocks)
+		{
+			currentBlocks[bid].setEditable(!state);
+			currentBlocks[bid].setMovable(!state);
+			currentBlocks[bid].setDeletable(!state);
+		}
+	};
 
 	var highlight = function(id) {
 		workspace.highlightBlock(id);
