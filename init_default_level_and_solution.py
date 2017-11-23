@@ -18,7 +18,18 @@ def get_num_in_file_name(name):
     return int(name[i:j])
 
 
-level_list = os.listdir('./leveldb/level')
+level_list = [
+"default1.txt",
+"default2.txt",
+"default3.txt",
+"default4.txt",
+"default5.txt",
+"default6.txt",
+"default7.txt",
+"default8.txt",
+"default9.txt",
+"default10.txt",
+]
 for l in level_list:
     num = get_num_in_file_name(l)
     if num == 0:
@@ -40,10 +51,21 @@ for l in level_list:
         print "default level " + str(_default_level_id) + " changed successfully"
         continue
 
-    level = Level.objects.create(default_level_id = _default_level_id, info = _level_info, user_name = "super_admin")
+    level = Level.objects.create(default_level_id = _default_level_id, info = _level_info, user_name = "super_admin", shared=True)
     print "default level " + str(_default_level_id) + " built  successfully"
 
-solution_list = os.listdir('./leveldb/solution')
+solution_list = [
+"default1.txt",
+"default2.txt",
+"default3.txt",
+"default4.txt",
+"default5.txt",
+"default6.txt",
+"default7.txt",
+"default8.txt",
+"default9.txt",
+"default10.txt",
+]
 for l in solution_list:
     num = get_num_in_file_name(l)
     if num == 0:
