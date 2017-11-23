@@ -190,6 +190,36 @@ var user = function() {
 			$("#payVipModal").modal();
 		});
 
+		$("#payVipSubmitButton1").click(function() {
+			$("#payVipSubmitButton1").attr("disabled", "disabled");
+			
+			logic.doPayVip(function(err, res) {
+				$("#payVipSubmitButton1").removeAttr("disabled");
+				
+				if (err != undefined) {
+					alert("付费失败： " + err);
+					return;
+				}
+				alert("付费成功！");
+				$("#payVipModal").modal("hide");
+				ui.start();
+			});
+		});
+		$("#payVipSubmitButton2").click(function() {
+			$("#payVipSubmitButton2").attr("disabled", "disabled");
+			
+			logic.doPayVip(function(err, res) {
+				$("#payVipSubmitButton2").removeAttr("disabled");
+				
+				if (err != undefined) {
+					alert("付费失败： " + err);
+					return;
+				}
+				alert("付费成功！");
+				$("#payVipModal").modal("hide");
+				ui.start();
+			});
+		});
 		$("#payVipSubmitButton").click(function() {
 			$("#payVipSubmitButton").attr("disabled", "disabled");
 			

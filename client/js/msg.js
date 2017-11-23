@@ -18,7 +18,7 @@ function Msg()
 		1014: ["Identifying code can't be empty.", "验证码不能为空"],
 		1015: ["Wrong identifying code.", "验证码错误"],
 		1016: ["Level id and default level id can't be empty in the same time.", "关卡ID和预置关卡ID不能同时为空"],
-		1017: ["This level doesn't exist.", "这个关卡不存在"],
+		1017: ["This level doesn't exist.", "您已通关"],
 		1018: ["The input default level id needs to be an Integer.", "默认关卡ID需要是Int类型"],
 		1019: ["The input level id needs to be an Integer.", "关卡ID需要是Int类型"],
 		1020: ["Default level id can't be empty.", "默认关卡ID不能为空"],

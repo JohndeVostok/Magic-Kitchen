@@ -543,6 +543,15 @@ function Logic()
 				return 1;
 		};
 
+		this.prepareForInbox = function() {
+			if (player.haveItem && itemList[player.itemId].type == 1)
+			{
+				ui.deleteItem(-1, undefined);
+				player.haveItem = 0;
+				player.itemId = 0;
+			}
+		};
+
 		this.checkLoad = function(pos)
 		{
 			if (player.haveItem)
@@ -1353,6 +1362,7 @@ function Logic()
 	{
 		validator.init();
 		var f = state.getInbox();
+		state.prepareForInbox();
 		state.checkLoad(f.pos);
 		if (validator.validate())
 			return undefined;
