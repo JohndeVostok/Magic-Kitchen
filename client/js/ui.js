@@ -435,7 +435,7 @@ var ui = function() {
 							+ '</span></button>&nbsp&nbsp';
 					$("#chooseDefaultLevelDiv").append(btn);
 					btn = "#chooseDefaultLevelButtonId" + i;
-					if (i >= res.nextDefaultLevel) $(btn).attr("disabled", true);
+					if (i >= res.nextDefaultLevel && res.nextDefaultLevel != -1) $(btn).attr("disabled", true);
 					$(btn).click(function() {
 						var targetLevelId = $(this).attr("value");
 						if (isNaN(targetLevelId))
