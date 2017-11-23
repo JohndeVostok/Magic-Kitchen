@@ -108,13 +108,17 @@ var ui = function() {
 	const IOItemsHeight = 50;
 	const IOItemsHorizontalGap = 20;
 	const IOItemsLeftPos = 100;
-	const inputTopPos = 0;
-	const outputTopPos = 75;
+	const inputTopPos = 0 + 160;
+	const outputTopPos = 75 + 160;
 	var inputItems = [];
 	var outputItems = [];
 	
 	// For continuous-run function.
 	var gameRunning = false;
+	
+	// For level description.
+	var levelDescriptionBox = undefined;
+	var levelDescriptionText = undefined;
 	
 	var initUI = function() {
 		// Init map.
@@ -136,6 +140,35 @@ var ui = function() {
 			clearAlert();
 		});
 		
+		// Init level description.
+		// Only run this the first time.
+		if (levelDescriptionBox == undefined) {
+			const TextWidth = 530;
+			const TextHeight = 140;
+			const StageWidth = 550;
+			const StageHeight = 160;
+			var textbgGraphics = new createjs.Graphics().beginFill("#e8f3f3")
+				.drawRoundRect(
+					0, 0,
+					TextWidth, TextHeight,
+					20, 20, 20, 20
+				);
+			alertTextBackground = stage.addChild(new createjs.Shape()).set({
+				graphics: textbgGraphics,
+				x: (StageWidth - TextWidth) / 2,
+				y: (StageHeight - TextHeight) / 2,
+				alpha: 0.85
+			});
+			
+			levelDescriptionText = stage.addChild(new createjs.Text("test", "20px Arial", "#222200"));
+			levelDescriptionText.textAlign = "center";
+			levelDescriptionText.lineWidth = TextWidth;
+			levelDescriptionText.maxWidth = TextWidth;
+			levelDescriptionText.lineHeight = 25;
+			levelDescriptionText.x = StageWidth / 2;
+			levelDescriptionText.y = (StageHeight - 20) / 2;
+		}
+		
 		// Init items.
 		// Use clear items animation.
 		// Animation queue must be initialized before this.
@@ -143,9 +176,9 @@ var ui = function() {
 		
 		// Setup and render on CreateJS.
 		mapLeftPos = 2;
-		mapTopPos = 2 + 150;
-		mapGridHeight = 546 / N;
-		mapGridWidth = 546 / M;
+		mapTopPos = 2 + 150 + 160;
+		mapGridHeight = 546 * 0.707 / N;
+		mapGridWidth = 546 * 0.707 / M;
 		
 		mapSpriteSheet = {};
 		for (var i in config.UI.map.images) {
@@ -1120,9 +1153,10 @@ var ui = function() {
 		alertText = stage.addChild(new createjs.Text(text, "20px Arial", "#660077"));
 		alertText.textAlign = "center";
 		alertText.lineWidth = TextWidth;
-		alertText.lineHeight = TextHeight;
+		alertText.maxWidth = TextWidth;
+		alertText.lineHeight = 25;
 		alertText.x = StageWidth / 2;
-		alertText.y = (StageHeight - 20) / 2;
+		alertText.y = (StageHeight - alertText.getMeasuredHeight()) / 2;
 	};
 	
 	var runAlert = function(args) {
@@ -1310,9 +1344,14 @@ var ui = function() {
 		$("#currentLevelSpan").text("默认关卡：第" + default_level_id + "关")	
 	};
 
-	var setDescription = function(index)
-	{
-	}
+	var setDescription = function(text) {
+		if (typeof(text) != "string") {
+			text = text + "";
+		}
+		levelDescriptionText.text = text;
+		var h = levelDescriptionText.getMeasuredHeight();
+		levelDescriptionText.y = (160 - h) / 2;
+	};
 	
 	return {
 		doLoad: doLoad,
