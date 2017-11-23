@@ -199,6 +199,7 @@ function Logic()
 
 			input = $.extend(true, [], levelInfo.input);
 			output = $.extend(true, [], levelInfo.output);
+			description = levelInfo.description;
 		}
 
 		this.render = function()
