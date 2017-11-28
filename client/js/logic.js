@@ -1007,6 +1007,20 @@ function Logic()
 	
 	// Load a level stored in levelInfo, which sets up the map and Blockly.
 	// Start a new level, may need grabbing it from server.
+	this.loadSolution = function(solutionId, afterwards){
+		network.getSolutionInfo(
+			solutionId,
+			function(data){
+				if (data["status"] == msg.getMsgId("Succeeded"))
+				{
+					code.loadSolution(JSON.parse(data["solution_info"]));
+					if (afterwards != undefined) afterwards();
+				}
+				else alert(msg.getMessage(data["status"]));
+			}
+		);
+	};
+
 	this.loadLevel = function(levelId, afterwards)
 	{
 		var compLevel = function(data) {
@@ -1022,7 +1036,7 @@ function Logic()
 						var solution_id = JSON.parse(data["solution_dict"])[levelId];
 						if (solution_id != undefined)
 						{
-							logic.loadSolution(solution_id, afterwards);
+							this.loadSolution(solution_id, afterwards);
 						}
 					}
 					else
@@ -1068,20 +1082,6 @@ function Logic()
 			}
 		};
 		network.getDefaultLevelInfo(levelId, compLevel);
-	};
-
-	this.loadSolution = function(solutionId, afterwards){
-		network.getSolutionInfo(
-			solutionId,
-			function(data){
-				if (data["status"] == msg.getMsgId("Succeeded"))
-				{
-					code.loadSolution(JSON.parse(data["solution_info"]));
-					if (afterwards != undefined) afterwards();
-				}
-				else alert(msg.getMessage(data["status"]));
-			}
-		);
 	};
 
 	var renderLevel = function()
