@@ -1985,9 +1985,12 @@ function Logic()
 			star = 4;
 			bestNum = "-";
 		}
-		else if (usedNum <= bestBlockNum) star = 3;
-		else if (usedNum <= bestBlockNum * 2) star = 2;
-		else star = 1;
+		else if (usedNum <= bestBlockNum)
+			star = 3;
+		else if (usedNum <= bestBlockNum * 2)
+			star = 2;
+		else
+			star = 1;
 		return {used_num: usedNum, best_num: bestNum, result: star};
 	}
 
