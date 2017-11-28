@@ -666,7 +666,6 @@ var ui = function() {
 				
 				var privateList = res.privateLevelList;
 				$("#choosePrivateLevelDiv").empty();
-				var but = "";
 				for (let i = 0; i < privateList.length; i++)
 				{
 					var btn = '<button type="button" class="btn btn-primary" id="'
