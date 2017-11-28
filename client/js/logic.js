@@ -438,7 +438,7 @@ function Logic()
 
 		this.dumpLevel = function()
 		{
-			level = {
+			var level = {
 				blockTypes: [21, 22, 23, 24, 25, 26, 31, 32, 41, 42, 43, 11],
 				playerInfo: {pos: 7, dir: 0},
 				opFloor: opFloor,
