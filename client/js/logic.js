@@ -1027,7 +1027,8 @@ function Logic()
 					}
 					else
 					{
-						if (afterwards != undefined) afterwards();
+						if (afterwards != undefined)
+							afterwards();
 					}
 				});
 			}
