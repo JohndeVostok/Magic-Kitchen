@@ -1895,14 +1895,15 @@ function Logic()
 	this.getNextDefaultLevel = function(list, callback)
 	{
 		network.getCurrentUserInfo(function(res) {
+			var ans;
 			if (res.status == msg.getMsgId("Succeeded"))
 			{
-				var ans = $.extend(true, {}, list, {nextDefaultLevel: res.next_default_level_id});
+				ans = $.extend(true, {}, list, {nextDefaultLevel: res.next_default_level_id});
 				callback(undefined, ans);
 			}
 			else
 			{
-				var ans = $.extend(true, {}, list, {nextDefaultLevel: user.getNextLevel()});
+				ans = $.extend(true, {}, list, {nextDefaultLevel: user.getNextLevel()});
 				callback(undefined, ans);
 			}
 		});
