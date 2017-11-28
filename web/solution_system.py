@@ -29,7 +29,7 @@ def new_std_solution(request):
     ret = {}
 
     session = get_session(request)
-    if (session == None):
+    if session == None:
         ret['status'] = msgid.NOT_LOGIN #'please log in first'
         return json_response(ret)
 
@@ -45,7 +45,6 @@ def new_std_solution(request):
     try:
         _default_level_id = int(content['default_level_id'])
     except ValueError,e :
-        print e
         ret['status'] = msgid.DEFAULT_LEVEL_ID_NOT_INT #'the input default level id needs to be an Integer'
         return json_response(ret)
 
@@ -66,7 +65,6 @@ def new_std_solution(request):
         try:
             _edit = int(content['edit'])
         except ValueError,e :
-            print e
             ret['status'] = msgid.EDIT_OUT_OF_RANGE #'the input edit needs to be 0 or 1'
             return json_response(ret)
         if (_edit != 0) and (_edit != 1):
@@ -90,7 +88,6 @@ def new_std_solution(request):
     try:
         std_block_num = int(_info['block_num'])
     except ValueError,e :
-        print e
         ret['status'] = msgid.BLOCK_NUM_NOT_INT #''block_num' in solution_info dict needs to be an Integer'
         return json_response(ret)
 
@@ -125,7 +122,7 @@ def new_solution(request):
     ret = {}
 
     session = get_session(request)
-    if (session == None):
+    if session == None:
         ret['status'] = msgid.NOT_LOGIN #'please log in first'
         return json_response(ret)
 
@@ -136,7 +133,6 @@ def new_solution(request):
     try:
         _level_id = int(content['level_id'])
     except ValueError,e :
-        print e
         ret['status'] = msgid.LEVEL_ID_NOT_INT #'the input level id needs to be an Integer'
         return json_response(ret)
 
@@ -161,7 +157,6 @@ def new_solution(request):
     try:
         user_block_num = int(_info['block_num'])
     except ValueError,e :
-        print e
         ret['status'] = msgid.BLOCK_NUM_NOT_INT #''block_num' in solution_info dict needs to be an Integer'
         return json_response(ret)
 
@@ -214,7 +209,6 @@ def get_solution_info(request):
     try:
         _solution_id = int(content['solution_id'])
     except ValueError,e :
-        print e
         ret['status'] = msgid.SOLUTION_ID_NOT_INT #'the input solution id needs to be an Integer'
         return json_response(ret)
 
@@ -251,7 +245,7 @@ def share_solution(request):
     ret = {}
 
     session = get_session(request)
-    if (session == None):
+    if session == None:
         ret['status'] = msgid.NOT_LOGIN #'please log in first'
         return json_response(ret)
 
@@ -265,7 +259,6 @@ def share_solution(request):
     try:
         _shared = int(content['share'])
     except ValueError,e :
-        print e
         ret['status'] = msgid.SHARE_OUT_OF_RANGE #'the input share needs to be 0 or 1'
         return json_response(ret)
     if (_shared != 0) and (_shared != 1):
@@ -275,7 +268,6 @@ def share_solution(request):
     try:
         _solution_id = int(content['solution_id'])
     except ValueError,e :
-        print e
         ret['status'] = msgid.SOLUTION_ID_NOT_INT #'the input solution id needs to be an Integer'
         return json_response(ret)
 
