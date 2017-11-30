@@ -577,7 +577,7 @@ function Logic()
 						validator.invalid(msg.getMsgId("Inbox is empty."));
 				}
 				else
-					validator.invalid(msg.getMsgId("There is notiong there to load."));
+					validator.invalid(msg.getMsgId("There is nothing there to load."));
 				return 0;
 			}
 			return 1;

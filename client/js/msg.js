@@ -60,7 +60,7 @@ function Msg()
 		3003: ["Invalid address.", "地址不存在"],
 		3011: ["Target is not an operation floor.", "目标不是操作台。"],
 		3012: ["I have something in my hand.", "我手里有东西。"],
-		3013: ["There is nothing there to load", "那没什么可拿的。"],
+		3013: ["There is nothing there to load.", "那没什么可拿的。"],
 		3014: ["Inbox is empty.", "进材口已经空了。"],
 		3015: ["I have nothing in my hand.", "我手里没东西。"],
 		3016: ["There is something there.", "那已经有东西了。"],
