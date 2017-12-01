@@ -172,7 +172,7 @@
 ### Get All Private Level
         Post('/api/get_all_private_level')
         返回所有当前用户创建关卡中未被分享的部分。
-        如果没有登陆，不会报错，但会返回空列表。
+        如果没有登录，不会报错，但会返回空列表。
 
         return json dict:
             status = 1000
