@@ -104,22 +104,49 @@ var user = function() {
 		});
 		
 		$("#forgotPasswordButton").click(function() {
-			$("#forgotPasswordButton").attr("disabled", "disabled");
+			$("#resetPasswordUsername").val($("#loginUsername").val());
+			$("#resetPasswordCode").val("");
+			$("#resetPasswordPassword").val("");
+			$("#resetPasswordGetCodeButton").removeAttr("disabled");
+			$("#resetPasswordModal").modal();
+		});
+		$("#resetPasswordGetCodeButton").click(function() {
+			$("#resetPasswordGetCodeButton").attr("disabled", "disabled");
 			
-			// Call logic login interface.
-			network.changePasswordByEmail($("#loginUsername").val(), function(data) {
-				$("#forgotPasswordButton").removeAttr("disabled");
-				$("#forgotPasswordButton").css("display", "none");
-				
-				if (data["status"] != msg.getMsgId("Succeeded")) {
-					alert("找回失败：" + msg.getMessage(data["status"]));
-					$("#loginPassword").val("");
-					return;
+			network.changePasswordByEmail(
+				$("#resetPasswordUsername").val(),
+				function(data) {
+					$("#resetPasswordGetCodeButton").removeAttr("disabled");
+					
+					if (data["status"] != msg.getMsgId("Succeeded")) {
+						alert("发送验证码失败：" + msg.getMessage(data["status"]));
+						return;
+					}
+					
+					alert("邮件已发送，请查收");
 				}
-				
-				alert("邮件已发送，请查收");
-				$("#loginPassword").val("");
-			});
+			);
+		});
+		$("#resetPasswordSubmitButton").click(function() {
+			$("#resetPasswordSubmitButton").attr("disabled", "disabled");
+			
+			network.changePasswordByIdentifyingCode(
+				$("#resetPasswordUsername").val(),
+				$("#resetPasswordCode").val(),
+				$("#resetPasswordPassword").val(),
+				function(data) {
+					$("#resetPasswordSubmitButton").removeAttr("disabled");
+					
+					if (data["status"] != msg.getMsgId("Succeeded")) {
+						alert("重置密码失败：" + msg.getMessage(data["status"]));
+						$("#resetPasswordPassword").val("");
+						return;
+					}
+					
+					alert("重置密码成功");
+					$("#resetPasswordModal").modal("hide");
+				}
+			);
 		});
 		// For logout function.
 		$("#logoutButton").click(function() {

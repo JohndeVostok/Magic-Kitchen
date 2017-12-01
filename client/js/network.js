@@ -95,6 +95,18 @@ var network = function() {
 		);
 	};
 
+	var changePasswordByIdentifyingCode = function(name, code, password, callback) {
+		postRequest(
+			"/api/change_password_by_identifying_code",
+			{
+				"name": name,
+				"identifying_code": code,
+				"new_password": password
+			},
+			callback
+		);
+	};
+
 	var newDefaultLevel = function(level_id, level_info, callback) {
 		postRequest(
 			"/api/new_default_level",
@@ -342,6 +354,7 @@ var network = function() {
 		logout: logout,
 		changePasswordByEmail: changePasswordByEmail,
 		changePasswordAfterLogin: changePasswordAfterLogin,
+		changePasswordByIdentifyingCode: changePasswordByIdentifyingCode,
 		newDefaultLevel: newDefaultLevel,
 		editDefaultLevel: editDefaultLevel,
 		getDefaultLevelInfo: getDefaultLevelInfo,
