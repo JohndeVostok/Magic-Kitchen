@@ -438,7 +438,7 @@ function Logic()
 
 		this.dumpLevel = function()
 		{
-			level = {
+			var level = {
 				blockTypes: [21, 22, 23, 24, 25, 26, 31, 32, 41, 42, 43, 11],
 				playerInfo: {pos: 7, dir: 0},
 				opFloor: opFloor,
@@ -1027,7 +1027,8 @@ function Logic()
 					}
 					else
 					{
-						if (afterwards != undefined) afterwards();
+						if (afterwards != undefined)
+							afterwards();
 					}
 				});
 			}
@@ -1057,7 +1058,8 @@ function Logic()
 					}
 					else
 					{
-						if (afterwards != undefined) afterwards();
+						if (afterwards != undefined)
+							afterwards();
 					}
 				});
 			}
@@ -1894,14 +1896,15 @@ function Logic()
 	this.getNextDefaultLevel = function(list, callback)
 	{
 		network.getCurrentUserInfo(function(res) {
+			var ans;
 			if (res.status == msg.getMsgId("Succeeded"))
 			{
-				var ans = $.extend(true, {}, list, {nextDefaultLevel: res.next_default_level_id});
+				ans = $.extend(true, {}, list, {nextDefaultLevel: res.next_default_level_id});
 				callback(undefined, ans);
 			}
 			else
 			{
-				var ans = $.extend(true, {}, list, {nextDefaultLevel: user.getNextLevel()});
+				ans = $.extend(true, {}, list, {nextDefaultLevel: user.getNextLevel()});
 				callback(undefined, ans);
 			}
 		});
@@ -1983,9 +1986,12 @@ function Logic()
 			star = 4;
 			bestNum = "-";
 		}
-		else if (usedNum <= bestBlockNum) star = 3;
-		else if (usedNum <= bestBlockNum * 2) star = 2;
-		else star = 1;
+		else if (usedNum <= bestBlockNum)
+			star = 3;
+		else if (usedNum <= bestBlockNum * 2)
+			star = 2;
+		else
+			star = 1;
 		return {used_num: usedNum, best_num: bestNum, result: star};
 	}
 
