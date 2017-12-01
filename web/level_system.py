@@ -42,7 +42,6 @@ def new_default_level(request):
     try:
         _id = int(content['default_level_id'])
     except ValueError,e :
-        print e
         ret['status'] = msgid.DEFAULT_LEVEL_ID_NOT_INT #'the input default level id needs to be an Integer'
         return json_response(ret)
 
@@ -55,7 +54,6 @@ def new_default_level(request):
         try:
             _edit = int(content['edit'])
         except ValueError,e :
-            print e
             ret['status'] = msgid.EDIT_OUT_OF_RANGE #'the input edit needs to be 0 or 1'
             return json_response(ret)
         if (_edit != 0) and (_edit != 1):
@@ -100,7 +98,6 @@ def get_level_info(request):
         try:
             _default_level_id = int(content['default_level_id'])
         except ValueError,e :
-            print e
             ret['status'] = msgid.DEFAULT_LEVEL_ID_NOT_INT #'the input default level id needs to be an Integer'
             return json_response(ret)
 
@@ -149,7 +146,6 @@ def get_level_info(request):
         try:
             _level_id = int(content['level_id'])
         except ValueError,e :
-            print e
             ret['status'] = msgid.LEVEL_ID_NOT_INT #'the input level id needs to be an Integer'
             return json_response(ret)
 
@@ -175,7 +171,7 @@ def get_level_info(request):
                 if not ((session == level.user_name) or (user.authority >= 3)):
                     ret['status'] = msgid.NO_AUTHORITY #'you don't have operation authority'
                     return json_response(ret)
-            if (_default_level_id > 5):
+            if _default_level_id > 5:
                 refresh_vip_authority(user)
                 user = User.objects.filter(name = session)[0]
                 if user.authority < 2:
@@ -207,7 +203,7 @@ def new_usermade_level(request):
     ret = {}
 
     session = get_session(request)
-    if (session == None):
+    if session == None:
         ret['status'] = msgid.NOT_LOGIN #'please log in first'
         return json_response(ret)
 
@@ -219,7 +215,7 @@ def new_usermade_level(request):
     MAX_USER_CREATED_LEVEL_NUM = 10
     MAX_VIP_CREATED_LEVEL_NUM = 30
     user = User.objects.filter(name = session)[0]
-    if (user.authority < 3):
+    if user.authority < 3:
         refresh_vip_authority(user)
         user = User.objects.filter(name = session)[0]
         level_filter = Level.objects.filter(user_name = session)
@@ -243,7 +239,7 @@ def share_level(request):
     ret = {}
 
     session = get_session(request)
-    if (session == None):
+    if session == None:
         ret['status'] = msgid.NOT_LOGIN #'please log in first'
         return json_response(ret)
 
@@ -257,7 +253,6 @@ def share_level(request):
     try:
         _shared = int(content['share'])
     except ValueError,e :
-        print e
         ret['status'] = msgid.SHARE_OUT_OF_RANGE #'the input share needs to be 0 or 1'
         return json_response(ret)
     if (_shared != 0) and (_shared != 1):
@@ -270,7 +265,6 @@ def share_level(request):
     try:
         _level_id = int(content['level_id'])
     except ValueError,e :
-        print e
         ret['status'] = msgid.LEVEL_ID_NOT_INT #'the input level id needs to be an Integer'
         return json_response(ret)
 
@@ -300,7 +294,7 @@ def get_all_level(request):
     ret = {}
 
     session = get_session(request)
-    if (session == None):
+    if session == None:
         ret['status'] = msgid.NOT_LOGIN #'please log in first'
         return json_response(ret)
 
@@ -324,7 +318,7 @@ def get_all_private_level(request):
 
     session = get_session(request)
 
-    if (session == None):
+    if session == None:
         ret['all_private_level'] = json.dumps([])
         ret['status'] = msgid.SUCCESS #'succeeded'
         return json_response(ret)
@@ -358,10 +352,10 @@ def get_all_default_level(request):
     all_default_level = Level.objects.exclude(default_level_id = -1).order_by('default_level_id')
 
     session = get_session(request)
-    if (session == None):
+    if session == None:
         l = []
         for level in all_default_level:
-            if (level.default_level_id > 5):
+            if level.default_level_id > 5:
                 l.append({'default_level_id': level.default_level_id, 'status': 1}) #vip level, can't access
             else:
                 l.append({'default_level_id': level.default_level_id, 'status': 0}) #can access but not pass
@@ -387,7 +381,7 @@ def get_all_default_level(request):
             if str(level.level_id) in solution_dict:
                 l.append({'default_level_id': level.default_level_id, 'status': 2}) #passed
             else:
-                if (level.default_level_id > 5):
+                if level.default_level_id > 5:
                     l.append({'default_level_id': level.default_level_id, 'status': 1}) #vip level, can't access
                 else:
                     l.append({'default_level_id': level.default_level_id, 'status': 0}) #can access but not pass
@@ -399,7 +393,7 @@ def change_level_info(request):
     ret = {}
 
     session = get_session(request)
-    if (session == None):
+    if session == None:
         ret['status'] = msgid.NOT_LOGIN #'please log in first'
         return json_response(ret)
 
@@ -410,7 +404,6 @@ def change_level_info(request):
     try:
         _level_id = int(content['level_id'])
     except ValueError,e :
-        print e
         ret['status'] = msgid.LEVEL_ID_NOT_INT #'the input level id needs to be an Integer'
         return json_response(ret)
 

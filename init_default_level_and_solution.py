@@ -41,18 +41,18 @@ for l in level_list:
     try:
         _level_info_json = json.loads(_level_info_str)
     except ValueError,e:
-        print "can't analysis default level " + str(_default_level_id)
+        print ("can't analysis default level " + str(_default_level_id))
         continue
     _level_info = json.dumps(_level_info_json)
     default_level_id_filter = Level.objects.filter(default_level_id = _default_level_id)
     if len(default_level_id_filter) > 0:
         default_level_id_filter[0].info = _level_info
         default_level_id_filter[0].save()
-        print "default level " + str(_default_level_id) + " changed successfully"
+        print ("default level " + str(_default_level_id) + " changed successfully")
         continue
 
     level = Level.objects.create(default_level_id = _default_level_id, info = _level_info, user_name = "super_admin", shared=True)
-    print "default level " + str(_default_level_id) + " built  successfully"
+    print ("default level " + str(_default_level_id) + " built  successfully")
 
 solution_list = [
 "default1.txt",
@@ -77,7 +77,7 @@ for l in solution_list:
 
     default_level_id_filter = Level.objects.filter(default_level_id = _default_level_id)
     if len(default_level_id_filter) == 0:
-        print "default level " + str(_default_level_id) + " doesn't exist"
+        print ("default level " + str(_default_level_id) + " doesn't exist")
         continue
     level = default_level_id_filter[0]
     _level_id = default_level_id_filter[0].level_id
@@ -86,23 +86,23 @@ for l in solution_list:
     try:
         _solution_info_json = json.loads(_solution_info_str)
     except ValueError,e:
-        print "can't analysis default level " + str(_default_level_id) + "'s solution"
+        print ("can't analysis default level " + str(_default_level_id) + "'s solution")
         continue
     _solution_info = json.dumps(_solution_info_json)
 
     if not 'block_num' in _solution_info_json:
-        print "default level " + str(_default_level_id) + "'s solution doesn't contain key 'block_num'"
+        print ("default level " + str(_default_level_id) + "'s solution doesn't contain key 'block_num'")
         continue
 
     try:
         std_block_num = int(_solution_info_json['block_num'])
     except ValueError,e :
-        print "'block_num' in default level " + str(_default_level_id) + "'s solution isn't an Integer"
+        print ("'block_num' in default level " + str(_default_level_id) + "'s solution isn't an Integer")
         continue
 
     admin_filter = User.objects.filter(name = "super_admin")
     if len(admin_filter) == 0:
-        print "super admin doesn't exist"
+        print ("super admin doesn't exist")
         continue
 
     admin = admin_filter[0]
@@ -115,7 +115,7 @@ for l in solution_list:
         solution.save()
         level.std_solution_id = _solution_id
         level.save()
-        print "default level " + str(_default_level_id) + "'s solution changed successfully"
+        print ("default level " + str(_default_level_id) + "'s solution changed successfully")
     else:
         solution = Solution.objects.create(user_name = "super_admin", level_id = _level_id, info = _solution_info, score = 3)    
         solution_dict[str(_level_id)] = solution.solution_id
@@ -123,7 +123,7 @@ for l in solution_list:
         admin.save()
         level.std_solution_id = solution.solution_id
         level.save()
-        print "default level " + str(_default_level_id) + "'s solution built  successfully"
+        print ("default level " + str(_default_level_id) + "'s solution built  successfully")
     level = Level.objects.filter(default_level_id = _default_level_id)[0]
     if level.shared == False:
         level.shared = True

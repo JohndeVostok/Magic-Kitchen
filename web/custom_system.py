@@ -39,7 +39,7 @@ def register(request):
     ret = {}
 
     session = get_session(request)
-    if (session != None):
+    if session != None:
         ret['status'] = msgid.ALREADY_LOGIN #'you have already logged in'
         return json_response(ret)
 
@@ -104,7 +104,7 @@ def login(request):
     ret = {}
 
     session = get_session(request)
-    if (session != None):
+    if session != None:
         ret['status'] = msgid.ALREADY_LOGIN #'you have already logged in'
         return json_response(ret)
 
@@ -146,7 +146,7 @@ def login(request):
 def logout(request):
     ret = {}
     session = get_session(request)
-    if (session != None):
+    if session != None:
         del request.session['name']
     ret['status'] = msgid.SUCCESS #'succeeded'
     return json_response(ret)
@@ -157,7 +157,7 @@ def change_password_after_login(request):
     ret = {}
 
     session = get_session(request)
-    if (session == None):
+    if session == None:
         ret['status'] = msgid.NOT_LOGIN #'please log in first'
         return json_response(ret)
 
@@ -344,7 +344,6 @@ def vip_charge(request):
     try:
         _days = int(content['days'])
     except ValueError,e :
-        print e
         ret['status'] = msgid.DAYS_NOT_INT #'the input days needs to be an Integer'
         return json_response(ret)
 
@@ -403,7 +402,7 @@ def send_code_to_mobile_phone_user(request):
     ret = {}
 
     session = get_session(request)
-    if (session != None):
+    if session != None:
         ret['status'] = msgid.ALREADY_LOGIN #'you have already logged in'
         return json_response(ret)
 
@@ -452,7 +451,7 @@ def login_with_phone_number(request):
     ret = {}
 
     session = get_session(request)
-    if (session != None):
+    if session != None:
         ret['status'] = msgid.ALREADY_LOGIN #'you have already logged in'
         return json_response(ret)
 
