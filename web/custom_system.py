@@ -307,7 +307,8 @@ def get_current_user_info(request):
             has_next_level = True
             break
     if not has_next_level:
-        ret['next_default_level_id'] = -1
+        # Set default level id to the very first level (1).
+        ret['next_default_level_id'] = 1
 
     numeric_only = True
     for c in session:

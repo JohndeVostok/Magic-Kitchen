@@ -424,7 +424,7 @@ class CustomSystemTestCase(TestCase):
         self.assertEqual(ret['status'], msgid.SUCCESS) #'succeeded'
         self.assertEqual(json.loads(ret['solution_dict']), {'1' : 4, '2' : 3})
         self.assertEqual(json.loads(ret['created_level']), [1, 2, 4])
-        self.assertEqual(ret['next_default_level_id'], -1)
+        self.assertEqual(ret['next_default_level_id'], 1)
         self.assertEqual(ret['is_VIP'], 1)
         self.assertEqual(ret['is_mobile_phone_user'], 0)
 
@@ -674,7 +674,7 @@ class CustomSystemTestCase(TestCase):
         self.assertEqual(ret['user_name'], '18810238602')
         self.assertEqual(json.loads(ret['solution_dict']), {})
         self.assertEqual(json.loads(ret['created_level']), [])
-        self.assertEqual(ret['next_default_level_id'], -1)
+        self.assertEqual(ret['next_default_level_id'], 1)
 
         #logout
         response = c.post('/api/logout')
