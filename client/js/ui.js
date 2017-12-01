@@ -951,7 +951,7 @@ var ui = function() {
 			graphics.removeSprite(mapSprites[i]);
 		}
 		for (var i in mapTextSprites) {
-			stage.removeChild(mapTextSprites[i]);
+			graphics.removeSprite(mapTextSprites[i]);
 		}
 		mapSprites = [];
 		mapTextSprites = [];
