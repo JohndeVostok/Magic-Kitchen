@@ -150,7 +150,7 @@ var ui = function() {
 	initUI = function() {
 		// Init map.
 		mapSize = N * M;
-		for (var i = 0; i < mapSize; i++) {
+		for (let i = 0; i < mapSize; i++) {
 			map[i] = 0;
 		}
 		
@@ -208,12 +208,12 @@ var ui = function() {
 		mapGridWidth = 546 / M;
 		
 		mapSpriteSheet = {};
-		for (var i in config.UI.map.images) {
+		for (let i in config.UI.map.images) {
 			mapSpriteSheets[i] = graphics.newSpriteSheet(config.UI.map.images[i]);
 		}
 		
 		objectSpriteSheet = {};
-		for (var i in config.UI.object.images) {
+		for (let i in config.UI.object.images) {
 			objectSpriteSheets[i] = graphics.newSpriteSheet(config.UI.object.images[i]);
 		}
 		
@@ -976,10 +976,14 @@ var ui = function() {
 		
 		// Remove original mapSprites
 		for (let i in mapSprites) {
-			graphics.removeSprite(mapSprites[i]);
+			if (mapSprites.hasOwnProperty(i)) {
+				graphics.removeSprite(mapSprites[i]);
+			}
 		}
 		for (let i in mapTextSprites) {
-			graphics.removeSprite(mapTextSprites[i]);
+			if (mapTextSprites.hasOwnProperty(i)) {
+				graphics.removeSprite(mapTextSprites[i]);
+			}
 		}
 		mapSprites = [];
 		mapTextSprites = [];
