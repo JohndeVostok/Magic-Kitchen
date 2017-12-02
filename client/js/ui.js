@@ -1,5 +1,25 @@
 var graphics;
+var createjs;
+var code;
+var logic;
+var user;
+var msg;
 var ui = function() {
+	// loadStage function
+	var loadStage;
+	
+	// CreateJS stage
+	var stage;
+	
+	// loadConfig function
+	var loadConfig;
+	
+	// initUI fuction
+	var initUI;
+	
+	// initUIControls function
+	var initUIControls;
+	
 	var doLoad = function() {
 		loadStage();
 		
@@ -17,10 +37,14 @@ var ui = function() {
 		initUI();
 		initUIControls();
 	};
-	// CreateJS stage
-	var stage;
 	
-	var loadStage = function() {
+	// adjustStageSize function
+	var adjustStageSize;
+	
+	// tickHandler function
+	var tickHandler;
+	
+	loadStage = function() {
 		stage = new createjs.Stage("gameCanvas");
 		adjustStageSize();
 		
@@ -31,7 +55,7 @@ var ui = function() {
 		stage.update();
 	};
 	
-	var adjustStageSize = function() {
+	adjustStageSize = function() {
 		/*! GetDevicePixelRatio | Author: Tyson Matanich, 2012 | License: MIT */
 		(function (window) {
 			window.getDevicePixelRatio = function () {
@@ -68,7 +92,7 @@ var ui = function() {
 	
 	var N, M;
 	
-	var loadConfig = function() {
+	loadConfig = function() {
 		N = config.mapHeight;
 		M = config.mapWidth;
 	};
@@ -120,7 +144,10 @@ var ui = function() {
 	var levelDescriptionBox = undefined;
 	var levelDescriptionText = undefined;
 	
-	var initUI = function() {
+	// clearAlert function
+	var clearAlert;
+	
+	initUI = function() {
 		// Init map.
 		mapSize = N * M;
 		for (var i = 0; i < mapSize; i++) {
@@ -136,7 +163,7 @@ var ui = function() {
 		// Clear alert masks (if exists).
 		clearAlert();
 		// Add alert listener.
-		stage.addEventListener("click", function(event) {
+		stage.addEventListener("click", function() {
 			clearAlert();
 		});
 		
@@ -557,7 +584,7 @@ var ui = function() {
 		gameRunning = false;
 	}
 	
-	var initUIControls = function() {
+	initUIControls = function() {
 		// TODO: Use "get user info" API to resolve this issue. (#50)
 		// Force logout to prevent "you have already logged in" bug.
 		user.initButtons();
@@ -666,9 +693,17 @@ var ui = function() {
 				
 				var privateList = res.privateLevelList;
 				$("#choosePrivateLevelDiv").empty();
+				var privateButtonFunc = function() {
+					var targetLevelId = $(this).attr("value");
+					if (isNaN(targetLevelId)) alert("请输入正确的关卡编号");
+					else logic.loadLevel(parseInt(targetLevelId));
+					resetGameButtons();
+					$("#chooseLevelModal").modal("hide");
+					$("#shareLevelButtonExtra").css("display", "");
+				};
 				for (let i = 0; i < privateList.length; i++)
 				{
-					var btn = '<button type="button" class="btn btn-primary" id="'
+					let btn = '<button type="button" class="btn btn-primary" id="'
 							+ 'choosePrivateLevelButtonId' + i
 							+ '" value = "'
 							+ privateList[i]
@@ -677,21 +712,21 @@ var ui = function() {
 							+ '</span></button>&nbsp&nbsp';
 					$("#choosePrivateLevelDiv").append(btn);
 					btn = "#choosePrivateLevelButtonId" + i;
-					$(btn).click(function() {
-						var targetLevelId = $(this).attr("value");
-						if (isNaN(targetLevelId)) alert("请输入正确的关卡编号");
-						else logic.loadLevel(parseInt(targetLevelId));
-						resetGameButtons();
-						$("#chooseLevelModal").modal("hide");
-						$("#shareLevelButtonExtra").css("display", "");
-					});
+					$(btn).click(privateButtonFunc);
 				}
 				var sharedList = res.sharedLevelList;
 				$("#chooseSharedLevelDiv").empty();
-				var but = "";
+				var sharedButtonFunc = function() {
+					var targetLevelId = $(this).attr("value");
+					if (isNaN(targetLevelId)) alert("请输入正确的关卡编号");
+					else logic.loadLevel(parseInt(targetLevelId));
+					resetGameButtons();
+					$("#chooseLevelModal").modal("hide");
+					$("#shareLevelButtonExtra").css("display", "none");
+				};
 				for (let i = 0; i < sharedList.length; i++)
 				{
-					var btn = '<button type="button" class="btn btn-primary" id="'
+					let btn = '<button type="button" class="btn btn-primary" id="'
 							+ 'chooseSharedLevelButtonId' + i
 							+ '" value = "'
 							+ sharedList[i]
@@ -700,18 +735,22 @@ var ui = function() {
 							+ '</span></button>&nbsp&nbsp';
 					$("#chooseSharedLevelDiv").append(btn);
 					btn = "#chooseSharedLevelButtonId" + i;
-					$(btn).click(function() {
-						var targetLevelId = $(this).attr("value");
-						if (isNaN(targetLevelId)) alert("请输入正确的关卡编号");
-						else logic.loadLevel(parseInt(targetLevelId));
-						resetGameButtons();
-						$("#chooseLevelModal").modal("hide");
-						$("#shareLevelButtonExtra").css("display", "none");
-					});
+					$(btn).click(sharedButtonFunc);
 				}
 				var defaultList = res.defaultLevelList;
 				$("#chooseDefaultLevelDiv").empty();
-				var but = "";
+				var defaultButtonFunc = function() {
+					var targetLevelId = $(this).attr("value");
+					if (isNaN(targetLevelId))
+						alert("请输入正确的关卡编号");
+					else
+					{
+						logic.loadDefaultLevel(parseInt(targetLevelId));
+					}
+					resetGameButtons();
+					$("#chooseLevelModal").modal("hide");
+					$("#shareLevelButtonExtra").css("display", "none");
+				};
 				for (let i = 0; i < defaultList.length; i++)
 				{
 					var levelicon = "";
@@ -719,7 +758,7 @@ var ui = function() {
 					if (defaultList[i].status == 1) levelicon = 'class="glyphicon glyphicon-lock"';
 					if (defaultList[i].status == 2) levelicon = 'class="glyphicon glyphicon-ok"';
 				
-					var btn = '<button type="button" class="btn btn-primary" id="'
+					let btn = '<button type="button" class="btn btn-primary" id="'
 							+ 'chooseDefaultLevelButtonId' + i
 							+ '" value = "'
 							+ defaultList[i].default_level_id
@@ -731,18 +770,7 @@ var ui = function() {
 					$("#chooseDefaultLevelDiv").append(btn);
 					btn = "#chooseDefaultLevelButtonId" + i;
 					if (i >= res.nextDefaultLevel && res.nextDefaultLevel != -1) $(btn).attr("disabled", true);
-					$(btn).click(function() {
-						var targetLevelId = $(this).attr("value");
-						if (isNaN(targetLevelId))
-							alert("请输入正确的关卡编号");
-						else
-						{
-							logic.loadDefaultLevel(parseInt(targetLevelId));
-						}
-						resetGameButtons();
-						$("#chooseLevelModal").modal("hide");
-						$("#shareLevelButtonExtra").css("display", "none");
-					});
+					$(btn).click(defaultButtonFunc);
 				}
 			});
 		});
@@ -772,7 +800,7 @@ var ui = function() {
 
 		$("#buttonSetFloor").click(function() {
 			var index = $("#textSetFloor").val();
-			var pos = 0;
+			var pos;
 			if (index != "" && !isNaN(index))
 			{
 				pos = parseInt(index);
@@ -783,7 +811,7 @@ var ui = function() {
 		});
 		$("#buttonSetInbox").click(function() {
 			var index = $("#textSetInbox").val();
-			var pos = 0;
+			var pos;
 			if (index != "" && !isNaN(index))
 			{
 				pos = parseInt(index);
@@ -794,7 +822,7 @@ var ui = function() {
 		});
 		$("#buttonSetOutbox").click(function() {
 			var index = $("#textSetOutbox").val();
-			var pos = 0;
+			var pos;
 			if (index != "" && !isNaN(index))
 			{
 				pos = parseInt(index);
@@ -805,7 +833,7 @@ var ui = function() {
 		});
 		$("#buttonErase").click(function() {
 			var index = $("#textErase").val();
-			var pos = 0;
+			var pos;
 			if (index != "" && !isNaN(index))
 			{
 				pos = parseInt(index);
@@ -817,8 +845,8 @@ var ui = function() {
 		$("#buttonSetItem").click(function() {
 			var index1 = $("#textSetItemPos").val();
 			var index2 = $("#textSetItemValue").val();
-			var pos = 0;
-			var value = 0;
+			var pos;
+			var value;
 			if (index1 == "" || isNaN(index1))
 				return undefined;
 			if (index2 == "" || isNaN(index2))
@@ -888,7 +916,7 @@ var ui = function() {
 	const MaxIdleTicks = 10;
 	
 	// Handle the ticks from Ticker.
-	var tickHandler = function() {
+	tickHandler = function() {
 		if (animationRunning == false) {
 			if (checkAnimationQueue()) {
 				idleTicks = 0;
@@ -940,23 +968,23 @@ var ui = function() {
 			throw "Invalid mapData";
 		}
 		
-		for (var i = 0; i < mapSize; i++) {
+		for (let i = 0; i < mapSize; i++) {
 			var x = mapData[i];
 			if (isNaN(x)) throw "Invalid mapData[" + i + "]: " + x;
 			map[i] = parseInt(x);
 		}
 		
 		// Remove original mapSprites
-		for (var i in mapSprites) {
+		for (let i in mapSprites) {
 			graphics.removeSprite(mapSprites[i]);
 		}
-		for (var i in mapTextSprites) {
+		for (let i in mapTextSprites) {
 			graphics.removeSprite(mapTextSprites[i]);
 		}
 		mapSprites = [];
 		mapTextSprites = [];
 		
-		for (var i = 0; i < N; i++) {
+		for (let i = 0; i < N; i++) {
 			for (var j = 0; j < M; j++) {
 				var id = i * M + j;
 				var s = graphics.newSprite(mapSpriteSheets[0]);
@@ -1194,7 +1222,7 @@ var ui = function() {
 				throw "Invalid newItem on " + pos;
 			}
 			if (objectSpriteSheets[args.type] == undefined) {
-				throw "Invalid newItem type " + type + " on pos " + pos;
+				throw "Invalid newItem type " + args.type + " on pos " + pos;
 			}
 			items[pos] = genNewItem(args);
 			setItemPos(items[pos], pos);
@@ -1415,14 +1443,18 @@ var ui = function() {
 	
 	var runSetInput = function(args) {
 		for (let i in inputItems) {
-			removeItem(inputItems[i]);
+			if (inputItems.hasOwnProperty(i)) {
+				removeItem(inputItems[i]);
+			}
 		}
 		inputItems = [];
 		
 		for (let i in args.itemList) {
-			let item = genNewItem(args.itemList[i]);
-			setInputItemPos(item, inputItems.length);
-			inputItems.push(item);
+			if (args.itemList.hasOwnProperty(i)) {
+				let item = genNewItem(args.itemList[i]);
+				setInputItemPos(item, inputItems.length);
+				inputItems.push(item);
+			}
 		}
 		
 		setTimeout(setAnimationComplete, 0);
@@ -1430,14 +1462,18 @@ var ui = function() {
 	
 	var runSetOutput = function(args) {
 		for (let i in outputItems) {
-			removeItem(outputItems[i]);
+			if (outputItems.hasOwnProperty(i)) {
+				removeItem(outputItems[i]);
+			}
 		}
 		outputItems = [];
 		
 		for (let i in args.itemList) {
-			let item = genNewItem(args.itemList[i]);
-			setOutputItemPos(item, outputItems.length);
-			outputItems.push(item);
+			if (args.itemList.hasOwnProperty(i)) {
+				let item = genNewItem(args.itemList[i]);
+				setOutputItemPos(item, outputItems.length);
+				outputItems.push(item);
+			}
 		}
 		
 		setTimeout(setAnimationComplete, 0);
@@ -1448,7 +1484,7 @@ var ui = function() {
 	var alertTextBackground = undefined;
 	var alertText = undefined;
 	
-	var clearAlert = function() {
+	clearAlert = function() {
 		if (alertMask != undefined) {
 			stage.removeChild(alertMask);
 			stage.removeChild(alertTextBackground);
@@ -1592,11 +1628,13 @@ var ui = function() {
 	var deepCopyItemList = function(itemList) {
 		var ret = [];
 		for (var i in itemList) {
-			var item = itemList[i];
-			ret[i] = {
-				type: item.type,
-				value: item.value
-			};
+			if (itemList.hasOwnProperty(i)) {
+				var item = itemList[i];
+				ret[i] = {
+					type: item.type,
+					value: item.value
+				};
+			}
 		}
 		return ret;
 	};
